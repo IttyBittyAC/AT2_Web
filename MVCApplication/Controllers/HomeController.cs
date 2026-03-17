@@ -4,6 +4,7 @@ using MVCApplication.Models;
 
 namespace MVCApplication.Controllers
 {
+    //this controller manages the home page and error handling for the application and navigation.
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
@@ -14,11 +15,6 @@ namespace MVCApplication.Controllers
         }
 
         public IActionResult Index()
-        {
-            return View();
-        }
-
-        public IActionResult Privacy()
         {
             return View();
         }
