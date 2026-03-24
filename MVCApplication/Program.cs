@@ -1,3 +1,6 @@
+using Microsoft.EntityFrameworkCore;
+using MVCApplication.Data;
+
 namespace MVCApplication
 {
     public class Program
