@@ -20,3 +20,53 @@ html {
 body {
   margin-bottom: 60px;
 }
+
+/* Remove Bootstrap container restriction if applied */
+.container {
+    max-width: 100% !important;
+    padding-left: 0;
+    padding-right: 0;
+}
+
+/* Make page fill full height */
+html, body {
+    height: 100%;
+    margin: 0;
+}
+
+.home-wrapper {
+    min-height: calc(100vh - 120px); /* adjust if navbar/footer height differs */
+    display: flex;
+    flex-direction: column;
+}
+
+/* Dashboard */
+.dashboard {
+    text-align: center;
+    padding: 40px 20px;
+    width: 100%;
+}
+
+/* Two-column layout */
+.info-section {
+    display: flex;
+    gap: 40px;
+    padding: 0 40px;
+    flex: 1; /* pushes contact to bottom */
+}
+
+/* Cards */
+.info-card {
+    flex: 1;
+    padding: 25px;
+    border-top: 3px solid #333;
+    background-color: #f9f9f9;
+}
+
+/* Contact sticks toward bottom */
+.contact {
+    text-align: center;
+    padding: 50px 20px;
+    background-color: #f1f1f1;
+    margin-top: auto;
+}
