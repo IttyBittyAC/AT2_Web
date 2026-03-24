@@ -2,4 +2,35 @@
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
 @{
+    ViewData["Title"] = "Feedback Form";
+
 }
+
+<div>
+    <h1 class="FeedbackHeading">Feedback</h1>
+    <h2 class="FeedbackSubHeading">We value your feedback! Please share your thoughts and suggestions with us.</h2>
+</div>
+<div>
+    <h3 class="FeedbackHeading">Select Feedback Type</h3>
+    <select name="FeedbackOptions" id="FeedbackOptions">
+        <option value="Experience">Experience with the website</option>
+        <option value="productSatisfaction">Product Satisfaction</option>
+        <option value="support">Support</option>
+        <option value="bugs">Bug report</option>
+        <option value="other">Other</option>
+    </select>
+</div>
+<div>
+
+    <input type="text" placeholder="heading">
+    <input type="text" placeholder="tell us how we can improve">
+    <button type="button">Submit</button>
+</div>
+<div>
+    <h3 class="FeedbackHeading">Would you like us to contact you?</h3>
+    <p>we can let you know if we have fixed, resolved or taken your feedback into consideration</p>
+    <input type="radio" id="contact" name="contactY" value="yes">
+    <label for="contactY">Yes</label>
+    <input type="radio" id="contact" name="contactN" value="no">
+    <label for="contactN">No</label>
+</div>
