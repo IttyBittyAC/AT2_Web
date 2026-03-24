@@ -4,22 +4,22 @@ using MVCApplication.Models;
 namespace MVCApplication.Controllers
 {
     //this controller manages user profile viewing and editing.
-    public class ProfileController : Controller
+    public class DashboardController : Controller
     {
         public IActionResult Index()
         {
             return View();
         }
 
-        public IActionResult Edit()
+        public IActionResult MyBookings()
         {
             return View();
         }
 
         [HttpPost]
-        public IActionResult Edit(User user)
+        public IActionResult Profile()
         {
-            return RedirectToAction("Index");
+            return View();
         }
     }
 }

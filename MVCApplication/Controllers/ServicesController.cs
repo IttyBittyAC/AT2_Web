@@ -2,18 +2,19 @@
 
 namespace MVCApplication.Controllers
 {
-    //this controller manages displaying of events and event details.
-    public class EventsController : Controller
+    public class ServicesController : Controller
     {
         public IActionResult Index()
         {
             return View();
         }
-        public IActionResult EventDetails(int id)
+
+        public IActionResult ServiceDetails(int id)
         {
             return View();
         }
-        public IActionResult Create()
+
+        public IActionResult Book()
         {
             return View();
         }
