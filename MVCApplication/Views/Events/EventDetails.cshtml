@@ -1,0 +1,11 @@
+﻿@{
+    ViewData["Title"] = "Event Details";
+}
+
+<div>
+    <h2>@Model.Title</h2>
+    <p><strong>Date:</strong> @Model.Date.ToString("MMMM dd, yyyy")</p>
+    <p><strong>Location:</strong> @Model.Location</p>
+    <p><strong>Description:</strong></p>
+    <p>@Model.Description</p>
+</div>

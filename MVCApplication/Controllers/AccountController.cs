@@ -10,6 +10,15 @@ namespace MVCApplication.Controllers
         {
             return View();
         }
+        public IActionResult Register()
+        {
+            return View();
+        }
+        public IActionResult AccessDenied()
+        {
+            return View();
+        }
+
 
         [HttpPost]
         public IActionResult Login(User user)
