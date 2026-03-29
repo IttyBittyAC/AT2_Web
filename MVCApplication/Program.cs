@@ -1,4 +1,3 @@
-using Microsoft.EntityFrameworkCore;
 using MVCApplication.Data;
 
 namespace MVCApplication
@@ -10,7 +9,14 @@ namespace MVCApplication
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
+            builder.Services.AddScoped<AppDb>();
             builder.Services.AddControllersWithViews();
+
+            builder.Services.AddSession(o => {
+                o.IdleTimeout = TimeSpan.FromHours(8);
+                o.Cookie.HttpOnly = true;
+                o.Cookie.Name = "session";
+            });
 
             var app = builder.Build();
 
@@ -28,10 +34,17 @@ namespace MVCApplication
             app.UseRouting();
 
             app.UseAuthorization();
+            app.UseSession();
+
 
             app.MapControllerRoute(
                 name: "default",
-                pattern: "{controller=Home}/{action=Feedback}/{id?}");
+                pattern: "{controller=OneRingToRuleThemAll}/{action=Index}/{id?}");
+            app.MapControllerRoute(
+                name: "better",
+
+                pattern: "{table}/{action}/{id?}",
+                defaults: new { controller = "OneRingToRuleThemAll" });
 
             app.Run();
         }
