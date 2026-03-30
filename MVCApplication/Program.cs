@@ -4,14 +4,15 @@ namespace MVCApplication
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
-            builder.Services.AddScoped<AppDb>();
-            builder.Services.AddControllersWithViews();
 
+
+            builder.Services.AddControllersWithViews();
+            builder.Services.AddScoped<AppDb>();
             builder.Services.AddSession(o => {
                 o.IdleTimeout = TimeSpan.FromHours(8);
                 o.Cookie.HttpOnly = true;
@@ -20,6 +21,11 @@ namespace MVCApplication
 
             var app = builder.Build();
 
+            using (var scope = app.Services.CreateScope())
+            {
+                var db = scope.ServiceProvider.GetRequiredService<AppDb>();
+                await db.EnsureCreated();
+            }
             // Configure the HTTP request pipeline.
             if (!app.Environment.IsDevelopment())
             {
@@ -33,18 +39,12 @@ namespace MVCApplication
 
             app.UseRouting();
 
-            app.UseAuthorization();
             app.UseSession();
-
-
+            app.UseAuthorization();
+            
             app.MapControllerRoute(
                 name: "default",
                 pattern: "{controller=OneRingToRuleThemAll}/{action=Index}/{id?}");
-            app.MapControllerRoute(
-                name: "better",
-
-                pattern: "{table}/{action}/{id?}",
-                defaults: new { controller = "OneRingToRuleThemAll" });
 
             app.Run();
         }
