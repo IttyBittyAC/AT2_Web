@@ -31,13 +31,13 @@ namespace MVCApplication.Controllers
         [HttpGet("/Home")]
         public IActionResult Index()
         {
-            return View(V.Home.Index, Build("home", "Home"));
+            return View(Home.Index, Build("home", "Home"));
         }
         [HttpGet("/Home/Announcements")]
-        public IActionResult Announcements() => View(V.Home.Announcements, Build("announcements", "We have something to announce"));
+        public IActionResult Announcements() => View(Home.Announcements, Build("announcements", "We have something to announce"));
 
         [HttpGet("/Home/FeedBack")]
-        public IActionResult Feedback() => View(V.Home.Feedback, Build("feedback", "Feedback Form"));
+        public IActionResult Feedback() => View(Home.Feedback, Build("feedback", "Feedback Form"));
 
         [HttpPost("/Home/FeedBack")]
         public async Task<IActionResult> Feedback(Feedback feedback)
@@ -47,7 +47,7 @@ namespace MVCApplication.Controllers
                 var m = Build("feedback", "Feedback");
                 m.Error = "Please fill in all fields";
                 m.Feedback = feedback;
-                return View(V.Home.Feedback, m);
+                return View(Home.Feedback, m);
             }
 
             var saved = await _db.SaveFeedback(feedback);
@@ -55,7 +55,7 @@ namespace MVCApplication.Controllers
             return RedirectToAction("Feedback");
         }
         [HttpGet("/Home/FAQ")]
-        public IActionResult FAQ() => View(V.Home.FAQ, Build("faq", "FAQ"));
+        public IActionResult FAQ() => View(Home.FAQ, Build("faq", "FAQ"));
 
         #endregion 
         #region Admin
@@ -139,7 +139,7 @@ namespace MVCApplication.Controllers
         #endregion 
         #region Account
         [HttpGet("/Account/Register")]
-        public IActionResult Register(string? returnurl = null) => IsAuth ? RedirectToAction("Index") : View(V.Account.Register, Build(returnUrl: returnurl));
+        public IActionResult Register(string? returnurl = null) => IsAuth ? RedirectToAction("Index") : View(Account.Register, Build(returnUrl: returnurl));
 
         [HttpPost("/Account/Register")]
         public async Task<IActionResult> Register(string password, string email, string username, string fullname, string? returnurl = null, string? adminPassword = null)
@@ -150,14 +150,14 @@ namespace MVCApplication.Controllers
             {
                 var model = Build(returnUrl: returnurl);
                 model.Error = ("Fields Required");
-                return View(V.Account.Register, model);
+                return View(Account.Register, model);
             }
             var register = await _db.Register(password, email, username, fullname, role);
-            return register == null ? View(V.Account.Register, new Func<AndInTheDarknessBindThem>(() => { var m = Build(returnUrl: returnurl); m.Error = "Cannot Register"; return m; })()) : RedirectToAction("Login");
+            return register == null ? View(Account.Register, new Func<AndInTheDarknessBindThem>(() => { var m = Build(returnUrl: returnurl); m.Error = "Cannot Register"; return m; })()) : RedirectToAction("Login");
         }
 
         [HttpGet("/Account/Login")]
-        public IActionResult Login(string? returnurl = null) => IsAuth ? RedirectToAction("Index") : View(V.Account.Login, Build(returnUrl: returnurl));
+        public IActionResult Login(string? returnurl = null) => IsAuth ? RedirectToAction("Index") : View(Account.Login, Build(returnUrl: returnurl));
 
         [HttpPost("/Account/Login")]
         public async Task<IActionResult> Login(string password, string email, string? returnurl = null)
@@ -167,7 +167,7 @@ namespace MVCApplication.Controllers
             {
                 var model = Build(returnUrl: returnurl);
                 model.Error = ("Email and password required.");
-                return View(V.Account.Login, model);
+                return View(Account.Login, model);
             }
             var user = await _db.Login(password, email);
 
@@ -175,7 +175,7 @@ namespace MVCApplication.Controllers
             {
                 var model = Build(returnUrl: returnurl);
                 model.Error = ("Invalid Login.");
-                return View(V.Account.Login, model);
+                return View(Account.Login, model);
             }
             ;
             HttpContext.Session.SetString("user", user?.Email ?? "");
@@ -194,10 +194,8 @@ namespace MVCApplication.Controllers
         #endregion 
         #region Dashboard
         [HttpGet("/Dashboard")]
-        public IActionResult Dashboard()
-        {
-            return View(V.Dashboard.Index, Build("dashboard", "Dashboard"));
-        }
+        public IActionResult Dashboard() => Guard() is { } redirect ? redirect : View(V.Dashboard.Index, Build("dashboard", "Dashboard"));
+
         [HttpGet("/DashBoard/MyBookings")]
         public IActionResult MyBookings()
         {
@@ -223,7 +221,7 @@ namespace MVCApplication.Controllers
             return View(V.Services.Index, model);
         }
         [HttpPost("/Services")]
-        public IActionResult Services(int id, string action) => action == "details" ? RedirectToAction("Details", "Services", new { id }) : RedirectToAction("Book", "Services", new { id });
+        public IActionResult Services(int id, string action) => action == "details" ? RedirectToAction("Details", new { id }) : RedirectToAction("Book");
 
         [HttpGet("/Services/Details/{id}")]
         public async Task<IActionResult> Details(int id)
@@ -306,7 +304,8 @@ namespace MVCApplication.Controllers
         {
             return View();
         }
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true )]
+        [HttpGet("/Error")]
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });

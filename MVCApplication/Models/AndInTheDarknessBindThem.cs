@@ -15,7 +15,7 @@
         // User
         public string? CurrentUser { get; set; } = null; 
         public string? CurrentRole { get; set; } = null;
-        public bool IsAdmin => CurrentRole == "Admin";
+        public bool IsAdmin => CurrentRole == "admin";
         public bool IsAuth => CurrentUser is not null;
 
         // Check Table

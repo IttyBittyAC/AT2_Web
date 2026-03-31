@@ -2,8 +2,6 @@
 using BCrypt.Net;
 using Dapper;
 using MVCApplication.Models;
-using System.Reflection.Metadata.Ecma335;
-using Microsoft.EntityFrameworkCore.Metadata.Conventions;
 
 namespace MVCApplication.Data
 {
@@ -14,21 +12,21 @@ namespace MVCApplication.Data
         public async Task<User?> Login(string password, string email)
         {
             using var c = new SqliteConnection(_conn);
-            var user = await c.QueryFirstOrDefaultAsync(
+            var user = await c.QueryFirstOrDefaultAsync<User>(
                 "select * from users where email = @email",
                 new { email }
                 );
-            return user is null ?  null : BCrypt.Net.BCrypt.Verify(password, (string)user.password_hash) ? user : null;
+            return user is null ?  null : BCrypt.Net.BCrypt.EnhancedVerify(password, (string)user.PasswordHash) ? user : null;
         }
         public async Task<User?> Register(string password, string email, string username, string fullname, string role)
         {
             using var c = new SqliteConnection(_conn);
 
-            var UserExist = await c.ExecuteScalarAsync(
+            var UserExist = await c.ExecuteScalarAsync<int>(
                 "select count(1) from users where email = @email",
                 new { email }
                 );
-            if (UserExist is not null) return null;
+            if (UserExist > 0 ) return null;
 
             var id = await c.ExecuteScalarAsync<int>(@"
                 insert into users (email, password_hash, username, fullname, role) values (@email, @hash, @username, @fullname, @role) returning id", new { email, hash = BCrypt.Net.BCrypt.EnhancedHashPassword(password), username, fullname, role });
@@ -48,6 +46,13 @@ namespace MVCApplication.Data
                 role          text not null default 'user',
                 created_at    datetime default current_timestamp
             );
+            create table if not exists events (
+                id              integer primary key autoincrement,
+                title           text not null,
+                description     text not null,
+                location        text not null,
+                date            datetime default current_timestamp
+            );
             create table if not exists feedback (
                 id             integer  primary key autoincrement,
                 fullname       text     not null,
@@ -58,24 +63,18 @@ namespace MVCApplication.Data
                 wants_contact  integer  not null default 0,
                 submitted_date datetime default current_timestamp
             );
-            create table if not exists events (
-                id              integer primary key autoincrement,
-                title           text not null,
-                description     text not null,
-                location        text not null,
-                date            datetime default current_timestamp
-            );
             create table if not exists bookings (
                 id              integer primary key autoincrement,
                 fullname        text not null,
-                email           text unique not null,
+                email           text not null,
                 date            datetime
+            );
         ");
         }
         public async Task<(List<User>?, User?)> GetUser(int? id)
         {
             using var c = new SqliteConnection(_conn);
-            return id is not null ? (new List<User>(), (await c.QueryFirstOrDefaultAsync<User>("select * from users where id = @id", new { id }))) : ((await c.QueryAsync<User>("select * from users order by date asc")).ToList(), null);
+            return id is not null ? (new List<User>(), (await c.QueryFirstOrDefaultAsync<User>("select * from users where id = @id", new { id }))) : ((await c.QueryAsync<User>("select * from users order by created_at asc")).ToList(), null);
         }
         public async Task<(List<Event>?, Event?)> GetEvent(int? id)
         {
@@ -110,7 +109,7 @@ namespace MVCApplication.Data
         public async Task<bool> SaveBooking(Booking booking)
         {
             using var c = new SqliteConnection(_conn);
-            return await c.ExecuteAsync(@"insert into bookings(fullname , email, bookingdate)values (@FullName, @Email, @BookingDate)", booking) > 0;
+            return await c.ExecuteAsync(@"insert into bookings(fullname , email, date)values (@FullName, @Email, @Date)", booking) > 0;
         }
         public async Task<int> UpdateUser(List<User> users)
         {
@@ -123,7 +122,7 @@ namespace MVCApplication.Data
                 if(user.FullName is not null)sets.Add("fullname = @FullName");
                 if (user.Email is not null) sets.Add("email = @Email");
                 if (user.Role is not null) sets.Add("role = @Role");
-                if (user.Username is not null) sets.Add("username = @UserName");
+                if (user.Username is not null) sets.Add("username = @Username");
                 affected += await c.ExecuteAsync($"update users set {string.Join(",", sets)} where id = @Id", user);
             }
             return affected;
@@ -156,7 +155,7 @@ namespace MVCApplication.Data
                 if (eve.Title is not null) sets.Add("title = @Title");
                 if (eve.Description is not null) sets.Add("description = @Description");
                 if (eve.Location is not null) sets.Add("location = @Location");
-                if (eve.EventDate != DateTime.MinValue) sets.Add("eventdate = @EventDate");
+                if (eve.EventDate != DateTime.MinValue) sets.Add("date = @EventDate");
                 affected += await c.ExecuteAsync($"update events set {string.Join(",", sets)} where id = @Id", eve);
             }
             return affected;
@@ -171,8 +170,8 @@ namespace MVCApplication.Data
                 var sets = new List<string>();
                 if (booking.FullName is not null) sets.Add("fullname = @FullName");
                 if (booking.Email is not null) sets.Add("email = @Email");
-                if (booking.BookingDate != DateTime.MinValue) sets.Add("bookingdate = @BookingData");
-                affected += await c.ExecuteAsync($"update events set {string.Join(",", sets)} where id = @Id", booking);
+                if (booking.BookingDate != DateTime.MinValue) sets.Add("bookingdate = @BookingDate");
+                affected += await c.ExecuteAsync($"update bookings set {string.Join(",", sets)} where id = @Id", booking);
             }
             return affected;
         }
