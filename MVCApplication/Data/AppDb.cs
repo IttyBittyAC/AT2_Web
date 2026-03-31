@@ -161,6 +161,27 @@ namespace MVCApplication.Data
             }
         }
 
+        public async Task<(List<User>?, User?)> GetUserByEmail(string? email)
+        {
+            try
+            {
+                using var c = new SqliteConnection(_conn);
+
+                // Return user by email
+                return (new List<User>(), await c.QueryFirstOrDefaultAsync<User>("SELECT * FROM users WHERE email = @Email", new { Email = email }));
+            }
+            catch (SqliteException ex)
+            {
+                _logger.LogError(ex, "Database error during GetUserByEmail for {Email}", email);
+                return (null, null);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Unexpected error during GetUserByEmail for {Email}", email);
+                throw;
+            }
+        }
+
         public async Task<(List<Event>?, Event?)> GetEvent(int? id)
         {
             try
