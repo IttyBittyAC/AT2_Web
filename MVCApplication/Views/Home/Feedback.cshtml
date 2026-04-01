@@ -1,36 +1,91 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@model AndInTheDarknessBindThem
 @{
-    ViewData["Title"] = "Feedback Form";
-
+    ViewData["Title"] = "Feedback";
+    var t = Model.Feedback?.Type ?? "";
 }
+@* This is an AI generated example for helping you design the other web pages. do not submit this*@
 
-<div>
-    <h1 class="FeedbackHeading">Feedback</h1>
-    <h2 class="FeedbackSubHeading">We value your feedback! Please share your thoughts and suggestions with us.</h2>
-</div>
-<div>
-    <h3 class="FeedbackHeading">Select Feedback Type</h3>
-    <select name="FeedbackOptions" id="FeedbackOptions">
-        <option value="Experience">Experience with the website</option>
-        <option value="productSatisfaction">Product Satisfaction</option>
-        <option value="support">Support</option>
-        <option value="bugs">Bug report</option>
-        <option value="other">Other</option>
-    </select>
-</div>
-<div>
 
-    <input type="text" placeholder="heading">
-    <input type="text" placeholder="tell us how we can improve">
-    <button type="button">Submit</button>
-</div>
-<div>
-    <h3 class="FeedbackHeading">Would you like us to contact you?</h3>
-    <p>we can let you know if we have fixed, resolved or taken your feedback into consideration</p>
-    <input type="radio" id="contact" name="contactY" value="yes">
-    <label for="contactY">Yes</label>
-    <input type="radio" id="contact" name="contactN" value="no">
-    <label for="contactN">No</label>
-</div>
+<form method="post" action="/Home/Feedback">
+    @Html.AntiForgeryToken()
+
+    @if (Model.Error != null)
+    {
+        <div class="alert error">@Model.Error</div>
+    }
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert success">@TempData["Success"]</div>
+    }
+
+    <div>
+        <h1 class="FeedbackHeading">Feedback</h1>
+        <h2 class="FeedbackSubHeading">We value your feedback! Please share your thoughts and suggestions with us.</h2>
+    </div>
+
+    <div class="field">
+        <h3 class="FeedbackHeading">Select Feedback Type</h3>
+        <select name="Type" id="FeedbackOptions">
+            <option value="">— Please select —</option>
+            <option value="Experience" selected="@(t == "Experience" ? "selected" : null)">Experience with the website</option>
+            <option value="ProductSatisfaction" selected="@(t == "ProductSatisfaction" ? "selected" : null)">Product Satisfaction</option>
+            <option value="Support" selected="@(t == "Support" ? "selected" : null)">Support</option>
+            <option value="Bugs" selected="@(t == "Bugs" ? "selected" : null)">Bug report</option>
+            <option value="Other" selected="@(t == "Other" ? "selected" : null)">Other</option>
+        </select>
+        <span asp-validation-for="Feedback.Type" class="text-danger small"></span>
+    </div>
+
+    <div>
+        <input type="text"
+               name="Heading"
+               placeholder="heading"
+               value="@Model.Feedback?.Heading" />
+        <span asp-validation-for="Feedback.Heading" class="text-danger small"></span>
+
+        <input type="text"
+               name="Message"
+               placeholder="tell us how we can improve"
+               value="@Model.Feedback?.Message" />
+        <span asp-validation-for="Feedback.Message" class="text-danger small"></span>
+
+        <input type="text"
+               name="FullName"
+               placeholder="full name"
+               value="@Model.Feedback?.FullName" />
+        <span asp-validation-for="Feedback.FullName" class="text-danger small"></span>
+
+        <input type="email"
+               name="Email"
+               placeholder="email address"
+               value="@Model.Feedback?.Email" />
+        <span asp-validation-for="Feedback.Email" class="text-danger small"></span>
+
+        <button type="submit">Submit</button>
+    </div>
+
+    <div>
+        <h3 class="FeedbackHeading">Would you like us to contact you?</h3>
+        <p>we can let you know if we have fixed, resolved or taken your feedback into consideration</p>
+
+        <input type="radio"
+               id="contactYes"
+               name="WantsContact"
+               value="true"
+               @(Model.Feedback?.WantsContact == true ? "checked" : "") />
+        <label for="contactYes">Yes</label>
+
+        <input type="radio"
+               id="contactNo"
+               name="WantsContact"
+               value="false"
+               @(Model.Feedback?.WantsContact == false ? "checked" : "checked") />
+        <label for="contactNo">No</label>
+    </div>
+
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
