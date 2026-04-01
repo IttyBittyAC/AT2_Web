@@ -21,7 +21,7 @@
             public const string Index = "~/Views/Admin/Index.cshtml";
             public const string Users = "~/Views/Admin/Users.cshtml";
             public const string Feedback = "~/Views/Admin/Feedback.cshtml";
-            public const string Announcements = "~/Views/Admin/Announcements .cshtml";
+            public const string Announcements = "~/Views/Admin/Announcements.cshtml";
             public const string Events = "~/Views/Admin/Events.cshtml";
         }
         public static class Dashboard

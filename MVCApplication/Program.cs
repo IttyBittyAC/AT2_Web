@@ -48,8 +48,8 @@ namespace MVCApplication
             
             app.MapControllerRoute(
                 name: "default",
-                pattern: "{controller=OneRingToRuleThemAll}/{action=Index}/{id?}");
-
+                pattern: "{controller=Home}/{action=Index}/{id?}"
+            );
             app.Run();
         }
     }
