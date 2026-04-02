@@ -40,6 +40,8 @@ namespace MVCApplication.Controllers
                 returnUrl
             );
         }
+        protected async Task<IActionResult> Ring(string view, bool? reqauth = null, string? table = null, string? title = null, string? returnurl = null, bool? requireadmin = null, AndInTheDarknessBindThem? passedparam = null, List<int>? id = null, string? action = null, string? email = null, string? username = null, string? fullname = null, string? password = null) =>
+            reqauth == null ? View(view, Build(table ?? "Not set", title ?? "Not set", returnUrl: returnurl ?? null)) : requireadmin != null ? new Func<IActionResult>(() => { return (View(view)); }) () :
 
         protected IActionResult? Guard(bool requireAdmin = false)
         {
