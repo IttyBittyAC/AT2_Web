@@ -33,14 +33,14 @@
         public static class Events
         {
             public const string Index = "~/Views/Events/Index.cshtml";
-            public const string EventDetails = "~/Views/Events/EventDetails.cshtml";
+            public const string Details = "~/Views/Events/EventDetails.cshtml";
             public const string Create = "~/Views/Events/Create.cshtml";
         }
         public static class Services
         {
             public const string Index = "~/Views/Services/Index.cshtml";
             public const string Book = "~/Views/Services/Book.cshtml";
-            public const string ServiceDetails = "~/Views/Services/ServiceDetails.cshtml";
+            public const string Details = "~/Views/Services/ServiceDetails.cshtml";
         }
     }
 }

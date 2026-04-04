@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MVCApplication.Data;
+using MVCApplication.Models;
 using static MVCApplication.Helpers.V;
 
 namespace MVCApplication.Controllers
@@ -11,110 +12,47 @@ namespace MVCApplication.Controllers
         }
 
         [HttpGet("/Account/Register")]
-        public IActionResult Register(string? returnUrl = null)
-        {
-            if (IsAuth)
-            {
-                return RedirectToAction("Index", "Home");
-            }
-
-            var model = Build(returnUrl: returnUrl);
-            return View(Account.Register, model);
-        }
+        public IActionResult Register(string? returnurl = null) => IsAuth ? RedirectToAction("Index", "Home") : View(Account.Register, Build("users", "Register", returnUrl: returnurl));
 
         [HttpPost("/Account/Register")]
-        public async Task<IActionResult> Register(
+        public Task<IActionResult> Register(
             string password,
             string email,
             string username,
             string fullname,
             string? returnUrl = null,
-            string? adminPassword = null)
-        {
-            string placeholderPass = "test";
-            string role = "user";
-
-            if (!string.IsNullOrEmpty(adminPassword))
-            {
-                if (adminPassword.ToLower().Trim() == placeholderPass)
-                {
-                    role = "admin";
-                }
-            }
-
-            if (string.IsNullOrEmpty(email) ||
-                string.IsNullOrEmpty(password) ||
-                string.IsNullOrEmpty(fullname) ||
-                string.IsNullOrEmpty(username))
-            {
-                var invalidModel = Build(returnUrl: returnUrl);
-                invalidModel.Error = "Fields Required";
-                return View(Account.Register, invalidModel);
-            }
-
-            var register = await _db.Register(password, email, username, fullname, role);
-
-            if (register == null)
-            {
-                var errorModel = Build(returnUrl: returnUrl);
-                errorModel.Error = "Cannot Register";
-                return View(Account.Register, errorModel);
-            }
-
-            return RedirectToAction("Login");
-        }
+            string? adminPassword = null) =>
+            string.IsNullOrEmpty(email) ||
+            string.IsNullOrEmpty(password) ||
+            string.IsNullOrEmpty(username) ||
+            string.IsNullOrEmpty(fullname)
+            ? GraveMind(Account.Register, "users", "Register",
+                populate: async m => { m.Error = "All Fields are required"; await Task.CompletedTask; })
+            : GraveMind(Account.Register, "users", "Register", 
+                save: async () => await _db.Register(password, email, username, fullname, !string.IsNullOrEmpty(adminPassword) && adminPassword.ToLower().Trim() == "test" ? "admin" : "user") != null, validMsg: "Registered completed", redirct: () => RedirectToAction("Login"), errorMsg: "Cannot Register");
+        
 
         [HttpGet("/Account/Login")]
-        public IActionResult Login(string? returnUrl = null)
-        {
-            if (IsAuth)
-            {
-                return RedirectToAction("Index", "Home");
-            }
+        public IActionResult Login(string? returnUrl = null) => IsAuth ? RedirectToAction("Index", "Home") : View(Account.Login, Build(returnUrl: returnUrl));
 
-            var model = Build(returnUrl: returnUrl);
-            return View(Account.Login, model);
-        }
 
         [HttpPost("/Account/Login")]
-        public async Task<IActionResult> Login(string password, string email, string? returnUrl = null)
-        {
-            if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(password))
-            {
-                var invalidModel = Build(returnUrl: returnUrl);
-                invalidModel.Error = "Email and password required.";
-                return View(Account.Login, invalidModel);
-            }
-
-            var user = await _db.Login(password, email);
-
-            if (user == null)
-            {
-                var errorModel = Build(returnUrl: returnUrl);
-                errorModel.Error = "Invalid Login.";
-                return View(Account.Login, errorModel);
-            }
-
-            HttpContext.Session.SetString("user", user.Email ?? "");
-            HttpContext.Session.SetString("role", user.Role ?? "");
-
-            if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
-            {
-                return Redirect(returnUrl);
-            }
-
-            return RedirectToAction("Index", "Home");
-        }
+        public async Task<IActionResult> Login(string password, string email, string? returnurl = null) => string.IsNullOrEmpty(email) || string.IsNullOrEmpty(password)
+            ? View(Account.Login, new Func<AndInTheDarknessBindThem>(() => { var m = Build(returnUrl: returnurl); m.Error = "Email and Password Required"; return m; })())
+            : await _db.Login(password, email) is { } user
+                ? new Func<IActionResult>(() => {
+                    HttpContext.Session.SetString("user", user.Email ?? "");
+                    HttpContext.Session.SetString("role", user.Role ?? "");
+                    return !string.IsNullOrEmpty(returnurl) && Url.IsLocalUrl(returnurl) ? Redirect(returnurl) : RedirectToAction("Index", "Home");
+                })() 
+                : View(Account.Login, new Func<AndInTheDarknessBindThem>(() => { 
+                    var m = Build(returnUrl: returnurl); 
+                    m.Error = "Login Invalid";
+                    return m; })()); 
 
         [HttpPost("/Account/Logout")]
         public IActionResult Logout()
         {
-            IActionResult? redirect = Guard();
-            if (redirect != null)
-            {
-                return redirect;
-            }
-
             HttpContext.Session.Clear();
             return RedirectToAction("Login");
         }
