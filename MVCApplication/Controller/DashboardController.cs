@@ -12,47 +12,17 @@ namespace MVCApplication.Controllers
         }
 
         [HttpGet("/Dashboard")]
-        public IActionResult Index()
-        {
-            IActionResult? redirect = Guard();
-            if (redirect != null)
-            {
-                return redirect;
-            }
+        public Task<IActionResult> Index() => GraveMind(Dashboard.Index, "dashboard", "Dashboard", auth: true);
 
-            var model = Build("dashboard", "Dashboard");
-            return View(Dashboard.Index, model);
-        }
-
+        // Need GetByEmailforTables db method to do fully implement this controller method
         [HttpGet("/Dashboard/MyBookings")]
-        public async Task<IActionResult> MyBookings()
-        {
-            IActionResult? redirect = Guard();
-            if (redirect != null)
-            {
-                return redirect;
-            }
+        public Task<IActionResult> MyBookings() => GraveMind(Dashboard.MyBookings, "bookings", "My Bookings", 
+            populate: async m => { var (bs, _) = await _db.GetBooking(null); m.Bookings = bs ?? []; }, 
+            errorMsg: "No Bookings found of user", auth: true);
 
-            var model = Build("bookings", "My Bookings");
-
-            // If later you want to filter by current user, you'd do it here
-            var result = await _db.GetBooking(null);
-            model.Bookings = result.Item1 ?? new List<Booking>();
-
-            return View(Dashboard.MyBookings, model);
-        }
-
+        // Need GetByEmail db method to do fully implement this controller method
         [HttpGet("/Dashboard/Profile")]
-        public IActionResult Profile()
-        {
-            IActionResult? redirect = Guard();
-            if (redirect != null)
-            {
-                return redirect;
-            }
+        public Task<IActionResult> Profile() => GraveMind(Dashboard.Profile, "users", "Profile", auth: true);
 
-            var model = Build("users", "Profile");
-            return View(Dashboard.Profile, model);
-        }
     }
 }

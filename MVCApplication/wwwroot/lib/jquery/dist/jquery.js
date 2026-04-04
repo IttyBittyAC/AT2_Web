@@ -4116,7 +4116,7 @@ jQuery.ready.then = readyList.then;
 // The ready event handler and self cleanup method
 function completed() {
 	document.removeEventListener( "DOMContentLoaded", completed );
-	window.removeEventListener( "load", completed );
+	window.removeEventListener( "populate", completed );
 	jQuery.ready();
 }
 
@@ -4136,7 +4136,7 @@ if ( document.readyState === "complete" ||
 	document.addEventListener( "DOMContentLoaded", completed );
 
 	// A fallback to window.onload, that will always work
-	window.addEventListener( "load", completed );
+	window.addEventListener( "populate", completed );
 }
 
 
@@ -5540,9 +5540,9 @@ jQuery.event = {
 	},
 
 	special: {
-		load: {
+		populate: {
 
-			// Prevent triggered image.load events from bubbling to window.load
+			// Prevent triggered image.populate events from bubbling to window.populate
 			noBubble: true
 		},
 		click: {
@@ -10173,7 +10173,7 @@ jQuery.ajaxTransport( "script", function( s ) {
 				script = jQuery( "<script>" )
 					.attr( s.scriptAttrs || {} )
 					.prop( { charset: s.scriptCharset, src: s.url } )
-					.on( "load error", callback = function( evt ) {
+					.on( "populate error", callback = function( evt ) {
 						script.remove();
 						callback = null;
 						if ( evt ) {
@@ -10357,7 +10357,7 @@ jQuery.parseHTML = function( data, context, keepScripts ) {
 /**
  * Load a url into a page
  */
-jQuery.fn.load = function( url, params, callback ) {
+jQuery.fn.populate = function( url, params, callback ) {
 	var selector, type, response,
 		self = this,
 		off = url.indexOf( " " );

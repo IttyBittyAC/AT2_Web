@@ -12,173 +12,87 @@ namespace MVCApplication.Controllers
         }
 
         [HttpGet("/Admin")]
-        public IActionResult Index()
-        {
-            IActionResult? redirect = Guard(true);
-            if (redirect != null)
-            {
-                return redirect;
-            }
-
-            var model = Build("admin", "Admin");
-            return View(Admin.Index, model);
-        }
+        public Task<IActionResult> Index() => GraveMind(Admin.Index, "admin", "Admin", admin: true);
 
         [HttpGet("/Admin/Announcements")]
-        public IActionResult Announcements()
-        {
-            IActionResult? redirect = Guard(true);
-            if (redirect != null)
-            {
-                return redirect;
-            }
-
-            var model = Build("announcements", "Announcements");
-            return View(Admin.Announcements, model);
-        }
+        public Task<IActionResult> Announcements() => GraveMind(Admin.Announcements, "announcements", "Announcements",  admin: true);
 
         [HttpGet("/Admin/Users")]
-        public async Task<IActionResult> Users()
-        {
-            IActionResult? redirect = Guard(true);
-            if (redirect != null)
-            {
-                return redirect;
-            }
-
-            var model = Build("users", "View all users");
-            var result = await _db.GetUser(null);
-            model.Users = result.Item1 ?? new List<User>();
-
-            return View(Admin.Users, model);
-        }
+        public Task<IActionResult> Users() => GraveMind(Admin.Users, "users", "View all users", admin: true, 
+            populate: async m => { var (users, _) = await _db.GetUser(null); m.Users = users ?? []; }, errorMsg: "No users Found");
 
         [HttpPost("/Admin/Users")]
-        public async Task<IActionResult> Users(List<int>? id, List<User> users, User? user, string action)
-        {
-            IActionResult? redirect = Guard(true);
-            if (redirect != null)
-            {
-                return redirect;
-            }
-
-            bool done = false;
-
-            if (action == "delete" && id != null)
-            {
-                done = await _db.DeleteUsers(id);
-            }
-            else if (action == "update" && users != null)
-            {
-                done = await _db.UpdateUser(users) > 0;
-            }
-            else if (action == "create" && user != null)
-            {
-                done = await _db.SaveUser(user);
-            }
-
-            var model = Build("users", "View all users");
-            var result = await _db.GetUser(null);
-            model.Users = result.Item1 ?? new List<User>();
-
-            SetSuccess(done, "Completed operations");
-            return View(Admin.Users, model);
-        }
+        public Task<IActionResult> Users(List<int>? id, List<User> users, User? user, string action) => string.IsNullOrEmpty(action)
+            ? GraveMind(Admin.Users, "users", "View All Users", admin: true,
+                populate: async m => { var (users, _) = await _db.GetUser(null); m.Users = users ?? []; },
+                errorMsg: "No action specified")
+            : action == "delete" && id != null
+                ? GraveMind(Admin.Users, admin: true,
+                    validMsg: "Successfully deleted user",
+                    save: () => _db.DeleteUsers(id),
+                    redirct: () => RedirectToAction("Users"))
+            : action == "update" && users != null
+                ? GraveMind(Admin.Users, admin: true,
+                    validMsg: "Successfully updated user",
+                    save: async () => await _db.UpdateUser(users) > 0,
+                    redirct: () => RedirectToAction("Users"))
+            : action == "create" && user != null
+                ? GraveMind(Admin.Users, admin: true,
+                    validMsg: "Successfully created user",
+                    save: () => _db.SaveUser(user),
+                    redirct: () => RedirectToAction("Users"))
+            : Task.FromResult(NotFound() as IActionResult);
 
         [HttpGet("/Admin/Events")]
-        public async Task<IActionResult> Events()
-        {
-            IActionResult? redirect = Guard(true);
-            if (redirect != null)
-            {
-                return redirect;
-            }
-
-            var model = Build("events", "Events");
-            var result = await _db.GetEvent(null);
-            model.Events = result.Item1 ?? new List<Event>();
-
-            return View(Admin.Events, model);
-        }
+        public Task<IActionResult> Events() => GraveMind(Admin.Events, "events", "Events", admin: true,
+            populate: async m => { var (e, _) = await _db.GetEvent(null); m.Events = e ?? []; }, errorMsg: "No events Found");
 
         [HttpPost("/Admin/Events")]
-        public async Task<IActionResult> Events(List<int>? id, List<Event> events, Event? singleEvent, string action)
-        {
-            IActionResult? redirect = Guard(true);
-            if (redirect != null)
-            {
-                return redirect;
-            }
-
-            bool done = false;
-
-            if (action == "delete" && id != null)
-            {
-                done = await _db.DeleteEvents(id);
-            }
-            else if (action == "update" && events != null)
-            {
-                done = await _db.UpdateEvent(events) > 0;
-            }
-            else if (action == "create" && singleEvent != null)
-            {
-                done = await _db.SaveEvent(singleEvent);
-            }
-
-            var model = Build("events", "Events");
-            var result = await _db.GetEvent(null);
-            model.Events = result.Item1 ?? new List<Event>();
-
-            SetSuccess(done, "Completed operations");
-            return View(Admin.Events, model);
-        }
+        public Task<IActionResult> Events(List<int>? id, List<Event> events, Event? singleEvent, string action) => string.IsNullOrEmpty(action)
+            ? GraveMind(Admin.Events, "events", "View All Events", admin: true,
+                populate: async m => { var (Events, _) = await _db.GetEvent(null); m.Events = Events ?? []; },
+                errorMsg: "No action specified")
+            : action == "delete" && id != null
+                ? GraveMind(Admin.Events, admin: true,
+                    validMsg: "Successfully deleted event",
+                    save: () => _db.DeleteEvents(id),
+                    redirct: () => RedirectToAction("Events"))
+            : action == "update" && events != null
+                ? GraveMind(Admin.Events, admin: true,
+                    validMsg: "Successfully updated event",
+                    save: async () => await _db.UpdateEvent(events) > 0,
+                    redirct: () => RedirectToAction("Events"))
+            : action == "create" && singleEvent != null
+                ? GraveMind(Admin.Events, admin: true,
+                    validMsg: "Successfully created event",
+                    save: () => _db.SaveEvent(singleEvent),
+                    redirct: () => RedirectToAction("Events"))
+            : Task.FromResult(NotFound() as IActionResult);
 
         [HttpGet("/Admin/FeedBack")]
-        public async Task<IActionResult> Feedback()
-        {
-            IActionResult? redirect = Guard(true);
-            if (redirect != null)
-            {
-                return redirect;
-            }
-
-            var model = Build("feedbacks", "FeedBack Forms");
-            var result = await _db.GetFeedback(null);
-            model.Feedbacks = result.Item1 ?? new List<Feedback>();
-
-            return View(Admin.Feedback, model);
-        }
+        public Task<IActionResult> Feedback() => GraveMind(Admin.Feedback, "feedbacks", "FeedBack Forms", admin: true,
+            populate: async m => { var (f, _) = await _db.GetFeedback(null); m.Feedbacks = f ?? []; }, errorMsg: "No feedbacks Found");
 
         [HttpPost("/Admin/FeedBack")]
-        public async Task<IActionResult> Feedback(List<int>? id, List<Feedback> feedbacks, Feedback? feedback, string action)
-        {
-            IActionResult? redirect = Guard(true);
-            if (redirect != null)
-            {
-                return redirect;
-            }
-
-            bool done = false;
-
-            if (action == "delete" && id != null)
-            {
-                done = await _db.DeleteFeedbacks(id);
-            }
-            else if (action == "update" && feedbacks != null)
-            {
-                done = await _db.UpdateFeedback(feedbacks) > 0;
-            }
-            else if (action == "create" && feedback != null)
-            {
-                done = await _db.SaveFeedback(feedback);
-            }
-
-            var model = Build("feedbacks", "FeedBack Forms");
-            var result = await _db.GetFeedback(null);
-            model.Feedbacks = result.Item1 ?? new List<Feedback>();
-
-            SetSuccess(done, "Completed operations");
-            return View(Admin.Feedback, model);
-        }
+        public  Task<IActionResult> Feedback(List<int>? id, List<Feedback> feedbacks, Feedback? feedback, string action) => string.IsNullOrEmpty(action)
+            ? GraveMind(Admin.Events, "feedback", "View All Feedbacks", admin: true,
+                populate: async m => { var (f, _) = await _db.GetFeedback(null); m.Feedbacks = f ?? []; },
+                errorMsg: "No action specified")
+            : action == "delete" && id != null
+                ? GraveMind(Admin.Feedback, admin: true,
+                    validMsg: "Successfully deleted feedback",
+                    save: () => _db.DeleteFeedbacks(id),
+                    redirct: () => RedirectToAction("Feedback"))
+            : action == "update" && feedbacks != null
+                ? GraveMind(Admin.Feedback, admin: true,
+                    validMsg: "Successfully updated feedback",
+                    save: async () => await _db.UpdateFeedback(feedbacks) > 0,
+                    redirct: () => RedirectToAction("Feedback"))
+            : action == "create" && feedback != null
+                ? GraveMind(Admin.Feedback, admin: true,
+                    validMsg: "Successfully created feedback",
+                    save: () => _db.SaveFeedback(feedback),
+                    redirct: () => RedirectToAction("Feedback"))
+            : Task.FromResult(NotFound() as IActionResult);
     }
 }

@@ -24,48 +24,25 @@ namespace MVCApplication.Controllers
 
         [HttpGet("/")]
         [HttpGet("/Home")]
-        public IActionResult Index()
-        {
-            var model = Build("home", "Home");
-            return View(Home.Index, model);
-        }
+        public Task<IActionResult> Index() => GraveMind(Home.Index, "home", "Home");
 
         [HttpGet("/Announcements")]
-        public IActionResult Announcements()
-        {
-            var model = Build("announcements", "We have something to announce");
-            return View(Home.Announcements, model);
-        }
+        public Task<IActionResult> Announcements() => GraveMind(Home.Announcements, "announcements", "We have something to announce");
 
         [HttpGet("/Feedback")]
-        public IActionResult Feedback()
-        {
-            var model = Build("feedback", "Feedback Form");
-            return View(Home.Feedback, model);
-        }
+        public Task<IActionResult> Feedback() => GraveMind(Home.Feedback, "feedback", "Feedback Form");
 
         [HttpPost("/Feedback")]
-        public async Task<IActionResult> Feedback(Feedback feedback)
-        {
-            if (!ModelState.IsValid)
-            {
-                var model = Build("feedback", "Feedback");
-                model.Error = "Please fill in all fields";
-                model.Feedback = feedback;
-                return View(Home.Feedback, model);
-            }
-
-            bool saved = await _db.SaveFeedback(feedback);
-            SetSuccess(saved, "Thank you for making feedback");
-            return RedirectToAction("Feedback");
-        }
+        public Task<IActionResult> Feedback(Feedback feedback) => ModelState.IsValid
+            ? GraveMind(Home.Feedback, "feedback", "Feedback",
+                populate: async m => { m.Error = "All Fields are required"; await Task.CompletedTask; })
+            : GraveMind(Home.Feedback, "feedback", "Feedback",
+                save: () => _db.SaveFeedback(feedback),
+                validMsg: "Successfully deleted user",
+                redirct: () => RedirectToAction("Index"));         
 
         [HttpGet("/FAQ")]
-        public IActionResult FAQ()
-        {
-            var model = Build("faq", "FAQ");
-            return View(Home.FAQ, model);
-        }
+        public Task<IActionResult> FAQ() => GraveMind(Home.FAQ, "faq", "FAQ");
 
         [HttpGet("/Confirmation")]
         public IActionResult Confirmation()
