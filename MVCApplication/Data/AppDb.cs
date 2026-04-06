@@ -238,6 +238,27 @@ namespace MVCApplication.Data
             }
         }
 
+        public async Task<(List<Booking>?, Booking?)> GetBookingByEmail(string? email)
+        {
+            try
+            {
+                using var c = new SqliteConnection(_conn);
+
+                // Return bookings by email
+                return ((await c.QueryAsync<Booking>("SELECT * FROM bookings WHERE email = @Email ORDER BY date ASC", new { Email = email })).ToList(), null);
+            }
+            catch (SqliteException ex)
+            {
+                _logger.LogError(ex, "Database error during GetBookingByEmail for {Email}", email);
+                return (null, null);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Unexpected error during GetBookingByEmail for {Email}", email);
+                throw;
+            }
+        }
+
         public async Task<(List<Feedback>?, Feedback?)> GetFeedback(int? id)
         {
             try
