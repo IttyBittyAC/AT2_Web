@@ -25,15 +25,50 @@ namespace MVCApplication.Controllers
         [HttpGet("/Dashboard")]
         public Task<IActionResult> Index() => GraveMind(Dashboard.Index, "dashboard", "Dashboard", auth: true);
 
-        // Need GetBookingByEmail db method to do fully implement this controller method
+        // Using the GetBookingByEmail db method to fetch user-specific bookings for the My Bookings view
         [HttpGet("/Dashboard/MyBookings")]
-        public Task<IActionResult> MyBookings() => GraveMind(Dashboard.MyBookings, "bookings", "My Bookings", 
-            populate: async m => { var (bs, _) = await _db.GetBooking(null); m.Bookings = bs ?? []; }, 
-            errorMsg: "No Bookings found of user", auth: true);
+        public Task<IActionResult> MyBookings() => GraveMind(
+            Dashboard.MyBookings,
+            "bookings",
+            "My Bookings",
+            populate: async m =>
+            {
+                var email = User.Identity?.Name;
+
+                if (string.IsNullOrEmpty(email))
+                {
+                    m.Bookings = [];
+                    return;
+                }
+
+                var (bs, _) = await _db.GetBookingByEmail(email);
+                m.Bookings = bs ?? [];
+            },
+            errorMsg: "No Bookings found of user",
+            auth: true
+        );
 
         // Using the GetUserByEmail db method to fetch user details for the profile view
         [HttpGet("/Dashboard/Profile")]
-        public Task<IActionResult> Profile() => GraveMind(Dashboard.Profile, "users", "Profile", auth: true);
+        public Task<IActionResult> Profile() => GraveMind(
+            Dashboard.Profile,
+            "users",
+            "Profile",
+            populate: async m =>
+            {
+                var email = User.Identity?.Name;
 
+                if (string.IsNullOrEmpty(email))
+                {
+                    m.User = null;
+                    return;
+                }
+
+                var (_, user) = await _db.GetUserByEmail(email);
+                m.User = user;
+            },
+            errorMsg: "User not found",
+            auth: true
+        );
     }
 }
