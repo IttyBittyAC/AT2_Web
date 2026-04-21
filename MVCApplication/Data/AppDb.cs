@@ -20,10 +20,10 @@ namespace MVCApplication.Data
         {
             try
             {
-                using var c = new SqliteConnection(_conn);
+                using SqliteConnection c = new SqliteConnection(_conn);
 
                 // Fetch user by email
-                var user = await c.QueryFirstOrDefaultAsync<User>(
+                User? user = await c.QueryFirstOrDefaultAsync<User>(
                     "SELECT * FROM users WHERE email = @email",
                     new { email });
 

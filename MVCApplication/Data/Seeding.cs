@@ -15,8 +15,8 @@ namespace MVCApplication.Data
             var exist = await s.ExecuteScalarAsync<int>("select count(1) from users where role = 'admin'");
             if (exist > 0) return;
 
-            // hashing the password should be done properly in a real application, this is just a placeholder
-            var hashedPassword = BCrypt.Net.BCrypt.HashPassword("admin123", workFactor: 12);
+            
+            var hashedPassword = BCrypt.Net.BCrypt.HashPassword("admin123");
             var id = await s.ExecuteScalarAsync<int>(@"insert into users(email, password_hash, username, fullname, role) values(@email, @hash, @username, @fullname, 'admin')  returning id",  new { email = "admin@example.com", hash = hashedPassword, username = "admin",fullname = "Admin User" });
         }
     }
