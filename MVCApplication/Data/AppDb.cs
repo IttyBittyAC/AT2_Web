@@ -90,12 +90,12 @@ namespace MVCApplication.Data
                 // Create tables if they do not exist
                 await con.ExecuteAsync(@"
                     CREATE TABLE IF NOT EXISTS users (
-                        id            integer primary key autoincrement,
-                        email         text unique not null,
-                        password_hash text not null,
-                        username      text not null,
-                        fullname      text not null,
-                        role          text not null default 'user',
+                        Id            integer primary key autoincrement,
+                        Email         text unique not null,
+                        PasswordHash  text not null,
+                        Username      text not null,
+                        FullName      text not null,
+                        Role          text not null default 'user',
                         created_at    datetime default current_timestamp
                     );
                     CREATE TABLE IF NOT EXISTS events (
@@ -298,12 +298,12 @@ namespace MVCApplication.Data
             }
             catch (SqliteException ex)
             {
-                _logger.LogError(ex, "Database error during SaveUser for email {Email}", user.Email);
+                _logger.LogError(ex, "Database error during SaveUser for email {Email}", user.email);
                 return false;
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Unexpected error during SaveUser for email {Email}", user.Email);
+                _logger.LogError(ex, "Unexpected error during SaveUser for email {Email}", user.email);
                 throw;
             }
         }
@@ -384,10 +384,10 @@ namespace MVCApplication.Data
                 foreach (User user in users)
                 {
                     List<string> sets = new List<string>();
-                    if (user.FullName is not null) sets.Add("fullname = @FullName");
-                    if (user.Email is not null) sets.Add("email = @Email");
-                    if (user.Role is not null) sets.Add("role = @Role");
-                    if (user.Username is not null) sets.Add("username = @Username");
+                    if (user.fullName is not null) sets.Add("fullname = @FullName");
+                    if (user.email is not null) sets.Add("email = @Email");
+                    if (user.role is not null) sets.Add("role = @Role");
+                    if (user.username is not null) sets.Add("username = @Username");
 
                     if (sets.Count == 0) continue; // No fields to update, skip this user
 

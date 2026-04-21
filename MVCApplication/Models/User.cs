@@ -19,7 +19,6 @@ namespace MVCApplication.Models
         [Display(Name = "Fullname")]
         public string? FullName { get; set; }
 
-
         [Required(ErrorMessage = "Email is required")]
         [EmailAddress(ErrorMessage = "Invalid email address")]
         [Display(Name = "Email")]
