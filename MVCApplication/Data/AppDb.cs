@@ -294,7 +294,9 @@ namespace MVCApplication.Data
                 using SqliteConnection con = new SqliteConnection(_conn);
                 
                 // Return true if at least one row was affected (i.e., user was inserted)
-                return await con.ExecuteAsync(@"INSERT INTO users(email , password_hash, username, fullname, role) VALUES (@email, @password_hash, @username, @fullname, @role)", user) > 0; 
+                return await c.ExecuteAsync(@"
+                    INSERT INTO users(email , password_hash, username, fullname, role) 
+                    VALUES (@Email, @PasswordHash, @Username, @FullName, @Role)", user) > 0; 
             }
             catch (SqliteException ex)
             {
