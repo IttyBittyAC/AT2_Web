@@ -294,18 +294,18 @@ namespace MVCApplication.Data
                 using SqliteConnection con = new SqliteConnection(_conn);
                 
                 // Return true if at least one row was affected (i.e., user was inserted)
-                return await c.ExecuteAsync(@"
-                    INSERT INTO users(email , password_hash, username, fullname, role) 
+                return await con.ExecuteAsync(@"
+                    INSERT INTO users(Email , PasswordHash, Username, FullName, Role) 
                     VALUES (@Email, @PasswordHash, @Username, @FullName, @Role)", user) > 0; 
             }
             catch (SqliteException ex)
             {
-                _logger.LogError(ex, "Database error during SaveUser for email {Email}", user.email);
+                _logger.LogError(ex, "Database error during SaveUser for email {Email}", user.Email);
                 return false;
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Unexpected error during SaveUser for email {Email}", user.email);
+                _logger.LogError(ex, "Unexpected error during SaveUser for email {Email}", user.Email);
                 throw;
             }
         }
@@ -386,10 +386,10 @@ namespace MVCApplication.Data
                 foreach (User user in users)
                 {
                     List<string> sets = new List<string>();
-                    if (user.fullName is not null) sets.Add("fullname = @FullName");
-                    if (user.email is not null) sets.Add("email = @Email");
-                    if (user.role is not null) sets.Add("role = @Role");
-                    if (user.username is not null) sets.Add("username = @Username");
+                    if (user.FullName is not null) sets.Add("FullName = @FullName");
+                    if (user.Email is not null) sets.Add("Email = @Email");
+                    if (user.Role is not null) sets.Add("Role = @Role");
+                    if (user.Username is not null) sets.Add("Username = @Username");
 
                     if (sets.Count == 0) continue; // No fields to update, skip this user
 
