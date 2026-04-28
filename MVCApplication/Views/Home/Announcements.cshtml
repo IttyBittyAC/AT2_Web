@@ -1,28 +1,104 @@
-﻿@{
+﻿@model MVCApplication.Models.AndInTheDarknessBindThem
+@{
     ViewData["Title"] = "Announcements";
 }
 
-<div>
-    <h1 style="text-align: center" class="AnnouncementHeading">Announcements</h1>
-    <div style="margin: 0 auto">
-        <details>
-            <summary>Brand new page added!</summary>
-            <div class="announcement-body">
-                whoop whoop
-            </div>
+<link rel="stylesheet" href="~/css/announcements.css" asp-append-version="true" />
 
-        </details>
-        <details>
-            <summary>Were doing things!</summary>
-            <div class="announcement-body">
-                made you look
+<div class="announcements-container">
+    <h1 class="AnnouncementHeading">Community Announcements</h1>
+    <p class="announcements-subtitle">Stay up to date with the latest news and updates from our community</p>
+
+    <div class="announcements-list">
+        <!-- Announcement 1 -->
+        <div class="announcement-card">
+            <div class="announcement-header">
+                <span class="announcement-badge announcement-badge-new">New</span>
+                <span class="announcement-date">April 28, 2026</span>
             </div>
-        </details>
-        <details>
-            <summary>brand new generic fill in information for announcements here</summary>
+            <h2 class="announcement-title">Welcome to Our New Community Portal!</h2>
             <div class="announcement-body">
-                ive run out of ideas
+                <p>
+                    We're excited to announce the launch of our brand new community portal! 
+                    This platform will help you stay connected with upcoming events, submit feedback, 
+                    and manage your community bookings all in one place.
+                </p>
+                <p>
+                    Explore the features available to you and don't hesitate to reach out if you 
+                    have any questions or suggestions.
+                </p>
             </div>
-        </details>
+        </div>
+
+        <!-- Announcement 2 -->
+        <div class="announcement-card">
+            <div class="announcement-header">
+                <span class="announcement-badge announcement-badge-important">Important</span>
+                <span class="announcement-date">April 20, 2026</span>
+            </div>
+            <h2 class="announcement-title">Upcoming Community Events</h2>
+            <div class="announcement-body">
+                <p>
+                    Several exciting community events are scheduled for the coming months! 
+                    Check out our Events page to see what's happening and register your interest.
+                </p>
+                <p>
+                    From workshops to social gatherings, there's something for everyone. 
+                    We look forward to seeing you there!
+                </p>
+            </div>
+        </div>
+
+        <!-- Announcement 3 -->
+        <div class="announcement-card">
+            <div class="announcement-header">
+                <span class="announcement-badge announcement-badge-info">Info</span>
+                <span class="announcement-date">April 15, 2026</span>
+            </div>
+            <h2 class="announcement-title">New Waste Management Services Available</h2>
+            <div class="announcement-body">
+                <p>
+                    We're pleased to offer expanded waste management services to better serve our community. 
+                    Visit our Waste Management page to learn about collection schedules, recycling guidelines, 
+                    and special disposal services.
+                </p>
+            </div>
+        </div>
+
+        <!-- Announcement 4 -->
+        <div class="announcement-card">
+            <div class="announcement-header">
+                <span class="announcement-badge announcement-badge-info">Info</span>
+                <span class="announcement-date">April 10, 2026</span>
+            </div>
+            <h2 class="announcement-title">Community Feedback Now Open</h2>
+            <div class="announcement-body">
+                <p>
+                    Your voice matters! We've launched a new feedback system where you can share 
+                    your thoughts, suggestions, and concerns with the community management team.
+                </p>
+                <p>
+                    <a href="/Feedback" class="announcement-link">Submit your feedback here →</a>
+                </p>
+            </div>
+        </div>
+
+        <!-- Announcement 5 -->
+        <div class="announcement-card">
+            <div class="announcement-header">
+                <span class="announcement-badge announcement-badge-general">General</span>
+                <span class="announcement-date">April 5, 2026</span>
+            </div>
+            <h2 class="announcement-title">FAQ Section Now Available</h2>
+            <div class="announcement-body">
+                <p>
+                    Have questions? Check out our newly added FAQ section for answers to common questions 
+                    about community services, booking procedures, and more.
+                </p>
+                <p>
+                    <a href="/FAQ" class="announcement-link">View FAQs →</a>
+                </p>
+            </div>
+        </div>
     </div>
 </div>
