@@ -1,3 +1,240 @@
-﻿@{
-    ViewData["Title"] = "Feedback";
+﻿@model MVCApplication.Models.AndInTheDarknessBindThem
+
+@{
+    ViewData["Title"] = "Admin - Feedback";
+    Layout = "_Layout";
 }
+
+<div class="container">
+    <h1 class="title has-text-centered">Feedback (Admin)</h1>
+
+    @if (!Model.IsAdmin)
+    {
+        <div class="notification is-danger">
+            You do not have permission to view this page.
+        </div>
+    }
+    else
+    {
+        @if (!string.IsNullOrEmpty(Model.Error))
+        {
+            <div class="notification is-danger">@Model.Error</div>
+        }
+        @if (!string.IsNullOrEmpty(Model.Success))
+        {
+            <div class="notification is-success">@Model.Success</div>
+        }
+
+        <section class="box">
+            <h2 class="subtitle">Create New Feedback</h2>
+            <form method="post" action="/Admin/FeedBack">
+                @Html.AntiForgeryToken()
+                <input type="hidden" name="action" value="create" />
+
+                <div class="field">
+                    <label class="label">Heading</label>
+                    <div class="control">
+                        <input class="input" type="text" name="feedback.Heading" placeholder="Short heading" maxlength="200" required />
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label class="label">Full name</label>
+                    <div class="control">
+                        <input class="input" type="text" name="feedback.FullName" placeholder="Your full name" maxlength="100" required />
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label class="label">Email</label>
+                    <div class="control">
+                        <input class="input" type="email" name="feedback.Email" placeholder="you@example.com" required />
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label class="label">Feedback type</label>
+                    <div class="control">
+                        <div class="select">
+                            <select name="feedback.Type" required>
+                                <option value="">Select type</option>
+                                <option>General</option>
+                                <option>Bug</option>
+                                <option>Feature Request</option>
+                                <option>Praise</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label class="label">Message</label>
+                    <div class="control">
+                        <textarea class="textarea" name="feedback.Message" placeholder="Tell us what's on your mind" minlength="10" maxlength="1000" required></textarea>
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label class="label">Date</label>
+                    <div class="control">
+                        <input class="input" type="datetime-local" name="feedback.Date" />
+                    </div>
+                </div>
+
+                <div class="field">
+                    <div class="control">
+                        <label class="checkbox">
+                            <input type="hidden" name="feedback.WantsContact" value="false" />
+                            <input type="checkbox" name="feedback.WantsContact" value="true" />
+                            Would you like us to contact you?
+                        </label>
+                    </div>
+                </div>
+
+                <div class="field is-grouped">
+                    <div class="control">
+                        <button type="submit" class="button is-primary">Create Feedback</button>
+                    </div>
+                    <div class="control">
+                        <button type="reset" class="button is-light">Reset</button>
+                    </div>
+                </div>
+            </form>
+        </section>
+
+        <section class="box">
+            <h2 class="subtitle">Manage Feedback</h2>
+
+            @if (Model.Feedbacks is null || !Model.Feedbacks.Any())
+            {
+                <div class="notification is-warning">No feedback entries available.</div>
+            }
+            else
+            {
+                <form method="post" action="/Admin/FeedBack">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" name="action" value="delete" />
+
+                    <table class="table is-fullwidth is-striped">
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th>Heading</th>
+                                <th>Full name</th>
+                                <th>Email</th>
+                                <th>Type</th>
+                                <th>Date</th>
+                                <th>Contact?</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @for (var i = 0; i < Model.Feedbacks.Count; i++)
+                            {
+                                var fb = Model.Feedbacks[i];
+                                <tr>
+                                    <td>
+                                        <input type="checkbox" name="id" value="@fb.Id" />
+                                    </td>
+                                    <td>@fb.Heading</td>
+                                    <td>@fb.FullName</td>
+                                    <td>@fb.Email</td>
+                                    <td>@fb.Type</td>
+                                    <td>@fb.Date.ToString("yyyy-MM-dd HH:mm")</td>
+                                    <td>@(fb.WantsContact ? "Yes" : "No")</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+
+                    <div class="field is-grouped">
+                        <div class="control">
+                            <button type="submit" class="button is-danger">Delete selected</button>
+                        </div>
+                    </div>
+                </form>
+
+                <hr />
+
+                <form method="post" action="/Admin/FeedBack">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" name="action" value="update" />
+
+                    @for (var i = 0; i < Model.Feedbacks.Count; i++)
+                    {
+                        var fb = Model.Feedbacks[i];
+                        <div class="box">
+                            <input type="hidden" name="feedbacks[@i].Id" value="@fb.Id" />
+
+                            <div class="field">
+                                <label class="label">Heading</label>
+                                <div class="control">
+                                    <input class="input" type="text" name="feedbacks[@i].Heading" value="@fb.Heading" maxlength="200" required />
+                                </div>
+                            </div>
+
+                            <div class="field">
+                                <label class="label">Full name</label>
+                                <div class="control">
+                                    <input class="input" type="text" name="feedbacks[@i].FullName" value="@fb.FullName" maxlength="100" required />
+                                </div>
+                            </div>
+
+                            <div class="field">
+                                <label class="label">Email</label>
+                                <div class="control">
+                                    <input class="input" type="email" name="feedbacks[@i].Email" value="@fb.Email" required />
+                                </div>
+                            </div>
+
+                            <div class="field">
+                                <label class="label">Feedback type</label>
+                                <div class="control">
+                                    <div class="select">
+                                        <select name="feedbacks[@i].Type" required>
+                                            <option value="">Select type</option>
+                                            <option selected="@(fb.Type == "General")">General</option>
+                                            <option selected="@(fb.Type == "Bug")">Bug</option>
+                                            <option selected="@(fb.Type == "Feature Request")">Feature Request</option>
+                                            <option selected="@(fb.Type == "Praise")">Praise</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="field">
+                                <label class="label">Message</label>
+                                <div class="control">
+                                    <textarea class="textarea" name="feedbacks[@i].Message" minlength="10" maxlength="1000" required>@fb.Message</textarea>
+                                </div>
+                            </div>
+
+                            <div class="field">
+                                <label class="label">Date</label>
+                                <div class="control">
+                                    <input class="input" type="datetime-local" name="feedbacks[@i].Date" value="@(fb.Date.ToString("yyyy-MM-ddTHH:mm"))" />
+                                </div>
+                            </div>
+
+                            <div class="field">
+                                <div class="control">
+                                    <label class="checkbox">
+                                        <input type="hidden" name="feedbacks[@i].WantsContact" value="false" />
+                                        <input type="checkbox" name="feedbacks[@i].WantsContact" value="true" @(fb.WantsContact ? "checked" : "") />
+                                        Would like contact
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    }
+
+                    <div class="field is-grouped">
+                        <div class="control">
+                            <button type="submit" class="button is-primary">Save updates</button>
+                        </div>
+                    </div>
+                </form>
+            }
+            <p class="help">Next: ensure feedback storage and CRUD methods exist in <code>AppDb</code> and that the AdminController POST/GET handlers persist and load feedback entries.</p>
+        </section>
+    }
+</div>
