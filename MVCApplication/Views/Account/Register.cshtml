@@ -1,14 +1,28 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@model MVCApplication.Models.AndInTheDarknessBindThem
 @{
     ViewData["Title"] = "Register Account";
-
 }
 
 <div>
     <h2 class="RegisterHeading">Register</h2>
-    <input type="text" name="username" placeholder="Username" />
-    <input type="password" name="password" placeholder="Password" />
-    <button type="button">Register</button>
+
+    @if (!string.IsNullOrEmpty(Model.Error))
+    {
+        <div class="alert alert-danger">@Model.Error</div>
+    }
+
+    <form method="post" action="/Account/Register">
+        <input type="text" name="fullname" placeholder="Full Name" required />
+        <input type="text" name="username" placeholder="Username" required />
+        <input type="email" name="email" placeholder="Email" required />
+        <input type="password" name="password" placeholder="Password" required />
+        <input type="password" name="adminPassword" placeholder="Admin Password (optional)" />
+
+        @if (!string.IsNullOrEmpty(Model.ReturnUrl))
+        {
+            <input type="hidden" name="returnUrl" value="@Model.ReturnUrl" />
+        }
+
+        <button type="submit">Register</button>
+    </form>
 </div>
