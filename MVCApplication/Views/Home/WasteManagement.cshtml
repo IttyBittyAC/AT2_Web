@@ -1,5 +1,166 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
+﻿@{
+    ViewData["Title"] = "Waste Management Services";
 }
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/waste-management.css" asp-append-version="true" />
+}
+
+<div class="waste-container">
+    <!-- Header -->
+    <div class="waste-header">
+        <h1 class="waste-title">🗑️ Waste Management Services 🗑️</h1>
+        <p class="waste-subtitle">"We Make Your Problems Disappear"</p>
+        <p class="tagline">Professional. Discreet. No Questions Asked.</p>
+    </div>
+
+    <!-- Services Grid -->
+    <div class="services-grid">
+        <!-- Service 1 -->
+        <div class="service-card">
+            <div class="service-icon">🚛</div>
+            <h3 class="service-title">Standard Collection</h3>
+            <p class="service-description">
+                Weekly pickup of your... "household items." Our professionals ensure everything
+                is handled with the utmost discretion. Rain or shine, we're always on time.
+            </p>
+            <p class="service-note">
+                Note: Recommended for small to medium-sized "projects."
+            </p>
+        </div>
+
+        <!-- Service 2 -->
+        <div class="service-card">
+            <div class="service-icon">🌙</div>
+            <h3 class="service-title">After-Hours Service</h3>
+            <p class="service-description">
+                Sometimes things need to be taken care of when the neighbors aren't watching.
+                Our late-night crew specializes in quiet, efficient operations.
+            </p>
+            <p class="service-note">
+                Note: Available 11 PM - 4 AM. Premium rates apply.
+            </p>
+        </div>
+
+        <!-- Service 3 -->
+        <div class="service-card">
+            <div class="service-icon">♻️</div>
+            <h3 class="service-title">"Recycling" Program</h3>
+            <p class="service-description">
+                We believe in giving things a second life. Our recycling program ensures
+                materials are thoroughly... "repurposed." Very thoroughly.
+            </p>
+            <p class="service-note">
+                Note: Some items may be "recycled" beyond recognition.
+            </p>
+        </div>
+
+        <!-- Service 4 -->
+        <div class="service-card">
+            <div class="service-icon">🔥</div>
+            <h3 class="service-title">Special Disposal</h3>
+            <p class="service-description">
+                For those items that need extra care. We have specialized facilities that
+                guarantee complete and total... satisfaction.
+            </p>
+            <p class="service-note">
+                Note: We don't talk about this one. You know why.
+            </p>
+        </div>
+
+        <!-- Service 5 -->
+        <div class="service-card">
+            <div class="service-icon">🤐</div>
+            <h3 class="service-title">Discretion Package</h3>
+            <p class="service-description">
+                Our premium service includes unmarked vehicles, no paperwork trail, and
+                staff who "didn't see nothin'." Perfect for sensitive situations.
+            </p>
+            <p class="service-note">
+                Note: Cash only. Receipts? What receipts?
+            </p>
+        </div>
+
+        <!-- Service 6 -->
+        <div class="service-card">
+            <div class="service-icon">📦</div>
+            <h3 class="service-title">Bulk Removal</h3>
+            <p class="service-description">
+                Got a big job? We've handled bigger. Our industrial equipment can make
+                anything disappear. And we mean anything.
+            </p>
+            <p class="service-note">
+                Note: No job too big. Seriously. Try us.
+            </p>
+        </div>
+    </div>
+
+    <!-- Warning Box -->
+    <div class="warning-box">
+        <h3>⚠️ Important Reminder</h3>
+        <p>All services are provided in compliance with... "our standards."</p>
+        <p>If you didn't see us, we weren't here. Capisce?</p>
+    </div>
+
+    <!-- Testimonials -->
+    <div class="testimonial-section">
+        <h2>What Our Clients Say</h2>
+
+        <div class="testimonial">
+            <p class="testimonial-text">
+                "I had a problem that needed to disappear. One call, and poof - like it never existed.
+                These guys are professionals."
+            </p>
+            <p class="testimonial-author">- Tony S., satisfied customer</p>
+        </div>
+
+        <div class="testimonial">
+            <p class="testimonial-text">
+                "Fast, clean, and most importantly - quiet. Didn't even wake the neighbors.
+                I sleep better at night knowing they're just a phone call away."
+            </p>
+            <p class="testimonial-author">- Paulie W., recurring client</p>
+        </div>
+
+        <div class="testimonial">
+            <p class="testimonial-text">
+                "They took care of my 'situation' with such professionalism. No mess, no fuss,
+                no evidence. Highly recommended for delicate matters."
+            </p>
+            <p class="testimonial-author">- Vinny "The Hammer" D.</p>
+        </div>
+    </div>
+
+    <!-- Contact Section -->
+    <div class="contact-section">
+        <h2>Get in Touch (Discreetly)</h2>
+
+        <div class="contact-grid">
+            <div class="contact-card">
+                <h3>Emergency Hotline</h3>
+                <p>For urgent "situations"</p>
+                <p class="emphasis">555-DISPOSE</p>
+                <p><small>(Available 24/7, operators standing by)</small></p>
+            </div>
+
+            <div class="contact-card">
+                <h3>Main Office</h3>
+                <p>Behind the laundromat on 5th</p>
+                <p class="emphasis">Ask for Sal</p>
+                <p><small>(Knock three times)</small></p>
+            </div>
+
+            <div class="contact-card">
+                <h3>Business Hours</h3>
+                <p>Regular: 9 AM - 5 PM</p>
+                <p>After Hours: <span class="emphasis">Anytime</span></p>
+                <p><small>(We're always watching... err, available)</small></p>
+            </div>
+        </div>
+
+        <p style="text-align: center; margin-top: 30px; color: #7f8c8d; font-style: italic;">
+            Remember: We don't talk about what we see. You don't talk about what we do.
+            It's a beautiful relationship. 🤝
+        </p>
+    </div>
+</div>
