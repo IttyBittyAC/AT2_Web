@@ -14,28 +14,26 @@ html {
 
 html {
   position: relative;
-  min-height: 100%;
+  min-height: 100vh;
 }
 
 body {
-  margin-bottom: 60px;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
 }
 
-/* Remove Bootstrap container restriction if applied */
+/* Make main content area grow to push footer down */
 .container {
-    max-width: 100% !important;
-    padding-left: 0;
-    padding-right: 0;
-}
-
-/* Make page fill full height */
-html, body {
-    height: 100%;
-    margin: 0;
+  flex: 1;
+  max-width: 100% !important;
+  padding-left: 0;
+  padding-right: 0;
 }
 
 .home-wrapper {
-    min-height: calc(100vh - 120px); /* adjust if navbar/footer height differs */
+    min-height: auto;
     display: flex;
     flex-direction: column;
 }
@@ -52,7 +50,7 @@ html, body {
     display: flex;
     gap: 40px;
     padding: 0 40px;
-    flex: 1; /* pushes contact to bottom */
+    flex: 1;
 }
 
 /* Cards */

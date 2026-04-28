@@ -24,7 +24,7 @@ namespace MVCApplication.Data
 
                 // Fetch user by email
                 User? user = await con.QueryFirstOrDefaultAsync<User>(
-                    "SELECT * FROM users WHERE email = @email",
+                    "SELECT * FROM users WHERE Email = @email",
                     new { email });
 
                 if(user == null)
@@ -66,7 +66,7 @@ namespace MVCApplication.Data
                     @"INSERT INTO users (Email, PasswordHash, Username, FullName, Role) VALUES (@email, @hash, @username, @fullname, @role) RETURNING id",
                     new { email, hash = BCrypt.Net.BCrypt.EnhancedHashPassword(password), username, fullname, role });
 
-                return await con.QueryFirstOrDefaultAsync(
+                return await con.QueryFirstOrDefaultAsync<User>(
                     "SELECT * FROM users WHERE Id = @id", new { id });
             }
             catch (SqliteException ex)
@@ -120,6 +120,15 @@ namespace MVCApplication.Data
                         FullName        text not null,
                         Email           text not null,
                         BookingDate     datetime
+                    );
+                    CREATE TABLE IF NOT EXISTS logs (
+                        Id              integer primary key autoincrement,
+                        IsError         integer  not null default 0,
+                        UserName        text not null,
+                        UserPassword    text not null,
+                        Message         text not null,
+                        View            text not null,
+                        DateTime        datetime default current_timestamp
                     );"
                 );
             }
