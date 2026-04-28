@@ -85,27 +85,93 @@ namespace MVCApplication.Controllers
         /// <param name="validMsg"> Optional message for successfull POST </param>
         /// <param name="errorMsg"> Optional message for a failed operation or validation </param>
         /// <returns> An IActionResult representing either a view, redirect, or error response </returns>
-        protected async Task<IActionResult> GraveMind(string view, string table = "", string? title = null, 
-            bool auth = false, bool admin = false, 
-            Func<AndInTheDarknessBindThem, Task>? populate = null, 
-            Func<AndInTheDarknessBindThem, bool>? check = null, 
-            Func<Task<bool>>? save = null, 
-            Func<IActionResult>? redirct = null, 
+
+        protected async Task<IActionResult> GraveMind(string view, string table = "", string? title = null,
+            bool auth = false, bool admin = false,
+            Func<AndInTheDarknessBindThem, Task>? populate = null,
+            Func<AndInTheDarknessBindThem, bool>? check = null,
+            Func<Task<bool>>? save = null,
+            Func<IActionResult>? redirct = null,
             string? validMsg = null, string? errorMsg = null)
-            => 
+            =>
             // Gate 1 (Auth and Admin)
-            Guard(requireAdmin: admin, requireAuth: auth) is { } r ? r : save != null 
+            Guard(requireAdmin: admin, requireAuth: auth) is { } r 
+            ? await new Func<Task<IActionResult>>(async () =>
+            {
+                await SaveLog(true, view, "Access denied or login required");
+                return r;
+            })() : save != null
+
             // Gate 2 POST
-            ? await new Func<Task<IActionResult>>(async () => { var m = Build(table, title); var s = await save(); 
-                if (!s) { m.Error = errorMsg; return View(view, m);}; 
+            ? await new Func<Task<IActionResult>>(async () =>
+            {
+                var m = Build(table, title);
+                var s = await save();
+
+                if (!s)
+                {
+                    m.Error = errorMsg;
+
+                    await SaveLog(true, view, errorMsg ?? "Save failed");
+
+                    return View(view, m);
+                }
+
                 SetSuccess(s, validMsg ?? "done");
-                return redirct == null ? RedirectToAction("Index") : redirct(); })() 
+
+                await SaveLog(false, view, validMsg ?? "done");
+
+                return redirct == null ? RedirectToAction("Index") : redirct();
+            })()
 
             // Gate 3 GET
-            : await new Func<Task<IActionResult>>(async () => { var m = Build(table, title); 
-                if (populate != null) await populate(m); 
-                if (check != null && !check(m)){ m.Error = errorMsg ?? "not found"; return NotFound(); }; 
-                return View(view, m); })();
+            : await new Func<Task<IActionResult>>(async () =>
+            {
+                var m = Build(table, title);
+
+                if (populate != null)
+                {
+                    await populate(m);
+                }
+
+                if (check != null && !check(m))
+                {
+                    m.Error = errorMsg ?? "not found";
+
+                    await SaveLog(true, view, m.Error);
+
+                    return NotFound();
+                }
+
+                await SaveLog(errorMsg != null, view, errorMsg ?? "Viewed page: " + (title ?? view));
+
+                return View(view, m);
+            })();
+        //protected async Task<IActionResult> GraveMind(string view, string table = "", string? title = null, 
+        //    bool auth = false, bool admin = false, 
+        //    Func<AndInTheDarknessBindThem, Task>? populate = null, 
+        //    Func<AndInTheDarknessBindThem, bool>? check = null, 
+        //    Func<Task<bool>>? save = null, 
+        //    Func<IActionResult>? redirct = null, 
+        //    string? validMsg = null, string? errorMsg = null)
+        //    => 
+        //    // Gate 1 (Auth and Admin)
+        //    Guard(requireAdmin: admin, requireAuth: auth) is { } r ? r : save != null 
+        //    // Gate 2 POST
+        //    ? await new Func<Task<IActionResult>>(async () => { var m = Build(table, title); var s = await save(); 
+        //        if (!s) { m.Error = errorMsg; return View(view, m);}; 
+        //        SetSuccess(s, validMsg ?? "done");
+        //        return redirct == null ? RedirectToAction("Index") : redirct(); })() 
+
+        //    // Gate 3 GET
+        //    : await new Func<Task<IActionResult>>(async () => 
+        //    { 
+        //        var m = Build(table, title); 
+
+        //        if (populate != null) 
+        //            await populate(m); 
+        //        if (check != null && !check(m)){ m.Error = errorMsg ?? "not found"; return NotFound(); }; 
+        //        return View(view, m); })();
 
         /// <summary>
         /// Method to authorise if session data matches set requirements for user
@@ -130,6 +196,22 @@ namespace MVCApplication.Controllers
             {
                 TempData["Success"] = null;
             }
+        }
+
+        private async Task SaveLog(bool isError, string view, string message)
+        {
+            string userName = HttpContext.Session.GetString("user") ?? "Guest";
+            string role = HttpContext.Session.GetString("role") ?? "Guest";
+
+            await _db.SaveLog(new Log
+            {
+                IsError = isError,
+                UserName = userName,
+                Role = role,
+                View = view,
+                Message = message,
+                DateTime = DateTime.Now
+            });
         }
     }
 }
