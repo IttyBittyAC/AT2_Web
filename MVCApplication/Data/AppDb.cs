@@ -66,7 +66,7 @@ namespace MVCApplication.Data
                     @"INSERT INTO users (email, password_hash, username, fullname, role) VALUES (@email, @hash, @username, @fullname, @role) RETURNING id",
                     new { email, hash = BCrypt.Net.BCrypt.EnhancedHashPassword(password), username, fullname, role });
 
-                return await c.QueryFirstOrDefaultAsync(
+                return await c.QueryFirstOrDefaultAsync<User>(
                     "SELECT * FROM users WHERE id = @id", new { id });
             }
             catch (SqliteException ex)

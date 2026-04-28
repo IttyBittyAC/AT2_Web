@@ -1,4 +1,7 @@
-﻿@{
+﻿@model MVCApplication.Models.AndInTheDarknessBindThem
+@using System.Linq
+
+@{
     ViewData["Title"] = "Home Page";
     Layout = "_Layout";
 }
@@ -9,7 +12,7 @@
     <section class="dashboard">
         <h2>Community Dashboard</h2>
         <p>
-            Some text here describing the dashboard content. Keep this short and readable.
+            Home Page, you can view events, announcements and contact info here.
         </p>
     </section>
 
@@ -26,18 +29,33 @@
 
         <div class="info-card">
             <h3>Events</h3>
-            <ul>
-                <li>Some text here</li>
-                <li>Some text here</li>
-                <li>Some text here</li>
-            </ul>
+            @if (Model.Events != null && Model.Events.Any())
+            {
+                <ul>
+                    @foreach (var evt in Model.Events)
+                    {
+                        <li>
+                            <strong>@evt.Title</strong><br />
+                            <small>@evt.EventDate.ToString("MMM dd, yyyy")</small><br />
+                            @evt.Description
+                        </li>
+                    }
+                </ul>
+            }
+            else
+            {
+                <ul>
+                    <li>No upcoming events</li>
+                </ul>
+            }
         </div>
     </section>
     <br/>
     <!-- Contact -->
     <section class="contact">
         <h2>Contact Us</h2>
-        <p>Contact info here</p>
+        <p>Contact Number: 04 1234 5678</p>
+        <p>Contact Email: THESONOFGOD@DontWorryAboutIt.com</p>
     </section>
 
 </div>
