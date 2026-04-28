@@ -1,2 +1,61 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <!--For search engines-->
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+	<!--Example URLs, replace with actual URLs when applicable-->
+	<url>
+	<loc>https://www.example.com/</loc>
+	<lastmod>2024-06-01</lastmod>
+	<changefreq>daily</changefreq>
+	<priority>1.0</priority>
+  </url>
+	
+  <url>
+	<loc>https://www.example.com/Home</loc>
+	<lastmod>2024-06-01</lastmod>
+	<changefreq>weekly</changefreq>
+	<priority>0.8</priority>
+  </url>
+	
+  <url>
+	<loc>https://www.example.com/Events</loc>
+	<lastmod>2024-06-01</lastmod>
+	<changefreq>weekly</changefreq>
+	<priority>0.8</priority>
+  </url>
+	
+  <url>
+	<loc>https://www.example.com/Events/Details</loc>
+	<lastmod>2024-06-01</lastmod>
+	<changefreq>monthly</changefreq>
+	<priority>0.6</priority>
+  </url>
+	
+  <url>
+	<loc>https://www.example.com/Account/Login</loc>
+	<lastmod>2024-06-01</lastmod>
+	<changefreq>yearly</changefreq>
+	<priority>0.3</priority>
+  </url>
+	
+  <url>
+	<loc>https://www.example.com/Account/Register</loc>
+	<lastmod>2024-06-01</lastmod>
+	<changefreq>yearly</changefreq>
+	<priority>0.3</priority>
+  </url>
+	
+  <url>
+	<loc>https://www.example.com/Services</loc>
+	<lastmod>2024-06-01</lastmod>
+	<changefreq>weekly</changefreq>
+	<priority>0.7</priority>
+  </url>
+	
+  <url>
+	<loc>https://www.example.com/Dashboard</loc>
+	<lastmod>2024-06-01</lastmod>
+	<changefreq>monthly</changefreq>
+	<priority>0.5</priority>
+  </url>
+	<!-- Add more URLs as needed -->
+</urlset>
