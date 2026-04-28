@@ -24,7 +24,7 @@ namespace MVCApplication.Data
 
                 // Fetch user by email
                 User? user = await con.QueryFirstOrDefaultAsync<User>(
-                    "SELECT * FROM users WHERE email = @email",
+                    "SELECT * FROM users WHERE Email = @email",
                     new { email });
 
                 if(user == null)
@@ -55,7 +55,7 @@ namespace MVCApplication.Data
 
                 // Check if user with the same email already exists
                 int UserExist = await con.ExecuteScalarAsync<int>(
-                    "SELECT count(1) FROM users WHERE email = @email",
+                    "SELECT count(1) FROM users WHERE Email = @email",
                     new { email });
 
                 if (UserExist > 0) 
@@ -63,11 +63,11 @@ namespace MVCApplication.Data
 
                 //  Insert new user and return the created user
                 int id = await con.ExecuteScalarAsync<int>(
-                    @"INSERT INTO users (email, password_hash, username, fullname, role) VALUES (@email, @hash, @username, @fullname, @role) RETURNING id",
+                    @"INSERT INTO users (Email, PasswordHash, Username, FullName, Role) VALUES (@email, @hash, @username, @fullname, @role) RETURNING id",
                     new { email, hash = BCrypt.Net.BCrypt.EnhancedHashPassword(password), username, fullname, role });
 
-                return await con.QueryFirstOrDefaultAsync(
-                    "SELECT * FROM users WHERE id = @id", new { id });
+                return await con.QueryFirstOrDefaultAsync<User>(
+                    "SELECT * FROM users WHERE Id = @id", new { id });
             }
             catch (SqliteException ex)
             {
@@ -99,27 +99,27 @@ namespace MVCApplication.Data
                         created_at    datetime default current_timestamp
                     );
                     CREATE TABLE IF NOT EXISTS events (
-                        id              integer primary key autoincrement,
-                        title           text not null,
-                        description     text not null,
-                        location        text not null,
-                        date            datetime default current_timestamp
+                        Id              integer primary key autoincrement,
+                        Title           text not null,
+                        Description     text not null,
+                        Location        text not null,
+                        EventDate            datetime default current_timestamp
                     );
                     CREATE TABLE IF NOT EXISTS feedback (
-                        id             integer  primary key autoincrement,
-                        fullname       text     not null,
-                        email          text     not null,
-                        type           text     not null,
-                        heading        text     not null,
-                        message        text     not null,
-                        wants_contact  integer  not null default 0,
+                        Id             integer  primary key autoincrement,
+                        FullName       text     not null,
+                        Email          text     not null,
+                        Type           text     not null,
+                        Heading        text     not null,
+                        Message        text     not null,
+                        WantsContact  integer  not null default 0,
                         submitted_date datetime default current_timestamp
                     );
                     CREATE TABLE IF NOT EXISTS bookings (
-                        id              integer primary key autoincrement,
-                        fullname        text not null,
-                        email           text not null,
-                        date            datetime
+                        Id              integer primary key autoincrement,
+                        FullName        text not null,
+                        Email           text not null,
+                        BookingDate     datetime
                     );"
                 );
             }
