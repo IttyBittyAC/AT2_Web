@@ -6,16 +6,17 @@ using MVCApplication.Models;
 namespace MVCApplication.Controllers
 {
     /// <summary>
-    /// 
+    /// Base controller that provides shared database access and common functionality for all other controllers in the application.
     /// </summary>
     public abstract class BaseAppController : Controller
     {
         /// <summary>
-        /// 
+        /// Database context for accessing application data, shared across all controllers that inherit from BaseAppController.
         /// </summary>
         protected readonly AppDb _db;
         /// <summary>
-        /// 
+        /// Initializes a new instance of the BaseAppController class with the provided database context, 
+        /// allowing derived controllers to access the database through the _db field.
         /// </summary>
         /// <param name="db"></param>
         protected BaseAppController(AppDb db)
