@@ -1,3 +1,170 @@
-﻿@{
-    ViewData["Title"] = "Events";
+﻿@model MVCApplication.Models.AndInTheDarknessBindThem
+
+@{
+    ViewData["Title"] = "Admin - Events";
+    Layout = "_Layout";
 }
+
+<div class="container">
+    <h1 class="title has-text-centered">Events (Admin)</h1>
+
+    @if (!Model.IsAdmin)
+    {
+        <div class="notification is-danger">
+            You do not have permission to view this page.
+        </div>
+    }
+    else
+    {
+        @if (!string.IsNullOrEmpty(Model.Error))
+        {
+            <div class="notification is-danger">@Model.Error</div>
+        }
+        @if (!string.IsNullOrEmpty(Model.Success))
+        {
+            <div class="notification is-success">@Model.Success</div>
+        }
+
+        <section class="box">
+            <h2 class="subtitle">Create New Event</h2>
+            <form method="post" action="/Admin/Events">
+                @Html.AntiForgeryToken()
+                <input type="hidden" name="action" value="create" />
+
+                <div class="field">
+                    <label class="label">Title</label>
+                    <div class="control">
+                        <input class="input" type="text" name="singleEvent.Title" placeholder="Event title" required />
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label class="label">Description</label>
+                    <div class="control">
+                        <textarea class="textarea" name="singleEvent.Description" placeholder="Event description"></textarea>
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label class="label">Event Date</label>
+                    <div class="control">
+                        <input class="input" type="datetime-local" name="singleEvent.EventDate" required />
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label class="label">Location</label>
+                    <div class="control">
+                        <input class="input" type="text" name="singleEvent.Location" placeholder="Location" />
+                    </div>
+                </div>
+
+                <div class="field is-grouped">
+                    <div class="control">
+                        <button type="submit" class="button is-primary">Create Event</button>
+                    </div>
+                    <div class="control">
+                        <button type="reset" class="button is-light">Reset</button>
+                    </div>
+                </div>
+            </form>
+        </section>
+
+        <section class="box">
+            <h2 class="subtitle">Manage Events</h2>
+
+            @if (Model.Events is null || !Model.Events.Any())
+            {
+                <div class="notification is-warning">No events available.</div>
+            }
+            else
+            {
+                <form method="post" action="/Admin/Events">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" name="action" value="delete" />
+
+                    <table class="table is-fullwidth is-striped">
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th>Title</th>
+                                <th>Event Date</th>
+                                <th>Location</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @for (var i = 0; i < Model.Events.Count; i++)
+                            {
+                                var ev = Model.Events[i];
+                                <tr>
+                                    <td>
+                                        <input type="checkbox" name="id" value="@ev.Id" />
+                                    </td>
+                                    <td>@ev.Title</td>
+                                    <td>@ev.EventDate.ToString("yyyy-MM-dd HH:mm")</td>
+                                    <td>@ev.Location</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+
+                    <div class="field is-grouped">
+                        <div class="control">
+                            <button type="submit" class="button is-danger">Delete selected</button>
+                        </div>
+                    </div>
+                </form>
+
+                <hr />
+
+                <form method="post" action="/Admin/Events">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" name="action" value="update" />
+
+                    @for (var i = 0; i < Model.Events.Count; i++)
+                    {
+                        var ev = Model.Events[i];
+                        <div class="box">
+                            <input type="hidden" name="events[@i].Id" value="@ev.Id" />
+
+                            <div class="field">
+                                <label class="label">Title</label>
+                                <div class="control">
+                                    <input class="input" type="text" name="events[@i].Title" value="@ev.Title" required />
+                                </div>
+                            </div>
+
+                            <div class="field">
+                                <label class="label">Description</label>
+                                <div class="control">
+                                    <textarea class="textarea" name="events[@i].Description">@ev.Description</textarea>
+                                </div>
+                            </div>
+
+                            <div class="field">
+                                <label class="label">Event Date</label>
+                                <div class="control">
+                                    <input class="input" type="datetime-local" name="events[@i].EventDate" value="@(ev.EventDate.ToString("yyyy-MM-ddTHH:mm"))" required />
+                                </div>
+                            </div>
+
+                            <div class="field">
+                                <label class="label">Location</label>
+                                <div class="control">
+                                    <input class="input" type="text" name="events[@i].Location" value="@ev.Location" />
+                                </div>
+                            </div>
+                        </div>
+                    }
+
+                    <div class="field is-grouped">
+                        <div class="control">
+                            <button type="submit" class="button is-primary">Save updates</button>
+                        </div>
+                    </div>
+                </form>
+            }
+            <p class="help">Next: hook up event storage in <code>AppDb</code> and ensure the AdminController POST/GET handlers are wired to persist and load events.</p>
+        </section>
+    }
+</div>

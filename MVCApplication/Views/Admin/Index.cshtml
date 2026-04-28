@@ -1,3 +1,131 @@
 ﻿@{
     ViewData["Title"] = "Admin";
+    Layout = "_Layout";
 }
+
+<div class="container py-4">
+    <h1 class="mb-3">Admin dashboard</h1>
+
+    <!-- Summary cards -->
+    <div class="row mb-4">
+        <div class="col-6 col-md-3">
+            <div class="card text-white bg-primary h-100">
+                <div class="card-body">
+                    <h6 class="card-title">Announcements</h6>
+                    <p class="card-text display-6">@((ViewBag.AnnouncementsCount ?? 0))</p>
+                    <a asp-controller="Admin" asp-action="Announcements" class="btn btn-light btn-sm">Manage</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-6 col-md-3">
+            <div class="card text-white bg-success h-100">
+                <div class="card-body">
+                    <h6 class="card-title">Events</h6>
+                    <p class="card-text display-6">@((ViewBag.EventsCount ?? 0))</p>
+                    <a asp-controller="Admin" asp-action="Events" class="btn btn-light btn-sm">Manage</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-6 col-md-3 mt-3 mt-md-0">
+            <div class="card text-white bg-warning h-100">
+                <div class="card-body">
+                    <h6 class="card-title">Users</h6>
+                    <p class="card-text display-6">@((ViewBag.UsersCount ?? 0))</p>
+                    <a asp-controller="Admin" asp-action="Users" class="btn btn-light btn-sm">Manage</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-6 col-md-3 mt-3 mt-md-0">
+            <div class="card text-white bg-danger h-100">
+                <div class="card-body">
+                    <h6 class="card-title">Feedback</h6>
+                    <p class="card-text display-6">@((ViewBag.FeedbackCount ?? 0))</p>
+                    <a asp-controller="Admin" asp-action="Feedback" class="btn btn-light btn-sm">Manage</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main content -->
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card mb-3">
+                <div class="card-header">Recent announcements</div>
+                <ul class="list-group list-group-flush">
+                    @if (ViewBag.RecentAnnouncements is IEnumerable<dynamic> recent && recent.Any())
+                    {
+                        foreach (var a in recent)
+                        {
+                            <li class="list-group-item">
+                                <div class="d-flex justify-content-between">
+                                    <div>
+                                        <strong>@a.Title</strong>
+                                        <div class="text-muted small">@a.Summary</div>
+                                    </div>
+                                    <div class="text-muted small">@a.PublishedAt?.ToString("g")</div>
+                                </div>
+                            </li>
+                        }
+                    }
+                    else
+                    {
+                        <li class="list-group-item">No recent announcements.</li>
+                    }
+                </ul>
+            </div>
+
+            <div class="card">
+                <div class="card-header">Recent events</div>
+                <div class="list-group list-group-flush">
+                    @if (ViewBag.RecentEvents is IEnumerable<dynamic> events && events.Any())
+                    {
+                        foreach (var e in events)
+                        {
+                            <a class="list-group-item list-group-item-action" asp-controller="Events" asp-action="EventDetails" asp-route-id="@e.Id">
+                                <div class="d-flex justify-content-between">
+                                    <div>
+                                        <strong>@e.Title</strong>
+                                        <div class="text-muted small">@e.Location</div>
+                                    </div>
+                                    <div class="text-muted small">@e.Start?.ToString("g")</div>
+                                </div>
+                            </a>
+                        }
+                    }
+                    else
+                    {
+                        <div class="list-group-item">No upcoming events.</div>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card mb-3">
+                <div class="card-header">Quick actions</div>
+                <div class="card-body">
+                    <p>
+                        <a asp-controller="Events" asp-action="Create" class="btn btn-success btn-block mb-2">Create event</a>
+                    </p>
+                    <p>
+                        <a asp-controller="Admin" asp-action="Announcements" class="btn btn-primary btn-block mb-2">New announcement</a>
+                    </p>
+                    <p>
+                        <a asp-controller="Admin" asp-action="Users" class="btn btn-secondary btn-block">Manage users</a>
+                    </p>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">System</div>
+                <div class="card-body small text-muted">
+                    <p>Use this page to get a quick overview and jump to management areas.</p>
+                    <p class="mb-0">Tip: populate @Html.Raw("<code>ViewBag.</code>") values from the controller to surface counts and recent items.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
