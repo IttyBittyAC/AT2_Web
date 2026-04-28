@@ -98,8 +98,9 @@ namespace MVCApplication.Controllers
             // Gate 2 POST
             ? await new Func<Task<IActionResult>>(async () => { var m = Build(table, title); var s = await save(); 
                 if (!s) { m.Error = errorMsg; return View(view, m);}; 
-                SetSuccess(s, validMsg ?? "done"); 
+                SetSuccess(s, validMsg ?? "done");
                 return redirct == null ? RedirectToAction("Index") : redirct(); })() 
+
             // Gate 3 GET
             : await new Func<Task<IActionResult>>(async () => { var m = Build(table, title); 
                 if (populate != null) await populate(m); 
