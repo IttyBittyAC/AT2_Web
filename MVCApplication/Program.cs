@@ -8,9 +8,10 @@ namespace MVCApplication
         {
             var builder = WebApplication.CreateBuilder(args);
 
+            //Add XML configuration file for feature flags
+            builder.Configuration.AddXmlFile("features.xml", optional: false, reloadOnChange: true);
+
             // Add services to the container.
-
-
             builder.Services.AddControllersWithViews();
             builder.Services.AddScoped<AppDb>();
             builder.Services.AddScoped<Seeding>();
@@ -40,6 +41,18 @@ namespace MVCApplication
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
+
+            app.MapGet("/sitemap.xml", (HttpContext _) =>
+            {
+                var file = Path.Combine(app.Environment.ContentRootPath, "wwwroot", "sitemap.xml");
+                return File.Exists(file) ? Results.File(file, "application/xml") : Results.NotFound();
+            });
+
+            app.MapGet("/rss.xml", (HttpContext _) =>
+            {
+                var file = Path.Combine(app.Environment.ContentRootPath, "wwwroot", "rss.xml");
+                return File.Exists(file) ? Results.File(file, "application/xml") : Results.NotFound();
+            });
 
             app.UseRouting();
 
