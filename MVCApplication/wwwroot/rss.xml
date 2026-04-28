@@ -1,2 +1,22 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <!--For feeds-->
+<rss version="2.0">
+  <channel>
+	<title>Example RSS Feed</title>
+	<link>https://www.example.com/</link>
+	<description>This is an example RSS feed for the MVC application.</description>
+	<language>en-us</language>
+	<lastBuildDate>Sat, 01 Jun 2024 12:00:00 GMT</lastBuildDate>
+	  
+	<!-- Example item, replace with actual content when applicable -->
+	<item>
+	  <title>Sample Event Title</title>
+	  <link>https://www.example.com/Events/Details/1</link>
+	  <description>This is a sample description for the event. It provides a brief overview of what the event is about.</description>
+	  <pubDate>Sat, 01 Jun 2024 10:00:00 GMT</pubDate>
+	  <guid>https://www.example.com/Events/Details/1</guid>
+	</item>
+	  
+	<!-- Add more items as needed -->
+  </channel>
+</rss>
