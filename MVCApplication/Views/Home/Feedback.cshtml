@@ -1,13 +1,16 @@
-﻿@model AndInTheDarknessBindThem
+﻿@model MVCApplication.Models.AndInTheDarknessBindThem
 @{
     ViewData["Title"] = "Feedback";
     var t = Model.Feedback?.Type ?? "";
 }
-@* This is an AI generated example for helping you design the other web pages. do not submit this*@
 
+@section Styles {
+    <link rel="stylesheet" href="~/css/feedback.css" asp-append-version="true" />
+}
 
-<form method="post" action="/Home/Feedback">
-    @Html.AntiForgeryToken()
+<div class="feedback-container">
+    <h1 class="FeedbackHeading">Share Your Feedback</h1>
+    <h2 class="FeedbackSubHeading">We value your feedback! Please share your thoughts and suggestions with us.</h2>
 
     @if (Model.Error != null)
     {
@@ -19,72 +22,104 @@
         <div class="alert success">@TempData["Success"]</div>
     }
 
-    <div>
-        <h1 class="FeedbackHeading">Feedback</h1>
-        <h2 class="FeedbackSubHeading">We value your feedback! Please share your thoughts and suggestions with us.</h2>
-    </div>
+    <form method="post" action="/Feedback">
+        @Html.AntiForgeryToken()
 
-    <div class="field">
-        <h3 class="FeedbackHeading">Select Feedback Type</h3>
-        <select name="Type" id="FeedbackOptions">
-            <option value="">— Please select —</option>
-            <option value="Experience" selected="@(t == "Experience" ? "selected" : null)">Experience with the website</option>
-            <option value="ProductSatisfaction" selected="@(t == "ProductSatisfaction" ? "selected" : null)">Product Satisfaction</option>
-            <option value="Support" selected="@(t == "Support" ? "selected" : null)">Support</option>
-            <option value="Bugs" selected="@(t == "Bugs" ? "selected" : null)">Bug report</option>
-            <option value="Other" selected="@(t == "Other" ? "selected" : null)">Other</option>
-        </select>
-        <span asp-validation-for="Feedback.Type" class="text-danger small"></span>
-    </div>
+        <!-- Feedback Type Section -->
+        <div class="form-section">
+            <div class="field">
+                <label for="FeedbackOptions">Feedback Type *</label>
+                <select name="Type" id="FeedbackOptions" required>
+                    <option value="">— Please select —</option>
+                    <option value="Experience" selected="@(t == "Experience" ? "selected" : null)">Experience with the website</option>
+                    <option value="ProductSatisfaction" selected="@(t == "ProductSatisfaction" ? "selected" : null)">Product Satisfaction</option>
+                    <option value="Support" selected="@(t == "Support" ? "selected" : null)">Support</option>
+                    <option value="Bugs" selected="@(t == "Bugs" ? "selected" : null)">Bug report</option>
+                    <option value="Other" selected="@(t == "Other" ? "selected" : null)">Other</option>
+                </select>
+                <span asp-validation-for="Feedback.Type" class="text-danger"></span>
+            </div>
+        </div>
 
-    <div>
-        <input type="text"
-               name="Heading"
-               placeholder="heading"
-               value="@Model.Feedback?.Heading" />
-        <span asp-validation-for="Feedback.Heading" class="text-danger small"></span>
+        <!-- Feedback Details Section -->
+        <div class="form-section">
+            <div class="field">
+                <label for="Heading">Subject *</label>
+                <input type="text"
+                       id="Heading"
+                       name="Heading"
+                       placeholder="Brief summary of your feedback"
+                       value="@Model.Feedback?.Heading"
+                       required />
+                <span asp-validation-for="Feedback.Heading" class="text-danger"></span>
+            </div>
 
-        <input type="text"
-               name="Message"
-               placeholder="tell us how we can improve"
-               value="@Model.Feedback?.Message" />
-        <span asp-validation-for="Feedback.Message" class="text-danger small"></span>
+            <div class="field">
+                <label for="Message">Your Feedback *</label>
+                <textarea id="Message"
+                          name="Message"
+                          placeholder="Tell us how we can improve..."
+                          required>@Model.Feedback?.Message</textarea>
+                <span asp-validation-for="Feedback.Message" class="text-danger"></span>
+            </div>
+        </div>
 
-        <input type="text"
-               name="FullName"
-               placeholder="full name"
-               value="@Model.Feedback?.FullName" />
-        <span asp-validation-for="Feedback.FullName" class="text-danger small"></span>
+        <!-- Contact Information Section -->
+        <div class="form-section">
+            <h3>Contact Information</h3>
 
-        <input type="email"
-               name="Email"
-               placeholder="email address"
-               value="@Model.Feedback?.Email" />
-        <span asp-validation-for="Feedback.Email" class="text-danger small"></span>
+            <div class="field">
+                <label for="FullName">Full Name *</label>
+                <input type="text"
+                       id="FullName"
+                       name="FullName"
+                       placeholder="John Doe"
+                       value="@Model.Feedback?.FullName"
+                       required />
+                <span asp-validation-for="Feedback.FullName" class="text-danger"></span>
+            </div>
 
-        <button type="submit">Submit</button>
-    </div>
+            <div class="field">
+                <label for="Email">Email Address *</label>
+                <input type="email"
+                       id="Email"
+                       name="Email"
+                       placeholder="john.doe@example.com"
+                       value="@Model.Feedback?.Email"
+                       required />
+                <span asp-validation-for="Feedback.Email" class="text-danger"></span>
+            </div>
+        </div>
 
-    <div>
-        <h3 class="FeedbackHeading">Would you like us to contact you?</h3>
-        <p>we can let you know if we have fixed, resolved or taken your feedback into consideration</p>
+        <!-- Contact Preference Section -->
+        <div class="form-section">
+            <h3>Would you like us to contact you?</h3>
+            <p>We can let you know if we have addressed your feedback</p>
 
-        <input type="radio"
-               id="contactYes"
-               name="WantsContact"
-               value="true"
-               @(Model.Feedback?.WantsContact == true ? "checked" : "") />
-        <label for="contactYes">Yes</label>
+            <div class="radio-group">
+                <div class="radio-option">
+                    <input type="radio"
+                           id="contactYes"
+                           name="WantsContact"
+                           value="true"
+                           @(Model.Feedback?.WantsContact == true ? "checked" : "") />
+                    <label for="contactYes">Yes, please contact me</label>
+                </div>
 
-        <input type="radio"
-               id="contactNo"
-               name="WantsContact"
-               value="false"
-               @(Model.Feedback?.WantsContact == false ? "checked" : "checked") />
-        <label for="contactNo">No</label>
-    </div>
+                <div class="radio-option">
+                    <input type="radio"
+                           id="contactNo"
+                           name="WantsContact"
+                           value="false"
+                           @(Model.Feedback?.WantsContact == false ? "checked" : "checked") />
+                    <label for="contactNo">No, thank you</label>
+                </div>
+            </div>
+        </div>
 
-</form>
+        <button type="submit" class="submit-button">Submit Feedback</button>
+    </form>
+</div>
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
