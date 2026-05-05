@@ -179,7 +179,7 @@ namespace MVCApplication.Controllers
         /// <param name="requireAdmin"> IfTrue Checks session for authenticated admin </param>
         /// <param name="requireAuth"> IfTrue Checks session for authenticated user </param>
         /// <returns> IActionResult redirect to login if session data doesnt match required params set, otherwise null </returns>
-        protected IActionResult? Guard(bool requireAdmin = false, bool requireAuth = false) => (requireAuth || requireAdmin) && !IsAuth ? RedirectToAction("Login", "Account") : requireAdmin && !IsAdmin ? Forbid() : null;
+        protected IActionResult? Guard(bool requireAdmin = false, bool requireAuth = false) => (requireAuth || requireAdmin) && !IsAuth ? RedirectToAction("Login", "Account") : requireAdmin && !IsAdmin ? new StatusCodeResult(403) : null;
 
         /// <summary>
         /// Method to pass information to view on redirect about status of operation
