@@ -2,13 +2,10 @@
 
 namespace MVCApplication.Models.Config
 {
+    //Singleton class to represent a feature flag that can be enabled or disabled globally
     public class Feature
     {
         public string Id { get; set; } = string.Empty; // Unique identifier for the feature
         public bool Enabled { get; set; } // Global enable/disable flag
-
-        //PROBABLY DONT NEED THESE, BUT LEAVING THEM HERE FOR NOW
-        // public int Rollout { get; set; }
-        // public string? RawValue { get; set; }
     }
 }

@@ -11,5 +11,9 @@ namespace MVCApplication.XMLServices
         Feature? GetFeature(string id);
         IReadOnlyList<Menu> GetMenus();
         Menu? GetMenu(string id);
+        IReadOnlyList<Footer> GetFooters();
+        Footer? GetFooter(string id);
+        IReadOnlyList<Faq> GetFaqs();
+        Faq? GetFaq(string id);
     }
 }
