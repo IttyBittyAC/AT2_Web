@@ -1,7 +1,69 @@
-﻿@{
+﻿@model MVCApplication.Models.AndInTheDarknessBindThem
+
+@{
     ViewData["Title"] = "Service Details";
 }
-<div>
-    <h1>Service Details</h1>
-    <p>Details about the service will be displayed here.</p>
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/services.css" asp-append-version="true" />
+}
+
+<div class="services-container details-container">
+    <!-- Header -->
+    <div class="services-header">
+        <h1 class="services-title">📋 Booking Details</h1>
+        <p class="services-subtitle">Your service booking information</p>
+    </div>
+
+    @if (Model.Booking != null)
+    {
+        <div class="details-card">
+            <div class="detail-item">
+                <span class="detail-label">Booking ID:</span>
+                <span class="detail-value">#@Model.Booking.Id</span>
+            </div>
+
+            <div class="detail-item">
+                <span class="detail-label">Full Name:</span>
+                <span class="detail-value">@Model.Booking.FullName</span>
+            </div>
+
+            <div class="detail-item">
+                <span class="detail-label">Email:</span>
+                <span class="detail-value">@Model.Booking.Email</span>
+            </div>
+
+            <div class="detail-item">
+                <span class="detail-label">Booking Date:</span>
+                <span class="detail-value">@Model.Booking.BookingDate.ToString("MMMM dd, yyyy")</span>
+            </div>
+
+            <div class="detail-item">
+                <span class="detail-label">Status:</span>
+                <span class="detail-value" style="color: #27ae60; font-weight: 600;">
+                    ✓ Confirmed
+                </span>
+            </div>
+
+            <div style="margin-top: 30px; display: flex; gap: 15px;">
+                <a href="/Services" class="btn-secondary">
+                    ← Back to Services
+                </a>
+                <a href="/Dashboard/MyBookings" class="btn-book">
+                    View All My Bookings
+                </a>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="empty-state">
+            <div class="empty-state-icon">❌</div>
+            <h2>Booking Not Found</h2>
+            <p>@(Model.Error ?? "We couldn't find the booking you're looking for.")</p>
+            <a href="/Services" class="btn-book">
+                ← Back to Services
+            </a>
+        </div>
+    }
 </div>

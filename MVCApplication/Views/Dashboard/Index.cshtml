@@ -1,3 +1,121 @@
-﻿@{
+﻿@model MVCApplication.Models.AndInTheDarknessBindThem
+@{
     ViewData["Title"] = "Dashboard";
 }
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/dashboard.css" asp-append-version="true" />
+}
+
+<div class="dashboard-container">
+    <!-- Welcome Section -->
+    <div class="dashboard-welcome">
+        <h1 class="welcome-title">Welcome back, @(Model.CurrentUser ?? "Friend")! 👋</h1>
+        <p class="welcome-subtitle">Here's what's happening in your community today</p>
+    </div>
+
+    <!-- Stats Section -->
+    <div class="dashboard-stats">
+        <h2 class="section-title">📊 Your Activity</h2>
+        <div class="stats-grid">
+            <div class="stat-card primary">
+                <div class="stat-value">@(Model.Bookings?.Count ?? 0)</div>
+                <div class="stat-label">Active Bookings</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">@(Model.Events?.Count ?? 0)</div>
+                <div class="stat-label">Upcoming Events</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">
+                    @if (Model.IsAdmin)
+                    {
+                        <span>Admin</span>
+                    }
+                    else
+                    {
+                        <span>Member</span>
+                    }
+                </div>
+                <div class="stat-label">Account Type</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="quick-actions">
+        <h2 class="section-title">⚡ Quick Actions</h2>
+        <div class="actions-grid">
+            <a href="/Events" class="action-card">
+                <span class="action-icon">📅</span>
+                <h3 class="action-title">Browse Events</h3>
+                <p class="action-description">Discover upcoming community events and activities</p>
+            </a>
+
+            <a href="/Events/Create" class="action-card">
+                <span class="action-icon">➕</span>
+                <h3 class="action-title">Create Event</h3>
+                <p class="action-description">Host your own event and invite the community</p>
+            </a>
+
+            <a href="/Dashboard/MyBookings" class="action-card">
+                <span class="action-icon">🎫</span>
+                <h3 class="action-title">My Bookings</h3>
+                <p class="action-description">View and manage your event registrations</p>
+            </a>
+
+            <a href="/Dashboard/Profile" class="action-card">
+                <span class="action-icon">👤</span>
+                <h3 class="action-title">My Profile</h3>
+                <p class="action-description">Update your account information</p>
+            </a>
+
+            <a href="/Feedback" class="action-card">
+                <span class="action-icon">💬</span>
+                <h3 class="action-title">Send Feedback</h3>
+                <p class="action-description">Share your thoughts and suggestions</p>
+            </a>
+
+            <a href="/Announcements" class="action-card">
+                <span class="action-icon">📢</span>
+                <h3 class="action-title">Announcements</h3>
+                <p class="action-description">Stay updated with community news</p>
+            </a>
+
+            @if (Model.IsAdmin)
+            {
+                <a href="/Admin/Users" class="action-card" style="border-color: #e74c3c;">
+                    <span class="action-icon">🛡️</span>
+                    <h3 class="action-title">Admin Panel</h3>
+                    <p class="action-description">Manage users, events, and feedback</p>
+                </a>
+            }
+        </div>
+    </div>
+
+    <!-- Recent Activity -->
+    <div class="recent-activity">
+        <h2 class="section-title">🕒 Recent Activity</h2>
+        <div class="activity-list">
+            @if (Model.Bookings != null && Model.Bookings.Any())
+            {
+                @foreach (var booking in Model.Bookings.OrderByDescending(b => b.BookingDate).Take(5))
+                {
+                    <div class="activity-item">
+                        <span class="activity-icon">✓</span>
+                        <div class="activity-content">
+                            <div class="activity-title">Event Registered</div>
+                            <div class="activity-time">@booking.BookingDate.ToString("MMM dd, yyyy")</div>
+                        </div>
+                    </div>
+                }
+            }
+            else
+            {
+                <div class="activity-empty">
+                    <p>🌟 No recent activity yet. Start by browsing events or creating your own!</p>
+                </div>
+            }
+        </div>
+    </div>
+</div>
