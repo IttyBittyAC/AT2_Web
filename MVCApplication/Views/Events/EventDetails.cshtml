@@ -1,11 +1,109 @@
-﻿@{
-    ViewData["Title"] = "Event Details";
+﻿@model MVCApplication.Models.AndInTheDarknessBindThem
+@{
+    ViewData["Title"] = Model.Event?.Title ?? "Event Details";
 }
 
-<div>
-    <h2>@Model.Title</h2>
-    <p><strong>Date:</strong> @Model.Date.ToString("MMMM dd, yyyy")</p>
-    <p><strong>Location:</strong> @Model.Location</p>
-    <p><strong>Description:</strong></p>
-    <p>@Model.Description</p>
+@section Styles {
+    <link rel="stylesheet" href="~/css/event-details.css" asp-append-version="true" />
+}
+
+<div class="event-details-container">
+    <!-- Back Button -->
+    <a href="/Events" class="back-button">
+        ← Back to All Events
+    </a>
+
+    @if (Model.Event != null)
+    {
+        <!-- Event Header -->
+        <div class="event-detail-header">
+            <h1 class="event-detail-title">@Model.Event.Title</h1>
+            <p class="event-detail-subtitle">Join us for this exciting community event!</p>
+        </div>
+
+        <!-- Event Content -->
+        <div class="event-detail-content">
+            <!-- Date & Location Info -->
+            <div class="event-info-grid">
+                <div class="info-box">
+                    <div class="info-box-label">📅 Date & Time</div>
+                    <div class="info-box-value">
+                        @Model.Event.EventDate.ToString("MMMM dd, yyyy")
+                    </div>
+                    <div style="color: #7f8c8d; margin-top: 5px;">
+                        @Model.Event.EventDate.ToString("h:mm tt")
+                    </div>
+                </div>
+
+                <div class="info-box">
+                    <div class="info-box-label">📍 Location</div>
+                    <div class="info-box-value">@Model.Event.Location</div>
+                </div>
+            </div>
+
+            <!-- Description Section -->
+            <div class="event-detail-section">
+                <h2 class="section-title">
+                    <span class="section-icon">📝</span>
+                    About This Event
+                </h2>
+                <div class="section-content">
+                    @Model.Event.Description
+                </div>
+            </div>
+
+            <!-- Additional Info Section -->
+            <div class="event-detail-section">
+                <h2 class="section-title">
+                    <span class="section-icon">ℹ️</span>
+                    Important Information
+                </h2>
+                <div class="section-content">
+                    <ul style="padding-left: 20px;">
+                        <li>Please arrive 15 minutes before the event starts</li>
+                        <li>All community members are welcome to attend</li>
+                        <li>For any questions, please contact our support team</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="event-actions">
+                @if (Model.IsAuth)
+                {
+                    <a href="/Events/Register/@Model.Event.Id" class="btn-action btn-primary">
+                        ✓ Register for This Event
+                    </a>
+                    <a href="/Feedback" class="btn-action btn-secondary">
+                        💬 Contact Organizer
+                    </a>
+                }
+                else
+                {
+                    <a href="/Account/Login?returnUrl=/Events/Details/@Model.Event.Id" class="btn-action btn-primary">
+                        🔐 Login to Register
+                    </a>
+                }
+                <a href="/Events" class="btn-action btn-secondary">
+                    📅 View All Events
+                </a>
+            </div>
+        </div>
+    }
+    else
+    {
+        <!-- Error State -->
+        <div class="error-state">
+            <div class="error-state-icon">❌</div>
+            <h2>Event Not Found</h2>
+            <p>Sorry, we couldn't find the event you're looking for.</p>
+            @if (!string.IsNullOrEmpty(Model.Error))
+            {
+                <p style="color: #c62828;">@Model.Error</p>
+            }
+            <a href="/Events" class="btn-action btn-primary">
+                ← Return to Events List
+            </a>
+        </div>
+    }
 </div>

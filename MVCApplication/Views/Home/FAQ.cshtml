@@ -4,20 +4,235 @@
 @{
     ViewData["Title"] = "FAQ";
 }
-<div>
-    <h1 style="text-align: center" class="FAQHeading">Frequently Asked Questions</h1>
-</div>
-<div style="margin: 0 auto">
-    <details>
-        <summary>What is this website about?</summary>
-        <p>never gonna give you up.</p>
-    </details>
-    <details>
-        <summary>How do I use this website?</summary>
-        <p>never gonna let you down</p>
-    </details>
-    <details>
-        <summary>Is this website free?</summary>
-        <p>never gonna run around and desert you</p>
-    </details>
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/faq.css" asp-append-version="true" />
+}
+
+<div class="faq-container">
+    <!-- Header -->
+    <div class="faq-header">
+        <h1 class="FAQHeading">❓ Frequently Asked Questions</h1>
+        <p class="faq-subtitle">Find answers to common questions about our community platform</p>
+    </div>
+
+    <!-- General Questions -->
+    <div class="faq-category">
+        <h2 class="category-title">📌 General Questions</h2>
+        <div class="faq-list">
+            <div class="faq-item">
+                <details>
+                    <summary>What is this website about?</summary>
+                    <div class="faq-answer">
+                        <p>
+                            This is a community management platform designed to help residents stay connected 
+                            with their local community. You can view upcoming events, submit feedback, 
+                            access waste management services, and stay informed about community announcements.
+                        </p>
+                    </div>
+                </details>
+            </div>
+
+            <div class="faq-item">
+                <details>
+                    <summary>Is this website free to use?</summary>
+                    <div class="faq-answer">
+                        <p>
+                            Yes! The platform is completely free for all community members. 
+                            Simply create an account to access all features including event registration, 
+                            feedback submission, and booking services.
+                        </p>
+                    </div>
+                </details>
+            </div>
+
+            <div class="faq-item">
+                <details>
+                    <summary>Do I need an account to use this website?</summary>
+                    <div class="faq-answer">
+                        <p>
+                            You can browse public content like events and announcements without an account. 
+                            However, to register for events, submit feedback, or access personalized features, 
+                            you'll need to create a free account.
+                        </p>
+                    </div>
+                </details>
+            </div>
+        </div>
+    </div>
+
+    <!-- Account & Login -->
+    <div class="faq-category">
+        <h2 class="category-title">🔐 Account & Login</h2>
+        <div class="faq-list">
+            <div class="faq-item">
+                <details>
+                    <summary>How do I create an account?</summary>
+                    <div class="faq-answer">
+                        <p>Creating an account is easy:</p>
+                        <ol>
+                            <li>Click the <strong>Register</strong> link in the navigation menu</li>
+                            <li>Fill in your full name, username, email, and password</li>
+                            <li>Click <strong>Register</strong></li>
+                            <li>You'll be redirected to login with your new credentials</li>
+                        </ol>
+                    </div>
+                </details>
+            </div>
+
+            <div class="faq-item">
+                <details>
+                    <summary>I forgot my password. What should I do?</summary>
+                    <div class="faq-answer">
+                        <p>
+                            Please contact our support team through the <a href="/Feedback" style="color: #3498db; font-weight: 600;">Feedback page</a> 
+                            with your registered email address. We'll help you reset your password.
+                        </p>
+                    </div>
+                </details>
+            </div>
+
+            <div class="faq-item">
+                <details>
+                    <summary>How do I update my profile information?</summary>
+                    <div class="faq-answer">
+                        <p>
+                            Once logged in, navigate to <strong>My Bookings</strong> in the navigation menu 
+                            where you can access your profile settings and update your information.
+                        </p>
+                    </div>
+                </details>
+            </div>
+        </div>
+    </div>
+
+    <!-- Events -->
+    <div class="faq-category">
+        <h2 class="category-title">📅 Events</h2>
+        <div class="faq-list">
+            <div class="faq-item">
+                <details>
+                    <summary>How do I register for an event?</summary>
+                    <div class="faq-answer">
+                        <p>To register for an event:</p>
+                        <ol>
+                            <li>Make sure you're <strong>logged in</strong> to your account</li>
+                            <li>Visit the <a href="/Events" style="color: #3498db; font-weight: 600;">Events page</a></li>
+                            <li>Click on an event to view details</li>
+                            <li>Click the <strong>Register for This Event</strong> button</li>
+                        </ol>
+                    </div>
+                </details>
+            </div>
+
+            <div class="faq-item">
+                <details>
+                    <summary>Can I cancel my event registration?</summary>
+                    <div class="faq-answer">
+                        <p>
+                            Yes! You can manage your event registrations through the <strong>My Bookings</strong> 
+                            section when logged in. If you need assistance, please contact us through the feedback form.
+                        </p>
+                    </div>
+                </details>
+            </div>
+
+            <div class="faq-item">
+                <details>
+                    <summary>How do I create an event?</summary>
+                    <div class="faq-answer">
+                        <p>
+                            Registered users can create community events! Simply log in, go to the 
+                            <a href="/Events" style="color: #3498db; font-weight: 600;">Events page</a>, 
+                            and click the <strong>Create New Event</strong> button. Fill in the event details 
+                            and submit for approval.
+                        </p>
+                    </div>
+                </details>
+            </div>
+        </div>
+    </div>
+
+    <!-- Waste Management -->
+    <div class="faq-category">
+        <h2 class="category-title">🗑️ Waste Management</h2>
+        <div class="faq-list">
+            <div class="faq-item">
+                <details>
+                    <summary>What waste management services are available?</summary>
+                    <div class="faq-answer">
+                        <p>
+                            We offer a range of "discreet" waste management services including standard collection, 
+                            after-hours service, recycling programs, and special disposal services. 
+                            Visit our <a href="/WasteManagement" style="color: #3498db; font-weight: 600;">Waste Management page</a> 
+                            for full details on our... services.
+                        </p>
+                    </div>
+                </details>
+            </div>
+
+            <div class="faq-item">
+                <details>
+                    <summary>What are the collection schedules?</summary>
+                    <div class="faq-answer">
+                        <p>
+                            Standard collections occur weekly. For specific schedules or after-hours services, 
+                            please contact our team directly. We're available 24/7 for urgent "situations."
+                        </p>
+                    </div>
+                </details>
+            </div>
+        </div>
+    </div>
+
+    <!-- Feedback & Support -->
+    <div class="faq-category">
+        <h2 class="category-title">💬 Feedback & Support</h2>
+        <div class="faq-list">
+            <div class="faq-item">
+                <details>
+                    <summary>How do I submit feedback or report an issue?</summary>
+                    <div class="faq-answer">
+                        <p>
+                            We value your input! Visit our <a href="/Feedback" style="color: #3498db; font-weight: 600;">Feedback page</a> 
+                            to submit suggestions, report bugs, or share your experience. 
+                            Choose the appropriate feedback type and provide as much detail as possible.
+                        </p>
+                    </div>
+                </details>
+            </div>
+
+            <div class="faq-item">
+                <details>
+                    <summary>How quickly will I receive a response?</summary>
+                    <div class="faq-answer">
+                        <p>
+                            We aim to respond to all feedback within 2-3 business days. 
+                            If you've requested a follow-up, our team will contact you at the email 
+                            address you provided.
+                        </p>
+                    </div>
+                </details>
+            </div>
+
+            <div class="faq-item">
+                <details>
+                    <summary>Who can I contact for urgent issues?</summary>
+                    <div class="faq-answer">
+                        <p>
+                            For urgent matters, please submit feedback marked as "Support" and we'll 
+                            prioritize your request. For waste management emergencies, call 555-DISPOSE.
+                        </p>
+                    </div>
+                </details>
+            </div>
+        </div>
+    </div>
+
+    <!-- Contact Box -->
+    <div class="faq-contact">
+        <h2>Still Have Questions?</h2>
+        <p>Can't find the answer you're looking for? We're here to help!</p>
+        <a href="/Feedback" class="btn-contact">Contact Support</a>
+    </div>
 </div>

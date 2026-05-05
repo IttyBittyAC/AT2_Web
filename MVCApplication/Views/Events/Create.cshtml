@@ -1,13 +1,145 @@
 ﻿<!--Only for Admin-->
+@model MVCApplication.Models.AndInTheDarknessBindThem
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Create Event";
 }
 
-<div>
-    <h1>Create Event</h1>
-    <input type="text" placeholder="Event Name" />
-    <input type="text" placeholder="Event Description" />
-    <input type="text" placeholder="Event Date" />
-    <input type="text" placeholder="Event Location" />
-    <button type="submit">Create</button>
+@section Styles {
+    <link rel="stylesheet" href="~/css/create-event.css" asp-append-version="true" />
+}
+
+<div class="create-event-container">
+    <!-- Header -->
+    <div class="create-event-header">
+        <h1 class="create-event-title">📅 Create New Event</h1>
+        <p class="create-event-subtitle">Share an event with your community</p>
+    </div>
+
+    <!-- Alert Messages -->
+    @if (!string.IsNullOrEmpty(Model.Error))
+    {
+        <div class="alert error">
+            <strong>⚠️ Error:</strong> @Model.Error
+        </div>
+    }
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert success">
+            <strong>✓ Success:</strong> @TempData["Success"]
+        </div>
+    }
+
+    <!-- Info Box -->
+    <div class="info-box">
+        <p>
+            <strong>💡 Tip:</strong> Make your event stand out with a clear title and detailed description. 
+            Include all important information so attendees know what to expect!
+        </p>
+    </div>
+
+    <!-- Create Event Form -->
+    <form method="post" action="/Events/Create" class="create-event-form">
+        @Html.AntiForgeryToken()
+
+        <!-- Event Title -->
+        <div class="form-group">
+            <label for="Title">
+                Event Title
+                <span class="required">*</span>
+            </label>
+            <input type="text" 
+                   id="Title" 
+                   name="Title" 
+                   placeholder="e.g., Community Barbecue, Book Club Meeting"
+                   value="@Model.Event?.Title"
+                   required
+                   minlength="5"
+                   maxlength="200" />
+            <span asp-validation-for="Event.Title" class="text-danger"></span>
+            <div class="form-helper">Minimum 5 characters, maximum 200</div>
+        </div>
+
+        <!-- Event Description -->
+        <div class="form-group">
+            <label for="Description">
+                Event Description
+            </label>
+            <textarea id="Description" 
+                      name="Description" 
+                      placeholder="Describe your event in detail... What will happen? Who should attend? What should people bring?"
+                      maxlength="2000">@Model.Event?.Description</textarea>
+            <span asp-validation-for="Event.Description" class="text-danger"></span>
+            <div id="descriptionCounter" class="char-counter">0 / 2000 characters</div>
+        </div>
+
+        <!-- Event Date & Time -->
+        <div class="form-group">
+            <label for="EventDate">
+                Event Date & Time
+                <span class="required">*</span>
+            </label>
+            <input type="datetime-local" 
+                   id="EventDate" 
+                   name="EventDate" 
+                   value="@(Model.Event?.EventDate.ToString("yyyy-MM-ddTHH:mm"))"
+                   required />
+            <span asp-validation-for="Event.EventDate" class="text-danger"></span>
+            <div class="form-helper">Select when your event will take place</div>
+        </div>
+
+        <!-- Event Location -->
+        <div class="form-group">
+            <label for="Location">
+                Location
+            </label>
+            <input type="text" 
+                   id="Location" 
+                   name="Location" 
+                   placeholder="e.g., Community Hall, Main Street Park"
+                   value="@Model.Event?.Location" />
+            <span asp-validation-for="Event.Location" class="text-danger"></span>
+            <div class="form-helper">Where will the event be held?</div>
+        </div>
+
+        <!-- Form Actions -->
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary">
+                ✓ Create Event
+            </button>
+            <a href="/Events" class="btn btn-secondary">
+                Cancel
+            </a>
+        </div>
+    </form>
 </div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    
+    <script>
+        // Character counter for description
+        document.addEventListener('DOMContentLoaded', function() {
+            const descriptionField = document.getElementById('Description');
+            const counter = document.getElementById('descriptionCounter');
+            
+            function updateCounter() {
+                const length = descriptionField.value.length;
+                counter.textContent = length + ' / 2000 characters';
+                
+                if (length > 1900) {
+                    counter.classList.add('danger');
+                    counter.classList.remove('warning');
+                } else if (length > 1700) {
+                    counter.classList.add('warning');
+                    counter.classList.remove('danger');
+                } else {
+                    counter.classList.remove('warning', 'danger');
+                }
+            }
+            
+            descriptionField.addEventListener('input', updateCounter);
+            updateCounter(); // Initial update
+        });
+    </script>
+}
