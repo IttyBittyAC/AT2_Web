@@ -23,6 +23,7 @@
             public const string Feedback = "~/Views/Admin/Feedback.cshtml";
             public const string Announcements = "~/Views/Admin/Announcements.cshtml";
             public const string Events = "~/Views/Admin/Events.cshtml";
+            public const string Logs = "~/Views/Admin/Logs.cshtml";
         }
         public static class Dashboard
         {
