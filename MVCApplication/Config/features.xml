@@ -1,0 +1,9 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Settings>
+	<Features>
+		<!--To enable or disable new UI-->
+		<NewUI>true</NewUI>
+		<!--To enable or disable Beta-->
+		<EnableBeta>false</EnableBeta>
+	</Features>
+</Settings>

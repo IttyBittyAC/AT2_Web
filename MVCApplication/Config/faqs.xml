@@ -1,0 +1,8 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Faqs>
+	<!--Add more as needed-->
+	<Faq id="f1">
+		<Question>How do I...?</Question>
+		<Answer>Do ...</Answer>
+	</Faq>
+</Faqs>

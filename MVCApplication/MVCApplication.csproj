@@ -14,4 +14,11 @@
     <PackageReference Include="Microsoft.Data.Sqlite" Version="10.0.5" />
   </ItemGroup>
 
+  <!-- Include XML configuration files under Config and copy them to output for runtime access -->
+  <ItemGroup>
+    <Content Include="Config\**\*.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
 </Project>

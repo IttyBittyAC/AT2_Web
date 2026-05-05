@@ -1,0 +1,5 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<AppSettings>
+	<Setting key="FeatureXEnabled" value="true"/>
+	<Setting key="SupportEmail" value="support@example.com"/>
+</AppSettings>

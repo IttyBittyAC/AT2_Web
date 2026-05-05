@@ -1,4 +1,5 @@
 using MVCApplication.Data;
+using MVCApplication.XMLServices;
 
 namespace MVCApplication
 {
@@ -8,9 +9,13 @@ namespace MVCApplication
         {
             var builder = WebApplication.CreateBuilder(args);
 
+            //Add XML configuration file for feature flags
+            builder.Configuration.AddXmlFile("Config/features.xml", optional: false, reloadOnChange: true);
+
+            //Register XML configuration service (loads Config/*.xml)
+            builder.Services.AddSingleton<IXMLConfigService, XMLConfigService>();
+
             // Add services to the container.
-
-
             builder.Services.AddControllersWithViews();
             builder.Services.AddScoped<AppDb>();
             builder.Services.AddScoped<Seeding>();
@@ -40,6 +45,18 @@ namespace MVCApplication
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
+
+            app.MapGet("/sitemap.xml", (HttpContext _) =>
+            {
+                var file = Path.Combine(app.Environment.ContentRootPath, "wwwroot", "sitemap.xml");
+                return File.Exists(file) ? Results.File(file, "application/xml") : Results.NotFound();
+            });
+
+            app.MapGet("/rss.xml", (HttpContext _) =>
+            {
+                var file = Path.Combine(app.Environment.ContentRootPath, "wwwroot", "rss.xml");
+                return File.Exists(file) ? Results.File(file, "application/xml") : Results.NotFound();
+            });
 
             app.UseRouting();
 
