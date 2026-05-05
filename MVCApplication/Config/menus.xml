@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Menus version="1.0">
+	<Menu id="main">
+		<Item text="Home" url="/" order="1"/>
+		<Item text="Announcements" url="/Announcements" order ="2"/>
+		<Item text="Events" url="/Events" order ="3"/>
+		<Item text="Services" url="/Services" order ="4"/>
+		<Item text="Feedback" url="/Feedback" order ="5"/>
+		<Item text="FAQ" url="/FAQ" order ="6"/>
+		<Item text="My Bookings" url="/Dashboard/MyBookings" order ="7"/>
+		<Item text="Admin" url="/Admin/Users" order ="8"/>
+	</Menu>
+</Menus>

@@ -1,0 +1,8 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Footer>
+	<Columns>
+		<Column title="Company">
+			<Link text="About Us" url="/about"/>
+		</Column>
+	</Columns>
+</Footer>
