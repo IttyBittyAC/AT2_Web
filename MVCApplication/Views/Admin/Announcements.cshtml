@@ -7,7 +7,7 @@
 
 <div class="container">
     <h1 class="title has-text-centered">Announcements (Admin)</h1>
-    
+
     @if (!Model.IsAdmin)
     {
         <div class="notification is-danger">
@@ -16,71 +16,229 @@
     }
     else
     {
-        @if (!string.IsNullOrEmpty(Model.Error))
-        {
-            <div class="notification is-danger">@Model.Error</div>
-        }
-        @if (!string.IsNullOrEmpty(Model.Success))
-        {
-            <div class="notification is-success">@Model.Success</div>
-        }
-
         <section class="box">
-            <h2 class="subtitle">Create New Announcement</h2>
-            <form method="post" action="/Admin/Announcements">
-                @Html.AntiForgeryToken()
-                <input type="hidden" name="action" value="create" />
+            <h2 class="subtitle">Create / Add Announcement</h2>
+
+            <form id="announcementForm" onsubmit="return false;">
                 <div class="field">
                     <label class="label">Title</label>
                     <div class="control">
-                        <input class="input" type="text" name="title" placeholder="Announcement title" />
+                        <input id="annTitle" class="input" type="text" placeholder="Announcement title" required />
                     </div>
                 </div>
 
                 <div class="field">
                     <label class="label">Body</label>
                     <div class="control">
-                        <textarea class="textarea" name="body" placeholder="Announcement body"></textarea>
+                        <textarea id="annBody" class="textarea" placeholder="Announcement body" required></textarea>
                     </div>
                 </div>
 
                 <div class="field is-grouped">
                     <div class="control">
-                        <button type="submit" class="button is-primary">Create</button>
+                        <button id="addBtn" class="button is-primary">Add</button>
                     </div>
                     <div class="control">
-                        <button type="reset" class="button is-light">Reset</button>
+                        <button id="clearBtn" type="button" class="button is-light">Clear</button>
+                    </div>
+                    <div class="control">
+                        <button id="exportBtn" type="button" class="button is-info">Export</button>
                     </div>
                 </div>
             </form>
         </section>
 
         <section class="box">
-            <h2 class="subtitle">Manage Announcements</h2>
+            <h2 class="subtitle">Current Announcements</h2>
+            <div id="announcementsList" class="content"></div>
 
-            <!--
-                NOTE:
-                - There is currently no announcements collection on the shared view model.
-                - Replace the static placeholders below with server-rendered data once you add
-                  announcement storage (table + AppDb methods) and update AdminController POST/GET.
-            -->
-            <div class="content">
-                <details>
-                    <summary>Sample announcement: System maintenance</summary>
-                    <div class="announcement-body">
-                        Scheduled maintenance on Sunday 2am - 4am.
-                    </div>
-                </details>
-
-                <details>
-                    <summary>Sample announcement: New feature</summary>
-                    <div class="announcement-body">
-                        We have added a new events calendar for the community.
-                    </div>
-                </details>
+            <div class="field mt-4">
+                <div class="control">
+                    <button id="deleteSelectedBtn" class="button is-danger">Delete Selected</button>
+                </div>
             </div>
-
-            <p class="help">To continue: add an announcements table and CRUD methods in <code>AppDb</code>, then populate this section from the model and wire the POST handler in <code>AdminController</code>.</p>
         </section>
     }
 </div>
+
+<script>
+    (function () {
+        const STORAGE_KEY = "admin_announcements_v1";
+
+        function uid() { return Date.now().toString(36) + Math.random().toString(36).slice(2, 8); }
+
+        function load() {
+            try {
+                const raw = localStorage.getItem(STORAGE_KEY);
+                return raw ? JSON.parse(raw) : [];
+            } catch {
+                return [];
+            }
+        }
+
+        function save(list) {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
+        }
+
+        function render() {
+            const list = load();
+            const container = document.getElementById("announcementsList");
+            if (!container) return;
+
+            if (!list || list.length === 0) {
+                container.innerHTML = '<div class="notification is-warning">No announcements yet.</div>';
+                return;
+            }
+
+            const html = list.map(a => `
+                <article class="message">
+                    <div class="message-header" style="display:flex;align-items:center;justify-content:space-between;">
+                        <div style="flex:1">
+                            <strong>${escapeHtml(a.title)}</strong>
+                            <div class="is-size-7 has-text-grey">Posted: ${new Date(a.createdAt).toLocaleString()}</div>
+                        </div>
+                        <div style="display:flex;gap:0.5rem;align-items:center;">
+                            <label class="checkbox" style="margin-right:0.5rem;">
+                                <input type="checkbox" class="delete-checkbox" data-id="${a.id}" />
+                            </label>
+                            <button class="button is-small is-light edit-btn" data-id="${a.id}">Edit</button>
+                        </div>
+                    </div>
+                    <div class="message-body">
+                        <div class="ann-body" data-id="${a.id}">${escapeHtml(a.body).replace(/\n/g, '<br/>')}</div>
+
+                        <div class="edit-area mt-3" data-id="${a.id}" style="display:none;">
+                            <div class="field">
+                                <input class="input edit-title" data-id="${a.id}" value="${escapeAttr(a.title)}" />
+                            </div>
+                            <div class="field">
+                                <textarea class="textarea edit-body" data-id="${a.id}">${escapeHtml(a.body)}</textarea>
+                            </div>
+                            <div class="field is-grouped">
+                                <div class="control">
+                                    <button class="button is-primary save-edit-btn" data-id="${a.id}">Save</button>
+                                </div>
+                                <div class="control">
+                                    <button class="button is-light cancel-edit-btn" data-id="${a.id}">Cancel</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+            `).join('');
+            container.innerHTML = html;
+            attachHandlers();
+        }
+
+        function attachHandlers() {
+            document.querySelectorAll(".edit-btn").forEach(btn =>
+                btn.addEventListener("click", () => toggleEdit(btn.dataset.id))
+            );
+            document.querySelectorAll(".save-edit-btn").forEach(btn =>
+                btn.addEventListener("click", () => saveEdit(btn.dataset.id))
+            );
+            document.querySelectorAll(".cancel-edit-btn").forEach(btn =>
+                btn.addEventListener("click", () => cancelEdit(btn.dataset.id))
+            );
+        }
+
+        function toggleEdit(id) {
+            const area = document.querySelector('.edit-area[data-id="' + id + '"]');
+            if (!area) return;
+            area.style.display = area.style.display === "none" ? "block" : "none";
+        }
+
+        function saveEdit(id) {
+            const titleEl = document.querySelector('.edit-title[data-id="' + id + '"]');
+            const bodyEl = document.querySelector('.edit-body[data-id="' + id + '"]');
+            if (!titleEl || !bodyEl) return;
+            const list = load();
+            const idx = list.findIndex(x => x.id === id);
+            if (idx === -1) return;
+            list[idx].title = titleEl.value.trim();
+            list[idx].body = bodyEl.value.trim();
+            save(list);
+            render();
+        }
+
+        function cancelEdit(id) {
+            const area = document.querySelector('.edit-area[data-id="' + id + '"]');
+            if (area) area.style.display = "none";
+        }
+
+        function addAnnouncement(title, body) {
+            const list = load();
+            list.unshift({
+                id: uid(),
+                title: title,
+                body: body,
+                createdAt: new Date().toISOString()
+            });
+            save(list);
+            render();
+        }
+
+        function deleteSelected() {
+            const checked = Array.from(document.querySelectorAll('.delete-checkbox:checked')).map(ch => ch.dataset.id);
+            if (!checked.length) return;
+            let list = load();
+            list = list.filter(a => !checked.includes(a.id));
+            save(list);
+            render();
+        }
+
+        function exportAnnouncements() {
+            const list = load();
+            const blob = new Blob([JSON.stringify(list, null, 2)], { type: "application/json" });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement("a");
+            a.href = url;
+            a.download = "announcements.json";
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+            URL.revokeObjectURL(url);
+        }
+
+        function escapeHtml(s) {
+            if (!s) return "";
+            return s.replace(/[&<>"']/g, function (m) {
+                return ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[m];
+            });
+        }
+
+        function escapeAttr(s) {
+            return (s || "").replace(/"/g, '&quot;').replace(/</g, '&lt;');
+        }
+
+        // Wire UI
+        document.getElementById("addBtn").addEventListener("click", function () {
+            const t = document.getElementById("annTitle").value.trim();
+            const b = document.getElementById("annBody").value.trim();
+            if (!t || !b) {
+                alert("Title and body are required.");
+                return;
+            }
+            addAnnouncement(t, b);
+            document.getElementById("annTitle").value = "";
+            document.getElementById("annBody").value = "";
+        });
+
+        document.getElementById("clearBtn").addEventListener("click", function () {
+            document.getElementById("annTitle").value = "";
+            document.getElementById("annBody").value = "";
+        });
+
+        document.getElementById("deleteSelectedBtn").addEventListener("click", function () {
+            if (!confirm("Delete selected announcements?")) return;
+            deleteSelected();
+        });
+
+        document.getElementById("exportBtn").addEventListener("click", function () {
+            exportAnnouncements();
+        });
+
+        // Initial render
+        render();
+    })();
+</script>
