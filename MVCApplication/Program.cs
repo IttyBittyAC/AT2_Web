@@ -9,7 +9,7 @@ namespace MVCApplication
             var builder = WebApplication.CreateBuilder(args);
 
             //Add XML configuration file for feature flags
-            builder.Configuration.AddXmlFile("features.xml", optional: false, reloadOnChange: true);
+            builder.Configuration.AddXmlFile("Config/features.xml", optional: false, reloadOnChange: true);
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
