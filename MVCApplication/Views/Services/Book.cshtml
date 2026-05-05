@@ -17,7 +17,7 @@
     <!-- Alert Messages -->
     @if (!string.IsNullOrEmpty(Model.Error))
     {
-        <div class="alert error">
+        <div class="alert error" id="serverError">
             <strong>⚠️ Error:</strong> @Model.Error
         </div>
     }
@@ -29,50 +29,49 @@
         </div>
     }
 
+    <div class="alert error" id="validationErrors" style="display: none;"></div>
+
     <!-- Booking Form -->
-    <form method="post" action="/Services/Book" class="booking-form">
+    <form method="post" action="/Services/Book" class="booking-form" id="bookingForm">
         @Html.AntiForgeryToken()
 
         <div class="form-group">
             <label for="FullName">
-                Full Name <span style="color: #c62828;">*</span>
+                Full Name <span class="required">*</span>
             </label>
-            <input type="text" 
-                   id="FullName" 
-                   name="FullName" 
+            <input type="text"
+                   id="FullName"
+                   name="FullName"
                    placeholder="John Doe"
-                   value="@Model.Booking?.FullName"
-                   required />
-            <span asp-validation-for="Booking.FullName" class="text-danger"></span>
+                   value="@Model.Booking?.FullName" />
+            <span class="error-message" id="fullNameError"></span>
         </div>
 
         <div class="form-group">
             <label for="Email">
-                Email Address <span style="color: #c62828;">*</span>
+                Email Address <span class="required">*</span>
             </label>
-            <input type="email" 
-                   id="Email" 
-                   name="Email" 
+            <input type="email"
+                   id="Email"
+                   name="Email"
                    placeholder="john.doe@example.com"
-                   value="@Model.Booking?.Email"
-                   required />
-            <span asp-validation-for="Booking.Email" class="text-danger"></span>
+                   value="@Model.Booking?.Email" />
+            <span class="error-message" id="emailError"></span>
         </div>
 
         <div class="form-group">
             <label for="BookingDate">
-                Preferred Date <span style="color: #c62828;">*</span>
+                Preferred Date <span class="required">*</span>
             </label>
-            <input type="date" 
-                   id="BookingDate" 
-                   name="BookingDate" 
-                   value="@Model.Booking?.BookingDate.ToString("yyyy-MM-dd")"
-                   required />
-            <span asp-validation-for="Booking.BookingDate" class="text-danger"></span>
+            <input type="date"
+                   id="BookingDate"
+                   name="BookingDate"
+                   value="@Model.Booking?.BookingDate.ToString("yyyy-MM-dd")" />
+            <span class="error-message" id="bookingDateError"></span>
         </div>
 
-        <div style="display: flex; gap: 15px; margin-top: 30px;">
-            <button type="submit" class="btn-book" style="flex: 1; padding: 14px;">
+        <div class="booking-actions">
+            <button type="submit" class="btn-book">
                 ✓ Submit Booking
             </button>
             <a href="/Services" class="btn-secondary">
@@ -83,5 +82,6 @@
 </div>
 
 @section Scripts {
-    <partial name="_ValidationScriptsPartial" />
+    <script src="~/js/validation-helpers.js"></script>
+    <script src="~/js/booking-validation.js"></script>
 }

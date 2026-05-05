@@ -109,6 +109,26 @@
     font-weight: 500;
 }
 
+.error-message {
+    color: #c62828;
+    font-size: 0.875rem;
+    display: block;
+    margin-top: 5px;
+    font-weight: 500;
+    visibility: hidden;
+}
+
+.form-group input.invalid,
+.form-group textarea.invalid {
+    border-color: #c62828;
+    box-shadow: 0 0 0 3px rgba(198, 40, 40, 0.1);
+}
+
+.form-group input.valid,
+.form-group textarea.valid {
+    border-color: #2e7d32;
+}
+
 /* Character Counter */
 .char-counter {
     text-align: right;
