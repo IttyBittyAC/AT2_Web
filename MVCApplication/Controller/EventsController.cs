@@ -60,7 +60,14 @@ namespace MVCApplication.Controllers
         /// </summary>
         /// <param name="id">Event ID</param>
         /// <returns>Event details view with data or error if not found</returns>
-        [HttpPost("/Events/Details")]
-        public Task<IActionResult> Details(int? id) => GraveMind(Events.Details, "events", "Display Events/Event", populate: async m => { var (events, _event) = await _db.GetEvent(id); m.Events = events ?? []; m.Event = _event; }, errorMsg: "Event not found");
+        [HttpGet("/Events/{id}")]
+        public Task<IActionResult> Details(int id) => 
+            GraveMind(Events.Details, "events", "Event Details", 
+                populate: async m => { 
+                    var (_, _event) = await _db.GetEvent(id); 
+                    m.Event = _event; 
+                }, 
+                check: m => m.Event != null,
+                errorMsg: "Event not found");
     }
 }
