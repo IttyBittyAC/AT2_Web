@@ -5,7 +5,7 @@ using MVCApplication.Models;
 
 namespace MVCApplication.Data
 {
-    public class AppDb
+    public partial class AppDb
     {
         private readonly string _conn; //Connection string for SQLite database
         private readonly ILogger _logger; //Logger for error handling
@@ -122,13 +122,13 @@ namespace MVCApplication.Data
                         BookingDate     datetime
                     );
                     CREATE TABLE IF NOT EXISTS logs (
-                        Id              integer primary key autoincrement,
-                        IsError         integer  not null default 0,
-                        UserName        text not null,
-                        UserPassword    text not null,
-                        Message         text not null,
-                        View            text not null,
-                        DateTime        datetime default current_timestamp
+                        Id integer primary key autoincrement,
+                        IsError integer not null default 0,
+                        UserName text not null,
+                        Role text not null,
+                        View text not null,
+                        Message text not null,
+                        DateTime datetime default current_timestamp
                     );"
                 );
             }

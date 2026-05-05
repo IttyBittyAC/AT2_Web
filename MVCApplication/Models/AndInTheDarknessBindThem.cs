@@ -30,6 +30,8 @@
         public List<Feedback> Feedbacks { get; set; } = [];
         public User? User { get; set; }
         public List<User> Users { get; set; } = [];
+        public Log? Log { get; set; }
+        public List<Log> Logs { get; set; } = [];
 
         public static AndInTheDarknessBindThem Build(string table, string? currentUser, string? currentRole, string? title = null, string? returnurl = null) =>
             new AndInTheDarknessBindThem

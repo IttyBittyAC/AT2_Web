@@ -1,12 +1,96 @@
-﻿@{
+﻿@model MVCApplication.Models.AndInTheDarknessBindThem
+@using System.Linq
+@{
     ViewData["Title"] = "Events";
 }
 
-<div>
-    <h1>Events</h1>
-    <ul>
-        <li>Some text here</li>
-        <li>Some text here</li>
-        <li>Some text here</li>
-    </ul>
+@section Styles {
+    <link rel="stylesheet" href="~/css/Events.css" asp-append-version="true" />
+}
+
+<div class="events-container">
+    <!-- Header -->
+    <div class="events-header">
+        <h1 class="events-title">📅 Community Events</h1>
+        <p class="events-subtitle">Discover and join exciting events in our community</p>
+    </div>
+
+    <!-- Create Event Button (Only for authenticated users) -->
+    @if (Model.IsAuth)
+    {
+        <div class="create-event-section">
+            <a href="/Events/Create" class="btn-create-event">
+                ➕ Create New Event
+            </a>
+        </div>
+    }
+
+    <!-- Events Grid -->
+    @if (Model.Events != null && Model.Events.Any())
+    {
+        <div class="events-grid">
+            @foreach (var evt in Model.Events)
+            {
+                <div class="event-card">
+                    <!-- Card Header -->
+                    <div class="event-card-header">
+                        <h2 class="event-card-title">@evt.Title</h2>
+                    </div>
+
+                    <!-- Card Body -->
+                    <div class="event-card-body">
+                        <p class="event-description">
+                            @if (evt.Description.Length > 150)
+                            {
+                                @evt.Description.Substring(0, 150)<text>...</text>
+                            }
+                            else
+                            {
+                                @evt.Description
+                            }
+                        </p>
+
+                        <!-- Event Meta Information -->
+                        <div class="event-meta">
+                            <div class="event-meta-item">
+                                <span class="event-meta-icon">🗓️</span>
+                                <span class="event-meta-text event-date">
+                                    @evt.EventDate.ToString("MMMM dd, yyyy 'at' h:mm tt")
+                                </span>
+                            </div>
+
+                            <div class="event-meta-item">
+                                <span class="event-meta-icon">📍</span>
+                                <span class="event-meta-text event-location">
+                                    @evt.Location
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Card Footer -->
+                    <div class="event-card-footer">
+                        <a href="/Events/Details/@evt.Id" class="btn-view-details">
+                            View Details →
+                        </a>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <!-- Empty State -->
+        <div class="empty-state">
+            <div class="empty-state-icon">📅</div>
+            <h2>No Events Available</h2>
+            <p>There are currently no upcoming events. Check back soon!</p>
+            @if (Model.IsAuth)
+            {
+                <a href="/Events/Create" class="btn-create-event">
+                    Be the first to create an event!
+                </a>
+            }
+        </div>
+    }
 </div>

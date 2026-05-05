@@ -1,3 +1,86 @@
-﻿@{
-    ViewData["Title"] = "Announcements";
+﻿@model MVCApplication.Models.AndInTheDarknessBindThem
+
+@{
+    ViewData["Title"] = "Admin - Announcements";
+    Layout = "_Layout";
 }
+
+<div class="container">
+    <h1 class="title has-text-centered">Announcements (Admin)</h1>
+    
+    @if (!Model.IsAdmin)
+    {
+        <div class="notification is-danger">
+            You do not have permission to view this page.
+        </div>
+    }
+    else
+    {
+        @if (!string.IsNullOrEmpty(Model.Error))
+        {
+            <div class="notification is-danger">@Model.Error</div>
+        }
+        @if (!string.IsNullOrEmpty(Model.Success))
+        {
+            <div class="notification is-success">@Model.Success</div>
+        }
+
+        <section class="box">
+            <h2 class="subtitle">Create New Announcement</h2>
+            <form method="post" action="/Admin/Announcements">
+                @Html.AntiForgeryToken()
+                <input type="hidden" name="action" value="create" />
+                <div class="field">
+                    <label class="label">Title</label>
+                    <div class="control">
+                        <input class="input" type="text" name="title" placeholder="Announcement title" />
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label class="label">Body</label>
+                    <div class="control">
+                        <textarea class="textarea" name="body" placeholder="Announcement body"></textarea>
+                    </div>
+                </div>
+
+                <div class="field is-grouped">
+                    <div class="control">
+                        <button type="submit" class="button is-primary">Create</button>
+                    </div>
+                    <div class="control">
+                        <button type="reset" class="button is-light">Reset</button>
+                    </div>
+                </div>
+            </form>
+        </section>
+
+        <section class="box">
+            <h2 class="subtitle">Manage Announcements</h2>
+
+            <!--
+                NOTE:
+                - There is currently no announcements collection on the shared view model.
+                - Replace the static placeholders below with server-rendered data once you add
+                  announcement storage (table + AppDb methods) and update AdminController POST/GET.
+            -->
+            <div class="content">
+                <details>
+                    <summary>Sample announcement: System maintenance</summary>
+                    <div class="announcement-body">
+                        Scheduled maintenance on Sunday 2am - 4am.
+                    </div>
+                </details>
+
+                <details>
+                    <summary>Sample announcement: New feature</summary>
+                    <div class="announcement-body">
+                        We have added a new events calendar for the community.
+                    </div>
+                </details>
+            </div>
+
+            <p class="help">To continue: add an announcements table and CRUD methods in <code>AppDb</code>, then populate this section from the model and wire the POST handler in <code>AdminController</code>.</p>
+        </section>
+    }
+</div>

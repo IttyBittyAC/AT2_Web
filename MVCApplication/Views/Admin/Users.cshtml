@@ -1,3 +1,164 @@
-﻿@{
-    ViewData["Title"] = "Users";
+﻿@model MVCApplication.Models.AndInTheDarknessBindThem
+
+@{
+    ViewData["Title"] = "Admin - Users";
+    Layout = "_Layout";
+}
+
+<div class="container">
+    <h1 class="title has-text-centered">Users (Admin)</h1>
+
+    @if (!Model.IsAdmin)
+    {
+        <div class="notification is-danger">
+            You do not have permission to view this page.
+        </div>
+    }
+    else
+    {
+        @if (!string.IsNullOrEmpty(Model.Error))
+        {
+            <div class="notification is-danger">@Model.Error</div>
+        }
+        @if (!string.IsNullOrEmpty(Model.Success))
+        {
+            <div class="notification is-success">@Model.Success</div>
+        }
+
+        <section class="box">
+            <h2 class="subtitle">Create user</h2>
+            <form method="post" action="/Admin/Users">
+                @Html.AntiForgeryToken()
+                <input type="hidden" name="action" value="create" />
+
+                <div class="field">
+                    <label class="label">Username</label>
+                    <div class="control">
+                        <input class="input" type="text" name="user.Username" placeholder="username" />
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label class="label">Full name</label>
+                    <div class="control">
+                        <input class="input" type="text" name="user.FullName" placeholder="Full name" />
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label class="label">Email</label>
+                    <div class="control">
+                        <input class="input" type="email" name="user.Email" placeholder="email@example.com" />
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label class="label">Role</label>
+                    <div class="control">
+                        <div class="select">
+                            <select name="user.Role">
+                                <option value="user">user</option>
+                                <option value="admin">admin</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Optional: password posted into PasswordHash field (backend decides how to store) -->
+                <div class="field">
+                    <label class="label">Password</label>
+                    <div class="control">
+                        <input class="input" type="password" name="user.PasswordHash" placeholder="password (optional)" />
+                    </div>
+                </div>
+
+                <div class="field is-grouped">
+                    <div class="control">
+                        <button type="submit" class="button is-primary">Create</button>
+                    </div>
+                    <div class="control">
+                        <button type="reset" class="button is-light">Reset</button>
+                    </div>
+                </div>
+            </form>
+        </section>
+
+        <section class="box">
+            <h2 class="subtitle">Manage users</h2>
+
+            @if (Model.Users == null || !Model.Users.Any())
+            {
+                <div class="notification is-warning">No users found.</div>
+            }
+            else
+            {
+                <form method="post" action="/Admin/Users" id="usersForm">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" id="action" name="action" value="" />
+
+                    <div class="table-container">
+                        <table class="table is-fullwidth is-striped is-hoverable">
+                            <thead>
+                                <tr>
+                                    <th><input type="checkbox" id="selectAll" /></th>
+                                    <th>Username</th>
+                                    <th>Full name</th>
+                                    <th>Email</th>
+                                    <th>Role</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @for (var i = 0; i < Model.Users.Count; i++)
+                                {
+                                    var u = Model.Users[i];
+                                    <tr>
+                                        <td>
+                                            <input type="checkbox" name="id" value="@u.Id" class="rowCheck" />
+                                        </td>
+                                        <td>
+                                            <input class="input" type="hidden" name="users[@i].Id" value="@u.Id" />
+                                            <input class="input" type="text" name="users[@i].Username" value="@u.Username" />
+                                        </td>
+                                        <td>
+                                            <input class="input" type="text" name="users[@i].FullName" value="@u.FullName" />
+                                        </td>
+                                        <td>
+                                            <input class="input" type="email" name="users[@i].Email" value="@u.Email" />
+                                        </td>
+                                        <td>
+                                            <div class="select">
+                                                <select name="users[@i].Role">
+                                                    <option value="user" selected="@(u.Role == "user")">user</option>
+                                                    <option value="admin" selected="@(u.Role == "admin")">admin</option>
+                                                </select>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="field is-grouped">
+                        <div class="control">
+                            <button type="submit" class="button is-link" onclick="document.getElementById('action').value='update'">Save changes</button>
+                        </div>
+                        <div class="control">
+                            <button type="submit" class="button is-danger" onclick="document.getElementById('action').value='delete'">Delete selected</button>
+                        </div>
+                    </div>
+                </form>
+            }
+        </section>
+    }
+</div>
+
+@section Scripts {
+    <script>
+        // select/deselect all checkboxes
+        document.getElementById('selectAll')?.addEventListener('change', function (e) {
+            var checked = e.target.checked;
+            document.querySelectorAll('.rowCheck').forEach(function (cb) { cb.checked = checked; });
+        });
+    </script>
 }
