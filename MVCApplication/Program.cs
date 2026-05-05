@@ -1,4 +1,5 @@
 using MVCApplication.Data;
+using MVCApplication.XMLServices;
 
 namespace MVCApplication
 {
@@ -10,6 +11,9 @@ namespace MVCApplication
 
             //Add XML configuration file for feature flags
             builder.Configuration.AddXmlFile("Config/features.xml", optional: false, reloadOnChange: true);
+
+            //Register XML configuration service (loads Config/*.xml)
+            builder.Services.AddSingleton<IXMLConfigService, XMLConfigService>();
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
