@@ -96,10 +96,10 @@ namespace MVCApplication.Controllers
             =>
             // Gate 1 (Auth and Admin)
             Guard(requireAdmin: admin, requireAuth: auth) is { } r 
-            ? await new Func<Task<IActionResult>>(async () =>
+            ? await new Func<Task<IActionResult>>(() =>
             {
-                await SaveLog(true, view, "Access denied or login required");
-                return r;
+                _ = SaveLog(true, view, "Access denied or login required");
+                return Task.FromResult(r);
             })() : save != null
 
             // Gate 2 POST
@@ -112,14 +112,14 @@ namespace MVCApplication.Controllers
                 {
                     m.Error = errorMsg;
 
-                    await SaveLog(true, view, errorMsg ?? "Save failed");
+                    _ =  SaveLog(true, view, errorMsg ?? "Save failed");
 
                     return View(view, m);
                 }
 
                 SetSuccess(s, validMsg ?? "done");
 
-                await SaveLog(false, view, validMsg ?? "done");
+                _ =  SaveLog(false, view, validMsg ?? "done");
 
                 return redirct == null ? RedirectToAction("Index") : redirct();
             })()
@@ -138,12 +138,12 @@ namespace MVCApplication.Controllers
                 {
                     m.Error = errorMsg ?? "not found";
 
-                    await SaveLog(true, view, m.Error);
+                    _ = SaveLog(true, view, m.Error);
 
                     return NotFound();
                 }
 
-                await SaveLog(errorMsg != null, view, errorMsg ?? "Viewed page: " + (title ?? view));
+                _ = SaveLog(errorMsg != null, view, errorMsg ?? "Viewed page: " + (title ?? view));
 
                 return View(view, m);
             })();
@@ -179,7 +179,7 @@ namespace MVCApplication.Controllers
         /// <param name="requireAdmin"> IfTrue Checks session for authenticated admin </param>
         /// <param name="requireAuth"> IfTrue Checks session for authenticated user </param>
         /// <returns> IActionResult redirect to login if session data doesnt match required params set, otherwise null </returns>
-        protected IActionResult? Guard(bool requireAdmin = false, bool requireAuth = false) => (requireAuth || requireAdmin) && !IsAuth ? RedirectToAction("Login", "Account") : requireAdmin && !IsAdmin ? Forbid() : null;
+        protected IActionResult? Guard(bool requireAdmin = false, bool requireAuth = false) => (requireAuth || requireAdmin) && !IsAuth ? RedirectToAction("Login", "Account") : requireAdmin && !IsAdmin ? new StatusCodeResult(403) : null;
 
         /// <summary>
         /// Method to pass information to view on redirect about status of operation
@@ -212,12 +212,12 @@ namespace MVCApplication.Controllers
                     Role = role,
                     View = view,
                     Message = message,
-                    DateTime = DateTime.Now
+                    DateTime = DateTime.UtcNow,
                 });
             }
-            catch
+            catch(Exception ex) 
             {
-                //just usin this as a safety net so it doesn't crash the web if there is logging problems.
+                Console.Error.WriteLine($"[LOG FAILED] {ex.Message}");
             }
         }
     }
