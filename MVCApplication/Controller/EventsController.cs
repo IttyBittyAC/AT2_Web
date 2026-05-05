@@ -8,13 +8,13 @@ namespace MVCApplication.Controllers
     /// <summary>
     /// Controller responsible for handling event-related actions such as viewing, creating, and displaying event details.
     /// </summary>
-    public class EventsController : BaseAppController
+    public class EventsController : BaseAppController<EventsController>
     {
         /// <summary>
         /// Initializes a new instance of the EventsController class with the provided database context.
         /// </summary>
         /// <param name="db">Application database context</param>
-        public EventsController(AppDb db) : base(db)
+        public EventsController(AppDb db, ILogger<EventsController> logger) : base(db,logger)
         {
         }
 

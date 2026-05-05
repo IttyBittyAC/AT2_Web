@@ -1,33 +1,37 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Diagnostics;
+using Microsoft.AspNetCore.Mvc;
 using MVCApplication.Data;
 using MVCApplication.Helpers;
 using MVCApplication.Models;
+using System.Linq;
 
 namespace MVCApplication.Controllers
 {
     /// <summary>
     /// Base controller that provides shared database access and common functionality for all other controllers in the application.
     /// </summary>
-    public abstract class BaseAppController : Controller
+    public abstract class BaseAppController<T> : Controller
     {
         /// <summary>
         /// Database context for accessing application data, shared across all controllers that inherit from BaseAppController.
         /// </summary>
         protected readonly AppDb _db;
+        private readonly ILogger<T> _logger;
         /// <summary>
         /// Initializes a new instance of the BaseAppController class with the provided database context, 
         /// allowing derived controllers to access the database through the _db field.
         /// </summary>
         /// <param name="db"></param>
-        protected BaseAppController(AppDb db)
+        protected BaseAppController(AppDb db, ILogger<T> logger)
         {
             _db = db;
+            _logger = logger;
         }
 
         /// <summary>
         /// Gets authentication status of session and sets true if not null
         /// </summary>
-        protected bool IsAuth 
+        protected bool IsAuth
         {
             get
             {
@@ -64,7 +68,23 @@ namespace MVCApplication.Controllers
                 returnUrl
             );
         }
-
+        private async Task<IActionResult> logWrapper(string path, Func<Task<IActionResult>> operation) => 
+            await new Func<Task<IActionResult>>(async () => { 
+                var sw = Stopwatch.StartNew(); 
+                try { var result = await operation(); sw.Stop(); 
+                    await( result switch 
+                    { 
+                        NotFoundResult => SaveLog(true, path, $"FAIL: {result.GetType().Name} {sw.ElapsedMilliseconds}ms"), 
+                        ForbidResult => SaveLog(true, path, $"FAIL: {result.GetType().Name} {sw.ElapsedMilliseconds}ms"), 
+                        RedirectResult =>  SaveLog(false, path, $"PASS: {sw.ElapsedMilliseconds}ms"), 
+                        ViewResult =>SaveLog(false, path, $"PASS: {sw.ElapsedMilliseconds}ms"), 
+                        _ => SaveLog(false, path, $"PASS: {sw.ElapsedMilliseconds}ms"), }); 
+                    return result; } 
+                catch (Exception ex) { 
+                    sw.Stop(); 
+                    await SaveLog(true, path, $"EXCEPTION: {ex.GetType().Name} {sw.ElapsedMilliseconds}ms {ex.Message}");
+                    _logger.LogError(ex, "ERROR in Gravemind");
+                    throw; } })();
         /// <summary>
         /// Method that handles
         ///     Authorisation (auth/admin)
@@ -86,67 +106,55 @@ namespace MVCApplication.Controllers
         /// <param name="errorMsg"> Optional message for a failed operation or validation </param>
         /// <returns> An IActionResult representing either a view, redirect, or error response </returns>
 
-        protected async Task<IActionResult> GraveMind(string view, string table = "", string? title = null,
+        protected Task<IActionResult> GraveMind(string view, string table = "", string? title = null,
             bool auth = false, bool admin = false,
             Func<AndInTheDarknessBindThem, Task>? populate = null,
             Func<AndInTheDarknessBindThem, bool>? check = null,
             Func<Task<bool>>? save = null,
             Func<IActionResult>? redirct = null,
             string? validMsg = null, string? errorMsg = null)
-            =>
-            // Gate 1 (Auth and Admin)
-            Guard(requireAdmin: admin, requireAuth: auth) is { } r 
-            ? await new Func<Task<IActionResult>>(() =>
-            {
-                _ = SaveLog(true, view, "Access denied or login required");
-                return Task.FromResult(r);
-            })() : save != null
+            => 
+            logWrapper(HttpContext.Request.Path.Value ?? view, 
+                async() =>           
+                    // Gate 1 (Auth and Admin)
+                    Guard(requireAdmin: admin, requireAuth: auth) is { } r 
+                    ? await new Func<Task<IActionResult>>(() =>
+                    {
+                        return Task.FromResult(r);
+                    })() : save != null
+                    // Gate 2 POST
+                    ? await new Func<Task<IActionResult>>(async () =>
+                    {
+                        var m = Build(table, title);
+                        var s = await save();
 
-            // Gate 2 POST
-            ? await new Func<Task<IActionResult>>(async () =>
-            {
-                var m = Build(table, title);
-                var s = await save();
+                        if (!s)
+                        {
+                            m.Error = errorMsg;
+                            return View(view, m);
+                        }
+                        SetSuccess(s, validMsg ?? "done");
 
-                if (!s)
-                {
-                    m.Error = errorMsg;
+                        return redirct == null ? RedirectToAction("Index") : redirct();
+                    })()
 
-                    _ =  SaveLog(true, view, errorMsg ?? "Save failed");
+                    // Gate 3 GET
+                    : await new Func<Task<IActionResult>>(async () =>
+                    {
+                        var m = Build(table, title);
 
-                    return View(view, m);
-                }
+                        if (populate != null)
+                        {
+                            await populate(m);
+                        }
 
-                SetSuccess(s, validMsg ?? "done");
-
-                _ =  SaveLog(false, view, validMsg ?? "done");
-
-                return redirct == null ? RedirectToAction("Index") : redirct();
-            })()
-
-            // Gate 3 GET
-            : await new Func<Task<IActionResult>>(async () =>
-            {
-                var m = Build(table, title);
-
-                if (populate != null)
-                {
-                    await populate(m);
-                }
-
-                if (check != null && !check(m))
-                {
-                    m.Error = errorMsg ?? "not found";
-
-                    _ = SaveLog(true, view, m.Error);
-
-                    return NotFound();
-                }
-
-                _ = SaveLog(errorMsg != null, view, errorMsg ?? "Viewed page: " + (title ?? view));
-
-                return View(view, m);
-            })();
+                        if (check != null && !check(m))
+                        {
+                            m.Error = errorMsg ?? "not found";
+                            return NotFound();
+                        }
+                        return View(view, m);
+                    })());
         //protected async Task<IActionResult> GraveMind(string view, string table = "", string? title = null, 
         //    bool auth = false, bool admin = false, 
         //    Func<AndInTheDarknessBindThem, Task>? populate = null, 
@@ -218,6 +226,7 @@ namespace MVCApplication.Controllers
             catch(Exception ex) 
             {
                 Console.Error.WriteLine($"[LOG FAILED] {ex.Message}");
+                _logger.LogError(ex, "[LOG FAILED]");
             }
         }
     }

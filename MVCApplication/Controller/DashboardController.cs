@@ -9,13 +9,13 @@ namespace MVCApplication.Controllers
     /// This controller is responsible for handling user dashboard-related actions, 
     /// such as displaying the main dashboard, user bookings, and profile information.
     /// </summary>
-    public class DashboardController : BaseAppController
+    public class DashboardController : BaseAppController<DashboardController>
     {
         /// <summary>
         /// Initializes a new instance of the DashboardController class with the provided database context.
         /// </summary>
         /// <param name="db">Application database context</param>
-        public DashboardController(AppDb db) : base(db)
+        public DashboardController(AppDb db, ILogger<DashboardController> logger) : base(db, logger)
         {
         }
 

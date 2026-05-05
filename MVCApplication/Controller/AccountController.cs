@@ -11,13 +11,13 @@ namespace MVCApplication.Controllers
     /// <summary>
     /// Controller responsible for handling user account-related actions such as registration, login, and logout.
     /// </summary>
-    public class AccountController : BaseAppController
+    public class AccountController : BaseAppController<AccountController>
     {
         /// <summary>
         /// Initializes a new instance of the AccountController class with the provided database context,
         /// </summary>  
         /// <param name="db">Application database context</param>
-        public AccountController(AppDb db) : base(db)
+        public AccountController(AppDb db, ILogger<AccountController> logger) : base(db,logger)
         {
         }
 

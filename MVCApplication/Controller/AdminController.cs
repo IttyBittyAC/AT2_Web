@@ -8,13 +8,13 @@ namespace MVCApplication.Controllers
     /// <summary>
     /// Controller responsible for handling administrative actions such as managing users, events, and feedback.
     /// </summary>
-    public class AdminController : BaseAppController
+    public class AdminController : BaseAppController<AdminController>
     {
         /// <summary>
         /// Initializes a new instance of the AdminController class with the provided database context.
         /// </summary>
         /// <param name="db">Application database context</param>
-        public AdminController(AppDb db) : base(db)
+        public AdminController(AppDb db, ILogger<AdminController> logger) : base(db,logger)
         {
         }
         /// <summary>

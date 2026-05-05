@@ -9,13 +9,13 @@ namespace MVCApplication.Controllers
     /// <summary>
     /// Controller responsible for handling general site pages such as the home page, announcements, feedback, FAQ, and error pages.
     /// </summary>
-    public class HomeController : BaseAppController
+    public class HomeController : BaseAppController<HomeController>
     {
         /// <summary>
         /// Initializes a new instance of the HomeController class with the provided database context.
         /// </summary>
         /// <param name="db">Application database context</param>
-        public HomeController(AppDb db) : base(db)
+        public HomeController(AppDb db, ILogger<HomeController> logger) : base(db, logger)
         {
         }
 
@@ -61,13 +61,15 @@ namespace MVCApplication.Controllers
         /// <param name="feedback">Feedback object containing user input data</param>
         /// <returns>Redirects on success or returns the view with errors</returns>
         [HttpPost("/Feedback")]
-        public Task<IActionResult> Feedback(Feedback feedback) => ModelState.IsValid
+        public Task<IActionResult> Feedback(Feedback feedback) => !ModelState.IsValid
             ? GraveMind(Home.Feedback, "feedback", "Feedback",
-                populate: async m => { m.Error = "All Fields are required"; await Task.CompletedTask; })
+                populate: async m => { m.Error = "All Fields are required";
+                    await Task.CompletedTask; })
             : GraveMind(Home.Feedback, "feedback", "Feedback",
                 save: () => _db.SaveFeedback(feedback),
-                validMsg: "Successfully deleted user",
+                validMsg: "Submitted form to our database",
                 redirct: () => RedirectToAction("Index"));
+
 
         /// <summary>
         /// Displays the FAQ page.
