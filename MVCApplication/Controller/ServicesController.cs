@@ -8,13 +8,13 @@ namespace MVCApplication.Controllers
     /// <summary>
     /// Controller responsible for handling service booking actions such as viewing bookings, booking services, and viewing booking details.
     /// </summary>
-    public class ServicesController : BaseAppController
+    public class ServicesController : BaseAppController<ServicesController>
     {
         /// <summary>
         /// Initializes a new instance of the ServicesController class with the provided database context.
         /// </summary>
         /// <param name="db">Application database context</param>
-        public ServicesController(AppDb db) : base(db)
+        public ServicesController(AppDb db, ILogger<ServicesController> logger) : base(db, logger)
         {
         }
 
