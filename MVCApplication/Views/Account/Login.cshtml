@@ -2,17 +2,33 @@
 @{
     ViewData["Title"] = "Login";
 }
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/login-register.css" asp-append-version="true" />
+}
+
 <div>
     <h2 class="loginHeading">Login</h2>
 
     @if (!string.IsNullOrEmpty(Model.Error))
     {
-        <div class="alert alert-danger">@Model.Error</div>
+        <div class="alert alert-danger" id="serverError">@Model.Error</div>
     }
 
-    <form method="post" action="/Account/Login">
-        <input type="email" name="email" placeholder="Email" required />
-        <input type="password" name="password" placeholder="Password" required />
+    <div class="alert alert-danger" id="validationErrors" style="display: none;"></div>
+
+    <form method="post" action="/Account/Login" id="loginForm">
+        @Html.AntiForgeryToken()
+        
+        <div class="input-wrapper">
+            <input type="email" id="email" name="email" placeholder="Email" />
+            <span class="error-message" id="emailError"></span>
+        </div>
+
+        <div class="input-wrapper">
+            <input type="password" id="password" name="password" placeholder="Password" />
+            <span class="error-message" id="passwordError"></span>
+        </div>
 
         @if (!string.IsNullOrEmpty(Model.ReturnUrl))
         {
@@ -22,3 +38,8 @@
         <button type="submit">Login</button>
     </form>
 </div>
+
+@section Scripts {
+    <script src="~/js/validation-helpers.js"></script>
+    <script src="~/js/login-validation.js"></script>
+}

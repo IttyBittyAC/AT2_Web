@@ -1,0 +1,59 @@
+/* Login and Register Forms - Side-by-side layout */
+
+/* Container for input + error message */
+.input-wrapper {
+    display: inline-block;
+    vertical-align: top;
+    margin-right: 15px;
+    margin-bottom: 10px;
+}
+
+/* Inputs stay inline */
+.input-wrapper input {
+    display: block;
+    width: 200px;  /* Adjust as needed */
+    margin-bottom: 3px;
+}
+
+/* Error messages below each input */
+.input-wrapper .error-message {
+    color: #c62828;
+    font-size: 0.75rem;
+    display: block;
+    min-height: 14px;
+    width: 200px;
+    white-space: normal;
+    word-wrap: break-word;
+}
+
+/* Submit button on new line */
+form button[type="submit"] {
+    display: block;
+    margin-top: 10px;
+}
+
+/* Validation styling */
+.input-wrapper input.invalid {
+    border-color: #c62828 !important;
+    border-width: 2px !important;
+}
+
+.input-wrapper input.valid {
+    border-color: #2e7d32 !important;
+    border-width: 2px !important;
+}
+
+/* Alert messages */
+.alert {
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    display: block;
+    width: 100%;
+}
+
+.alert-danger {
+    background-color: #ffebee;
+    color: #c62828;
+    border: 1px solid #ef9a9a;
+}

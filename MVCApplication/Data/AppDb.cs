@@ -323,10 +323,13 @@ namespace MVCApplication.Data
         {
             try
             {
-                using SqliteConnection con = new SqliteConnection(_conn);
+                using var c = new SqliteConnection(_conn);
 
                 // Return true if at least one row was affected (i.e., feedback was inserted)
-                return await con.ExecuteAsync(@"INSERT INTO feedback(fullname, email, type, heading, message, wants_contact, submitted_date) VALUES (@FullName, @Email, @Type, @Heading, @Message, @WantsContact, @SubmittedDate)", feedback) > 0;
+                return await c.ExecuteAsync(
+                    @"INSERT INTO feedback(fullname, email, type, heading, message, wants_contact, submitted_date) 
+                      VALUES (@FullName, @Email, @Type, @Heading, @Message, @WantsContact, @Date)", 
+                    feedback) > 0;
             }
             catch (SqliteException ex)
             {

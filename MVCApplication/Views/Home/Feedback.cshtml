@@ -12,9 +12,14 @@
     <h1 class="FeedbackHeading">Share Your Feedback</h1>
     <h2 class="FeedbackSubHeading">We value your feedback! Please share your thoughts and suggestions with us.</h2>
 
-    @if (Model.Error != null)
+    @if (!string.IsNullOrEmpty(Model.Error))
     {
-        <div class="alert error">@Model.Error</div>
+        <div class="alert error" id="serverError">@Model.Error</div>
+    }
+
+    @if (!string.IsNullOrEmpty(Model.Success))
+    {
+        <div class="alert success">@Model.Success</div>
     }
 
     @if (TempData["Success"] != null)
@@ -22,14 +27,16 @@
         <div class="alert success">@TempData["Success"]</div>
     }
 
-    <form method="post" action="/Feedback">
+    <div class="alert error" id="validationErrors" style="display: none;"></div>
+
+    <form method="post" action="/Feedback" id="feedbackForm">
         @Html.AntiForgeryToken()
 
         <!-- Feedback Type Section -->
         <div class="form-section">
             <div class="field">
-                <label for="FeedbackOptions">Feedback Type *</label>
-                <select name="Type" id="FeedbackOptions" required>
+                <label for="Type">Feedback Type *</label>
+                <select name="Type" id="Type">
                     <option value="">— Please select —</option>
                     <option value="Experience" selected="@(t == "Experience" ? "selected" : null)">Experience with the website</option>
                     <option value="ProductSatisfaction" selected="@(t == "ProductSatisfaction" ? "selected" : null)">Product Satisfaction</option>
@@ -37,7 +44,7 @@
                     <option value="Bugs" selected="@(t == "Bugs" ? "selected" : null)">Bug report</option>
                     <option value="Other" selected="@(t == "Other" ? "selected" : null)">Other</option>
                 </select>
-                <span asp-validation-for="Feedback.Type" class="text-danger"></span>
+                <span class="error-message" id="typeError"></span>
             </div>
         </div>
 
@@ -49,18 +56,16 @@
                        id="Heading"
                        name="Heading"
                        placeholder="Brief summary of your feedback"
-                       value="@Model.Feedback?.Heading"
-                       required />
-                <span asp-validation-for="Feedback.Heading" class="text-danger"></span>
+                       value="@Model.Feedback?.Heading" />
+                <span class="error-message" id="headingError"></span>
             </div>
 
             <div class="field">
                 <label for="Message">Your Feedback *</label>
                 <textarea id="Message"
                           name="Message"
-                          placeholder="Tell us how we can improve..."
-                          required>@Model.Feedback?.Message</textarea>
-                <span asp-validation-for="Feedback.Message" class="text-danger"></span>
+                          placeholder="Tell us how we can improve...">@Model.Feedback?.Message</textarea>
+                <span class="error-message" id="messageError"></span>
             </div>
         </div>
 
@@ -74,9 +79,8 @@
                        id="FullName"
                        name="FullName"
                        placeholder="John Doe"
-                       value="@Model.Feedback?.FullName"
-                       required />
-                <span asp-validation-for="Feedback.FullName" class="text-danger"></span>
+                       value="@Model.Feedback?.FullName" />
+                <span class="error-message" id="fullnameError"></span>
             </div>
 
             <div class="field">
@@ -85,9 +89,8 @@
                        id="Email"
                        name="Email"
                        placeholder="john.doe@example.com"
-                       value="@Model.Feedback?.Email"
-                       required />
-                <span asp-validation-for="Feedback.Email" class="text-danger"></span>
+                       value="@Model.Feedback?.Email" />
+                <span class="error-message" id="emailError"></span>
             </div>
         </div>
 
@@ -122,5 +125,6 @@
 </div>
 
 @section Scripts {
-    <partial name="_ValidationScriptsPartial" />
+    <script src="~/js/validation-helpers.js"></script>
+    <script src="~/js/feedback-validation.js"></script>
 }

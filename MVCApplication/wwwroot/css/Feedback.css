@@ -40,6 +40,10 @@
     background-color: #e8f5e9;
     color: #2e7d32;
     border: 1px solid #a5d6a7;
+    padding: 15px 20px;
+    border-radius: 8px;
+    margin-bottom: 25px;
+    font-weight: 500;
 }
 
 /* Form Sections */
