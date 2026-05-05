@@ -3,20 +3,51 @@
     ViewData["Title"] = "Register Account";
 }
 
+@section Styles {
+    <link rel="stylesheet" href="~/css/login-register.css" asp-append-version="true" />
+}
+
 <div>
     <h2 class="RegisterHeading">Register</h2>
 
     @if (!string.IsNullOrEmpty(Model.Error))
     {
-        <div class="alert alert-danger">@Model.Error</div>
+        <div class="alert alert-danger" id="serverError">@Model.Error</div>
     }
 
-    <form method="post" action="/Account/Register">
-        <input type="text" name="fullname" placeholder="Full Name" required />
-        <input type="text" name="username" placeholder="Username" required />
-        <input type="email" name="email" placeholder="Email" required />
-        <input type="password" name="password" placeholder="Password" required />
-        <input type="password" name="adminPassword" placeholder="Admin Password (optional)" />
+    <div class="alert alert-danger" id="validationErrors" style="display: none;"></div>
+
+    <form method="post" action="/Account/Register" id="registerForm">
+        @Html.AntiForgeryToken()
+        
+        <div class="input-wrapper">
+            <input type="text" id="fullname" name="fullname" placeholder="Full Name" />
+            <span class="error-message" id="fullnameError"></span>
+        </div>
+
+        <div class="input-wrapper">
+            <input type="text" id="username" name="username" placeholder="Username" />
+            <span class="error-message" id="usernameError"></span>
+        </div>
+
+        <div class="input-wrapper">
+            <input type="email" id="email" name="email" placeholder="Email" />
+            <span class="error-message" id="emailError"></span>
+        </div>
+
+        <div class="input-wrapper">
+            <input type="password" id="password" name="password" placeholder="Password" />
+            <span class="error-message" id="passwordError"></span>
+        </div>
+
+        <div class="input-wrapper">
+            <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Confirm Password" />
+            <span class="error-message" id="confirmPasswordError"></span>
+        </div>
+
+        <div class="input-wrapper">
+            <input type="password" id="adminPassword" name="adminPassword" placeholder="Admin Password (optional)" />
+        </div>
 
         @if (!string.IsNullOrEmpty(Model.ReturnUrl))
         {
@@ -26,3 +57,8 @@
         <button type="submit">Register</button>
     </form>
 </div>
+
+@section Scripts {
+    <script src="~/js/validation-helpers.js"></script>
+    <script src="~/js/register-validation.js"></script>
+}

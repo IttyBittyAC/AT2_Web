@@ -68,3 +68,77 @@ body {
     background-color: #f1f1f1;
     margin-top: auto;
 }
+
+/* Login and Register form styling - side-by-side inputs */
+form input[type="text"],
+form input[type="email"],
+form input[type="password"] {
+    display: inline-block;
+    width: auto;
+    margin-right: 10px;
+    margin-bottom: 10px;
+}
+
+form button[type="submit"] {
+    display: block;
+    margin-top: 10px;
+}
+
+/* Validation styles - No space taken */
+.error-message {
+    color: #c62828;
+    font-size: 0.875rem;
+    display: block;
+    min-height: 16px;
+    white-space: nowrap;
+}
+
+.error-message:not(:empty) {
+    visibility: visible;
+    height: auto;
+    min-height: 16px;
+    margin-bottom: 8px;
+}
+
+input.invalid,
+textarea.invalid,
+select.invalid {
+    border-color: #c62828 !important;
+}
+
+input.valid,
+textarea.valid,
+select.valid {
+    border-color: #2e7d32 !important;
+}
+
+.alert {
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+.alert-danger {
+    background-color: #ffebee;
+    color: #c62828;
+    border: 1px solid #ef9a9a;
+}
+
+.alert-success {
+    background-color: #e8f5e9;
+    color: #2e7d32;
+    border: 1px solid #a5d6a7;
+}
+
+/* Input groups for side-by-side layout with errors */
+.input-group {
+    display: inline-block;
+    vertical-align: top;
+    margin-right: 15px;
+    margin-bottom: 15px;
+}
+
+.input-group input {
+    display: block;
+    margin-bottom: 3px;
+}
