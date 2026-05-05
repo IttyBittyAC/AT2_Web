@@ -200,18 +200,25 @@ namespace MVCApplication.Controllers
 
         private async Task SaveLog(bool isError, string view, string message)
         {
-            string userName = HttpContext.Session.GetString("user") ?? "Guest";
-            string role = HttpContext.Session.GetString("role") ?? "Guest";
-
-            await _db.SaveLog(new Log
+            try
             {
-                IsError = isError,
-                UserName = userName,
-                Role = role,
-                View = view,
-                Message = message,
-                DateTime = DateTime.Now
-            });
+                string userName = HttpContext.Session.GetString("user") ?? "Guest";
+                string role = HttpContext.Session.GetString("role") ?? "Guest";
+
+                await _db.SaveLog(new Log
+                {
+                    IsError = isError,
+                    UserName = userName,
+                    Role = role,
+                    View = view,
+                    Message = message,
+                    DateTime = DateTime.Now
+                });
+            }
+            catch
+            {
+                //just usin this as a safety net so it doesn't crash the web if there is logging problems.
+            }
         }
     }
 }

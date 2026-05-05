@@ -29,14 +29,14 @@ namespace MVCApplication.Controllers
         /// </summary>
         /// <returns>Announcements view</returns>
         [HttpGet("/Admin/Announcements")]
-        public Task<IActionResult> Announcements() => GraveMind(Admin.Announcements, "announcements", "Announcements",  admin: true);
+        public Task<IActionResult> Announcements() => GraveMind(Admin.Announcements, "announcements", "Announcements", admin: true);
 
         /// <summary>
         /// Displays all users and populates the model with user data from the database. Requires admin access.
         /// </summary>
         /// <returns>Users view with data</returns>
         [HttpGet("/Admin/Users")]
-        public Task<IActionResult> Users() => GraveMind(Admin.Users, "users", "View all users", admin: true, 
+        public Task<IActionResult> Users() => GraveMind(Admin.Users, "users", "View all users", admin: true,
             populate: async m => { var (users, _) = await _db.GetUser(null); m.Users = users ?? []; }, errorMsg: "No users Found");
 
         /// <summary>
@@ -124,8 +124,8 @@ namespace MVCApplication.Controllers
         /// <param name="action">Action to perform (create, update, delete)</param>
         /// <returns>Redirects on success or returns the view with errors</returns>
         [HttpPost("/Admin/FeedBack")]
-        public  Task<IActionResult> Feedback(List<int>? id, List<Feedback> feedbacks, Feedback? feedback, string action) => string.IsNullOrEmpty(action)
-            ? GraveMind(Admin.Events, "feedbacks", "View All Feedbacks", admin: true,
+        public Task<IActionResult> Feedback(List<int>? id, List<Feedback> feedbacks, Feedback? feedback, string action) => string.IsNullOrEmpty(action)
+            ? GraveMind(Admin.Feedback, "feedbacks", "View All Feedbacks", admin: true,
                 populate: async m => { var (f, _) = await _db.GetFeedback(null); m.Feedbacks = f ?? []; },
                 errorMsg: "No action specified")
             : action == "delete" && id != null
@@ -144,5 +144,22 @@ namespace MVCApplication.Controllers
                     save: () => _db.SaveFeedback(feedback),
                     redirct: () => RedirectToAction("Feedback"))
             : Task.FromResult(NotFound() as IActionResult);
+
+
+
+        /// <summary>
+        /// Displays the application logs for administrators.
+        /// </summary>
+        /// <returns>Application logs view</returns>
+        [HttpGet("/Admin/Logs")]
+        public Task<IActionResult> Logs() => GraveMind(
+            Admin.Logs,
+            "logs",
+            "Application Logs",
+            admin: true,
+            populate: async m =>
+            {
+                m.Logs = await _db.GetLogs() ?? [];
+            });
     }
 }
