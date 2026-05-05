@@ -1,52 +1,116 @@
 ﻿using MVCApplication.Models.Config;
+using System.Xml;
+using System.Xml.Linq;
 
 namespace MVCApplication.XMLServices
 {
     public class XMLConfigService : IXMLConfigService
     {
-        /// <summary>
-        /// Retrieves a read-only list of all features defined in the XML configuration.
-        /// </summary>
-        /// <returns>A read-only list of <see cref="Feature"/> objects representing the features available in the configuration.
-        /// The list is empty if no features are defined.</returns>
-        /// <exception cref="NotImplementedException">The method is not implemented.</exception>
-        IReadOnlyList<Feature> IXMLConfigService.GetFeatures()
+        private readonly string _configFolder;
+        private List<Feature> _features = new List<Feature>();
+        private List<Menu> _menus = new List<Menu>();
+
+        public XMLConfigService(IHostEnvironment env)
         {
-            throw new NotImplementedException();
+            _configFolder = Path.Combine(env.ContentRootPath, "Config");
+             LoadAll();
         }
 
-        /// <summary>
-        /// Retrieves the feature with the specified identifier from the configuration source.
-        /// </summary>
-        /// <param name="id">The unique identifier of the feature to retrieve. Cannot be null or empty.</param>
-        /// <returns>A <see cref="Feature"/> instance representing the requested feature if found; otherwise, <see
-        /// langword="null"/>.</returns>
-        /// <exception cref="NotImplementedException">The method is not implemented.</exception>
-        Feature? IXMLConfigService.GetFeature(string id)
+        private XmlReaderSettings SafeSettings()
         {
-            throw new NotImplementedException();
+            return new XmlReaderSettings
+            {
+                DtdProcessing = DtdProcessing.Prohibit,
+                XmlResolver = null
+            };
         }
 
-        /// <summary>
-        /// Retrieves a read-only list of menus defined in the XML configuration.
-        /// </summary>
-        /// <returns>A read-only list of <see cref="Menu"/> objects representing the available menus. The list is empty if no
-        /// menus are defined.</returns>
-        /// <exception cref="NotImplementedException">Thrown if the method is not implemented.</exception>
-        IReadOnlyList<Menu> IXMLConfigService.GetMenus()
+        private void LoadAll()
         {
-            throw new NotImplementedException();
+            _features = LoadFeatures();
+            _menus = LoadMenus();
         }
 
-        /// <summary>
-        /// Retrieves the menu configuration associated with the specified identifier.
-        /// </summary>
-        /// <param name="id">The unique identifier of the menu to retrieve. Cannot be null or empty.</param>
-        /// <returns>A <see cref="Menu"/> object representing the menu configuration if found; otherwise, <see langword="null"/>.</returns>
-        /// <exception cref="NotImplementedException">The method is not implemented.</exception>
-        Menu? IXMLConfigService.GetMenu(string id)
+        private List<Feature> LoadFeatures()
         {
-            throw new NotImplementedException();
+            string file = Path.Combine(_configFolder, "features.xml");
+            if (!File.Exists(file)) return new List<Feature>();
+
+            try
+            {
+                using var reader = XmlReader.Create(file, SafeSettings());
+                XDocument doc = XDocument.Load(reader);
+
+                return doc.Root?
+                    .Elements()
+                    .Where(x => string.Equals(x.Name.LocalName, "feature", StringComparison.OrdinalIgnoreCase))
+                    .Select(x => new Feature
+                    {
+                        Id = (string?)x.Attribute("id") ?? string.Empty,
+                        Enabled = bool.TryParse((string?)x.Attribute("enabled"), out var e) ? e : false
+                    })
+                    .ToList()
+                    ?? new List<Feature>();
+            }
+            catch
+            {
+                return _features;
+            }
+        }
+
+        private List<Menu> LoadMenus()
+        {
+            string file = Path.Combine(_configFolder, "menus.xml");
+            if (!File.Exists(file)) return new List<Menu>();
+            try
+            {
+                using var reader = XmlReader.Create(file, SafeSettings());
+                XDocument doc = XDocument.Load(reader);
+
+                return doc.Root?
+                    .Elements()
+                    .Where(x => string.Equals(x.Name.LocalName, "menu", StringComparison.OrdinalIgnoreCase))
+                    .Select(x => new Menu
+                    {
+                        Id = (string?)x.Attribute("id") ?? string.Empty,
+                        Items = x.Elements()
+                            .Where(i => string.Equals(i.Name.LocalName, "item", StringComparison.OrdinalIgnoreCase))
+                            .Select(i => new MenuItem
+                            {
+                                 Text = (string?)i.Attribute("text") ?? string.Empty,
+                                 Url = (string?)i.Attribute("url") ?? string.Empty,
+                                 Order = int.TryParse((string?)i.Attribute("order"), out var o) ? o : 0
+                            })
+                            .OrderBy(i => i.Order)
+                            .ToList()
+                    })
+                    .ToList()
+                    ?? new List<Menu>();
+            }
+            catch
+            {
+                return _menus;
+            }
+        }
+
+        public IReadOnlyList<Feature> GetFeatures()
+        {
+            return _features;
+        }
+
+        public Feature? GetFeature(string id)
+        {
+            return _features.FirstOrDefault(f => f.Id.Equals(id, StringComparison.OrdinalIgnoreCase));
+        }
+
+        public IReadOnlyList<Menu> GetMenus()
+        {
+            return _menus;
+        }
+
+        public Menu? GetMenu(string id)
+        {
+            return _menus.FirstOrDefault(m => m.Id.Equals(id, StringComparison.OrdinalIgnoreCase));
         }
     }
 }
