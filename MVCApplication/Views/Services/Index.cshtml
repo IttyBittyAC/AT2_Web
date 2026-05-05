@@ -1,8 +1,86 @@
-﻿@{
+﻿@model MVCApplication.Models.AndInTheDarknessBindThem
+@{
     ViewData["Title"] = "Services";
 }
 
-<div>
-    <h1>Our Services</h1>
-    <!-- Services content here -->
+@section Styles {
+    <link rel="stylesheet" href="~/css/services.css" asp-append-version="true" />
+}
+
+<div class="services-container">
+    <!-- Header -->
+    <div class="services-header">
+        <h1 class="services-title">🛠️ Community Services</h1>
+        <p class="services-subtitle">Book services and facilities for your community needs</p>
+    </div>
+
+    <!-- Services Grid -->
+    <div class="services-grid">
+        <!-- Waste Management Service -->
+        <div class="service-card">
+            <span class="service-icon">🗑️</span>
+            <h3 class="service-name">Waste Management</h3>
+            <p class="service-description">
+                Schedule special waste pickups, recycling services, and bulk item removal.
+            </p>
+            <a href="/Services/Book" class="btn-book">Book Service</a>
+        </div>
+
+        <!-- Facility Rental -->
+        <div class="service-card">
+            <span class="service-icon">🏢</span>
+            <h3 class="service-name">Facility Rental</h3>
+            <p class="service-description">
+                Reserve community halls, meeting rooms, and recreational facilities.
+            </p>
+            <a href="/Services/Book" class="btn-book">Book Service</a>
+        </div>
+
+        <!-- Equipment Rental -->
+        <div class="service-card">
+            <span class="service-icon">🛠️</span>
+            <h3 class="service-name">Equipment Rental</h3>
+            <p class="service-description">
+                Rent community equipment like projectors, tables, chairs, and more.
+            </p>
+            <a href="/Services/Book" class="btn-book">Book Service</a>
+        </div>
+
+        <!-- Maintenance Request -->
+        <div class="service-card">
+            <span class="service-icon">🔧</span>
+            <h3 class="service-name">Maintenance Request</h3>
+            <p class="service-description">
+                Submit requests for repairs and maintenance in common areas.
+            </p>
+            <a href="/Services/Book" class="btn-book">Book Service</a>
+        </div>
+
+        <!-- Parking Permit -->
+        <div class="service-card">
+            <span class="service-icon">🅿️</span>
+            <h3 class="service-name">Parking Permit</h3>
+            <p class="service-description">
+                Apply for visitor parking permits and reserved parking spaces.
+            </p>
+            <a href="/Services/Book" class="btn-book">Book Service</a>
+        </div>
+
+        <!-- Community Transport -->
+        <div class="service-card">
+            <span class="service-icon">🚐</span>
+            <h3 class="service-name">Community Transport</h3>
+            <p class="service-description">
+                Book community shuttle services for events and group outings.
+            </p>
+            <a href="/Services/Book" class="btn-book">Book Service</a>
+        </div>
+    </div>
+
+    <!-- My Bookings Link -->
+    <div style="text-align: center; margin-top: 40px;">
+        <a href="/Dashboard/MyBookings" class="btn-secondary">
+            🎫 View My Bookings
+        </a>
+    </div>
 </div>

@@ -1,12 +1,87 @@
-﻿@{
-    ViewData["Title"] = "Booking";
+﻿@model MVCApplication.Models.AndInTheDarknessBindThem
+@{
+    ViewData["Title"] = "Book a Service";
 }
 
-<div>
-    <h1>Book a Service</h1>
-    <input type="text" placeholder="Full Name" />
-    <input type="text" placeholder="Email" />
-    <input type="text" placeholder="Event Id" />
-    <input type="text" placeholder="Booking Date" />
-    <button type="submit">Submit</button>
+@section Styles {
+    <link rel="stylesheet" href="~/css/services.css" asp-append-version="true" />
+}
+
+<div class="services-container booking-form-container">
+    <!-- Header -->
+    <div class="services-header">
+        <h1 class="services-title">📋 Book a Service</h1>
+        <p class="services-subtitle">Fill out the form below to reserve your service</p>
+    </div>
+
+    <!-- Alert Messages -->
+    @if (!string.IsNullOrEmpty(Model.Error))
+    {
+        <div class="alert error">
+            <strong>⚠️ Error:</strong> @Model.Error
+        </div>
+    }
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert success">
+            <strong>✓ Success:</strong> @TempData["Success"]
+        </div>
+    }
+
+    <!-- Booking Form -->
+    <form method="post" action="/Services/Book" class="booking-form">
+        @Html.AntiForgeryToken()
+
+        <div class="form-group">
+            <label for="FullName">
+                Full Name <span style="color: #c62828;">*</span>
+            </label>
+            <input type="text" 
+                   id="FullName" 
+                   name="FullName" 
+                   placeholder="John Doe"
+                   value="@Model.Booking?.FullName"
+                   required />
+            <span asp-validation-for="Booking.FullName" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label for="Email">
+                Email Address <span style="color: #c62828;">*</span>
+            </label>
+            <input type="email" 
+                   id="Email" 
+                   name="Email" 
+                   placeholder="john.doe@example.com"
+                   value="@Model.Booking?.Email"
+                   required />
+            <span asp-validation-for="Booking.Email" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label for="BookingDate">
+                Preferred Date <span style="color: #c62828;">*</span>
+            </label>
+            <input type="date" 
+                   id="BookingDate" 
+                   name="BookingDate" 
+                   value="@Model.Booking?.BookingDate.ToString("yyyy-MM-dd")"
+                   required />
+            <span asp-validation-for="Booking.BookingDate" class="text-danger"></span>
+        </div>
+
+        <div style="display: flex; gap: 15px; margin-top: 30px;">
+            <button type="submit" class="btn-book" style="flex: 1; padding: 14px;">
+                ✓ Submit Booking
+            </button>
+            <a href="/Services" class="btn-secondary">
+                Cancel
+            </a>
+        </div>
+    </form>
 </div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
