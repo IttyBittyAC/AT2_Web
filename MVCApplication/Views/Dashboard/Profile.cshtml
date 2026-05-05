@@ -1,3 +1,164 @@
-﻿@{
-    ViewData["Title"] = "Profile";
+﻿@model MVCApplication.Models.AndInTheDarknessBindThem
+@{
+    ViewData["Title"] = "My Profile";
 }
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/profile.css" asp-append-version="true" />
+}
+
+<div class="profile-container">
+    @if (Model.User != null)
+    {
+        <!-- Header -->
+        <div class="profile-header">
+            <div class="profile-avatar">
+                @if (!string.IsNullOrEmpty(Model.User.Username))
+                {
+                    @Model.User.Username.Substring(0, 1).ToUpper()
+                }
+                else
+                {
+                    <span>👤</span>
+                }
+            </div>
+            <h1 class="profile-title">@Model.User.FullName</h1>
+            <p class="profile-subtitle">@Model.User.Email</p>
+        </div>
+
+        <!-- Stats Section -->
+        <div class="stats-section">
+            <div class="stat-card primary">
+                <div class="stat-number">@(Model.Bookings?.Count ?? 0)</div>
+                <div class="stat-label">Bookings</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">
+                    @if (!string.IsNullOrEmpty(Model.User.Role))
+                    {
+                        <span class="role-badge @(Model.User.Role == "admin" ? "admin" : "user")">
+                            @Model.User.Role
+                        </span>
+                    }
+                </div>
+                <div class="stat-label">Account Type</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">
+                    @if (Model.User.Id > 0)
+                    {
+                        <span>✓</span>
+                    }
+                </div>
+                <div class="stat-label">Verified</div>
+            </div>
+        </div>
+
+        <!-- Profile Information -->
+        <div class="profile-card">
+            <div class="profile-section">
+                <h2 class="section-title">
+                    <span class="section-icon">👤</span>
+                    Personal Information
+                </h2>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <span class="info-label">Full Name</span>
+                        <span class="info-value">@Model.User.FullName</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Username</span>
+                        <span class="info-value">@Model.User.Username</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Email Address</span>
+                        <span class="info-value">@Model.User.Email</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Account ID</span>
+                        <span class="info-value">#@Model.User.Id</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="profile-section">
+                <h2 class="section-title">
+                    <span class="section-icon">🔐</span>
+                    Account Details
+                </h2>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <span class="info-label">Role</span>
+                        <span class="info-value">
+                            <span class="role-badge @(Model.User.Role == "admin" ? "admin" : "user")">
+                                @Model.User.Role
+                            </span>
+                        </span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Account Status</span>
+                        <span class="info-value" style="color: #2e7d32;">
+                            ✓ Active
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Actions -->
+            <div class="profile-actions">
+                <a href="/Dashboard" class="btn btn-secondary">
+                    ← Back to Dashboard
+                </a>
+                <a href="/Dashboard/MyBookings" class="btn btn-primary">
+                    🎫 View My Bookings
+                </a>
+                <a href="/Feedback" class="btn btn-secondary">
+                    💬 Contact Support
+                </a>
+            </div>
+        </div>
+
+        <!-- Quick Links Card -->
+        <div class="profile-card">
+            <div class="profile-section">
+                <h2 class="section-title">
+                    <span class="section-icon">⚡</span>
+                    Quick Actions
+                </h2>
+                <div class="profile-actions" style="margin-top: 15px;">
+                    <a href="/Events" class="btn btn-secondary">
+                        📅 Browse Events
+                    </a>
+                    <a href="/Events/Create" class="btn btn-primary">
+                        ➕ Create Event
+                    </a>
+                    @if (Model.User.Role == "admin")
+                    {
+                        <a href="/Admin/Users" class="btn btn-secondary" style="border-color: #e74c3c; color: #e74c3c;">
+                            🛡️ Admin Panel
+                        </a>
+                    }
+                </div>
+            </div>
+        </div>
+    }
+    else
+    {
+        <!-- Error State -->
+        @if (!string.IsNullOrEmpty(Model.Error))
+        {
+            <div class="alert error">
+                <strong>⚠️ Error:</strong> @Model.Error
+            </div>
+        }
+        
+        <div class="error-state">
+            <div class="error-state-icon">❌</div>
+            <h2>Profile Not Found</h2>
+            <p>We couldn't load your profile information.</p>
+            <a href="/Dashboard" class="btn btn-primary">
+                ← Return to Dashboard
+            </a>
+        </div>
+    }
+</div>

@@ -1,3 +1,120 @@
-﻿@{
+﻿@model MVCApplication.Models.AndInTheDarknessBindThem
+@using System.Linq
+@{
     ViewData["Title"] = "My Bookings";
+    var upcomingBookings = Model.Bookings?.Where(b => b.BookingDate >= DateTime.Now).OrderBy(b => b.BookingDate).ToList() ?? new List<MVCApplication.Models.Booking>();
+    var pastBookings = Model.Bookings?.Where(b => b.BookingDate < DateTime.Now).OrderByDescending(b => b.BookingDate).ToList() ?? new List<MVCApplication.Models.Booking>();
 }
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/my-bookings.css" asp-append-version="true" />
+}
+
+<div class="bookings-container">
+    <!-- Header -->
+    <div class="bookings-header">
+        <h1 class="bookings-title">🎫 My Bookings</h1>
+        <p class="bookings-subtitle">Manage your event registrations and bookings</p>
+    </div>
+
+    <!-- Stats Bar -->
+    @if (Model.Bookings != null && Model.Bookings.Any())
+    {
+        <div class="bookings-stats">
+            <div class="stat-box primary">
+                <div class="stat-number">@Model.Bookings.Count</div>
+                <div class="stat-label">Total Bookings</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-number">@upcomingBookings.Count</div>
+                <div class="stat-label">Upcoming</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-number">@pastBookings.Count</div>
+                <div class="stat-label">Past Events</div>
+            </div>
+        </div>
+
+        <!-- Upcoming Bookings -->
+        @if (upcomingBookings.Any())
+        {
+            <div style="margin-bottom: 40px;">
+                <h2 style="color: #2c3e50; font-size: 1.8rem; margin-bottom: 20px;">📅 Upcoming Bookings</h2>
+                <div class="bookings-list">
+                    @foreach (var booking in upcomingBookings)
+                    {
+                        <div class="booking-card">
+                            <div class="booking-icon">🎟️</div>
+                            <div class="booking-content">
+                                <div class="booking-id">Booking #@booking.Id</div>
+                                <h3 class="booking-name">@booking.FullName</h3>
+                                <div class="booking-info">
+                                    <div class="booking-detail">
+                                        <span class="booking-detail-icon">🗓️</span>
+                                        <span class="booking-date">@booking.BookingDate.ToString("MMMM dd, yyyy")</span>
+                                        <span class="status-badge status-upcoming">Upcoming</span>
+                                    </div>
+                                    <div class="booking-detail">
+                                        <span class="booking-detail-icon">📧</span>
+                                        <span>@booking.Email</span>
+                                    </div>
+                                    <div class="booking-detail">
+                                        <span class="booking-detail-icon">⏰</span>
+                                        <span>@((booking.BookingDate - DateTime.Now).Days) days away</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="booking-actions">
+                                <a href="/Events" class="btn-action btn-view">View Events</a>
+                                <button class="btn-action btn-cancel" onclick="return confirm('Are you sure you want to cancel this booking?')">
+                                    Cancel Booking
+                                </button>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+
+        <!-- Past Bookings -->
+        @if (pastBookings.Any())
+        {
+            <div>
+                <h2 style="color: #2c3e50; font-size: 1.8rem; margin-bottom: 20px;">📋 Past Bookings</h2>
+                <div class="bookings-list">
+                    @foreach (var booking in pastBookings)
+                    {
+                        <div class="booking-card" style="opacity: 0.7;">
+                            <div class="booking-icon">✓</div>
+                            <div class="booking-content">
+                                <div class="booking-id">Booking #@booking.Id</div>
+                                <h3 class="booking-name">@booking.FullName</h3>
+                                <div class="booking-info">
+                                    <div class="booking-detail">
+                                        <span class="booking-detail-icon">🗓️</span>
+                                        <span>@booking.BookingDate.ToString("MMMM dd, yyyy")</span>
+                                        <span class="status-badge status-past">Completed</span>
+                                    </div>
+                                    <div class="booking-detail">
+                                        <span class="booking-detail-icon">📧</span>
+                                        <span>@booking.Email</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+    }
+    else
+    {
+        <!-- Empty State -->
+        <div class="empty-state">
+            <div class="empty-state-icon">🎫</div>
+            <h2>No Bookings Yet</h2>
+            <p>You haven't registered for any events. Start exploring!</p>
+            <a href="/Events" class="btn-browse">Browse Events</a>
+        </div>
+    }
+</div>
