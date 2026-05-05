@@ -1,9 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MVCApplication.Data;
 using MVCApplication.Models;
-using static MVCApplication.Helpers.V;
 using System.Diagnostics;
-
+using static MVCApplication.Helpers.V;
 namespace MVCApplication.Controllers
 {
     /// <summary>
@@ -61,28 +60,13 @@ namespace MVCApplication.Controllers
         /// <param name="feedback">Feedback object containing user input data</param>
         /// <returns>Redirects on success or returns the view with errors</returns>
         [HttpPost("/Feedback")]
-        public async Task<IActionResult> Feedback(Feedback feedback)
-        {
-            if (!ModelState.IsValid)
-            {
-                return await GraveMind(Home.Feedback, "feedback", "Feedback",
-                    populate: async m => { m.Error = "All Fields are required"; await Task.CompletedTask; });
-            }
-            
-            try
-            {
-                // Attempt to save feedback
-                await _db.SaveFeedback(feedback);
-                
-                TempData["Success"] = "✓ Thank you! Your feedback has been successfully submitted.";
-                return RedirectToAction("Feedback");
-            }
-            catch (Exception)
-            {
-                return await GraveMind(Home.Feedback, "feedback", "Feedback",
-                    populate: async m => { m.Error = "Failed to submit feedback. Please try again."; await Task.CompletedTask; });
-            }
-        }
+        public Task<IActionResult> Feedback(Feedback feedback) => ModelState.IsValid
+            ? GraveMind(Home.Feedback, "feedback", "Feedback",
+                populate: async m => { m.Error = "All Fields are required"; await Task.CompletedTask; })
+            : GraveMind(Home.Feedback, "feedback", "Feedback",
+                save: () => _db.SaveFeedback(feedback),
+                validMsg: "Successfully deleted user",
+                redirct: () => RedirectToAction("Index"));
 
         /// <summary>
         /// Displays the FAQ page.
