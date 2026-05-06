@@ -4,7 +4,6 @@
     {
         // Route
         public string Table { get; set; } = string.Empty;
-        public int? Id { get; set; } = null;
 
         // State
         public string? Title { get; set; } = null;
@@ -18,8 +17,6 @@
         public bool IsAdmin => CurrentRole == "admin";
         public bool IsAuth => CurrentUser is not null;
 
-        // Check Table
-        public string FormAction => Id.HasValue ? $"/{Table}/{Id}" : $"/{Table}";
 
         // Models
         public Booking? Booking { get; set; }

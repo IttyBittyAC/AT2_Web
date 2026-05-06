@@ -22,6 +22,7 @@ namespace MVCApplication.Controllers
         /// allowing derived controllers to access the database through the _db field.
         /// </summary>
         /// <param name="db"></param>
+        /// <param name="logger"></param>
         protected BaseAppController(AppDb db, ILogger<T> logger)
         {
             _db = db;
@@ -68,21 +69,29 @@ namespace MVCApplication.Controllers
                 returnUrl
             );
         }
-        private async Task<IActionResult> logWrapper(string path, Func<Task<IActionResult>> operation) => 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="path"></param>
+        /// <param name="operation"></param>
+        /// <param name="e"></param>
+        /// <param name="s"></param>
+        /// <returns></returns>
+        private async Task<IActionResult> logWrapper(string path, string? e, string? s, Func<Task<IActionResult>> operation) => 
             await new Func<Task<IActionResult>>(async () => { 
                 var sw = Stopwatch.StartNew(); 
                 try { var result = await operation(); sw.Stop(); 
                     await( result switch 
                     { 
-                        NotFoundResult => SaveLog(true, path, $"FAIL: {result.GetType().Name} {sw.ElapsedMilliseconds}ms"), 
-                        ForbidResult => SaveLog(true, path, $"FAIL: {result.GetType().Name} {sw.ElapsedMilliseconds}ms"), 
-                        RedirectResult =>  SaveLog(false, path, $"PASS: {sw.ElapsedMilliseconds}ms"), 
-                        ViewResult =>SaveLog(false, path, $"PASS: {sw.ElapsedMilliseconds}ms"), 
-                        _ => SaveLog(false, path, $"PASS: {sw.ElapsedMilliseconds}ms"), }); 
+                        NotFoundResult => SaveLog(true, path, $"FAIL: TRACE: {HttpContext.TraceIdentifier} | TYPE: {result.GetType().Name} | TIME: {sw.ElapsedMilliseconds}ms | USER MSG:{e}"), 
+                        ForbidResult => SaveLog(true, path, $"FAIL: TRACE: {HttpContext.TraceIdentifier} | TYPE: {result.GetType().Name} | TIME: {sw.ElapsedMilliseconds}ms | USER MSG:{e}"), 
+                        RedirectResult =>  SaveLog(false, path, $"PASS: TRACE: {HttpContext.TraceIdentifier} | TIME: {sw.ElapsedMilliseconds}ms | USER MSG:{s}"), 
+                        ViewResult =>SaveLog(false, path, $"PASS: TRACE: {HttpContext.TraceIdentifier} | TIME: {sw.ElapsedMilliseconds}ms | USER MSG:{s}"), 
+                        _ => SaveLog(false, path, $"PASS: TRACE: {HttpContext.TraceIdentifier} | TIME: {sw.ElapsedMilliseconds}ms | USER MSG:{s}"), }); 
                     return result; } 
                 catch (Exception ex) { 
                     sw.Stop(); 
-                    await SaveLog(true, path, $"EXCEPTION: {ex.GetType().Name} {sw.ElapsedMilliseconds}ms {ex.Message}");
+                    await SaveLog(true, path, $"EXCEPTION: TRACE {HttpContext.TraceIdentifier} | TYPE: {ex.GetType().Name} | TIME: {sw.ElapsedMilliseconds}ms {ex.Message}");
                     _logger.LogError(ex, "ERROR in Gravemind");
                     throw; } })();
         /// <summary>
@@ -101,8 +110,8 @@ namespace MVCApplication.Controllers
         /// <param name="populate"> Optional delegate that populates the view model with data from db before rendering the view </param>
         /// <param name="check"> Optional delegate that validates model and returns false to trigger 404 </param>
         /// <param name="save"> Optional delegate that does POST operations </param>
-        /// <param name="redirct"> Optional delegate that stores where to be redirected to after a POST </param>
-        /// <param name="validMsg"> Optional message for successfull POST </param>
+        /// <param name="redirect"> Optional delegate that stores where to be redirected to after a POST </param>
+        /// <param name="successMsg"> Optional message for successfull POST </param>
         /// <param name="errorMsg"> Optional message for a failed operation or validation </param>
         /// <returns> An IActionResult representing either a view, redirect, or error response </returns>
 
@@ -111,10 +120,10 @@ namespace MVCApplication.Controllers
             Func<AndInTheDarknessBindThem, Task>? populate = null,
             Func<AndInTheDarknessBindThem, bool>? check = null,
             Func<Task<bool>>? save = null,
-            Func<IActionResult>? redirct = null,
-            string? validMsg = null, string? errorMsg = null)
+            Func<IActionResult>? redirect = null,
+            string? successMsg = null, string? errorMsg = null)
             => 
-            logWrapper(HttpContext.Request.Path.Value ?? view, 
+            logWrapper(HttpContext.Request.Path.Value ?? view, e: errorMsg, s: successMsg, 
                 async() =>           
                     // Gate 1 (Auth and Admin)
                     Guard(requireAdmin: admin, requireAuth: auth) is { } r 
@@ -133,9 +142,9 @@ namespace MVCApplication.Controllers
                             m.Error = errorMsg;
                             return View(view, m);
                         }
-                        SetSuccess(s, validMsg ?? "done");
+                        SetSuccess(s, successMsg ?? "done");
 
-                        return redirct == null ? RedirectToAction("Index") : redirct();
+                        return redirect == null ? RedirectToAction("Index") : redirect();
                     })()
 
                     // Gate 3 GET
@@ -155,32 +164,6 @@ namespace MVCApplication.Controllers
                         }
                         return View(view, m);
                     })());
-        //protected async Task<IActionResult> GraveMind(string view, string table = "", string? title = null, 
-        //    bool auth = false, bool admin = false, 
-        //    Func<AndInTheDarknessBindThem, Task>? populate = null, 
-        //    Func<AndInTheDarknessBindThem, bool>? check = null, 
-        //    Func<Task<bool>>? save = null, 
-        //    Func<IActionResult>? redirct = null, 
-        //    string? validMsg = null, string? errorMsg = null)
-        //    => 
-        //    // Gate 1 (Auth and Admin)
-        //    Guard(requireAdmin: admin, requireAuth: auth) is { } r ? r : save != null 
-        //    // Gate 2 POST
-        //    ? await new Func<Task<IActionResult>>(async () => { var m = Build(table, title); var s = await save(); 
-        //        if (!s) { m.Error = errorMsg; return View(view, m);}; 
-        //        SetSuccess(s, validMsg ?? "done");
-        //        return redirct == null ? RedirectToAction("Index") : redirct(); })() 
-
-        //    // Gate 3 GET
-        //    : await new Func<Task<IActionResult>>(async () => 
-        //    { 
-        //        var m = Build(table, title); 
-
-        //        if (populate != null) 
-        //            await populate(m); 
-        //        if (check != null && !check(m)){ m.Error = errorMsg ?? "not found"; return NotFound(); }; 
-        //        return View(view, m); })();
-
         /// <summary>
         /// Method to authorise if session data matches set requirements for user
         /// </summary>

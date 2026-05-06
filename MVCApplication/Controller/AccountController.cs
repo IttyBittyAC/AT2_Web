@@ -1,10 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.Extensions.Logging;
 using MVCApplication.Data;
-using MVCApplication.Models;
-using System.Data.SqlTypes;
 using static MVCApplication.Helpers.V;
+using static MVCApplication.Helpers.MessageDictionary;
 
 namespace MVCApplication.Controllers
 {
@@ -25,9 +22,9 @@ namespace MVCApplication.Controllers
         /// Handles user registration by displaying the registration form. 
         /// If the user is already authenticated, they are redirected to the home page.
         /// </summary>
-        /// <param name="returnurl">Optional return URL after successful registration</param>
+        /// <param name="returnUrl">Optional return URL after successful registration</param>
         [HttpGet("/Account/Register")]
-        public IActionResult Register(string? returnurl = null) => IsAuth ? RedirectToAction("Index", "Home") : View(Account.Register, Build("users", "Register", returnUrl: returnurl));
+        public Task<IActionResult> Register(string? returnUrl = null) => !IsAuth ? GraveMind(Account.Register, Store[MethodCode.Register].Table, Store[MethodCode.Register].Title, redirect: () => Redirect(returnUrl)) : Task.FromResult<IActionResult>(RedirectToAction("Index", "Home"));
 
         /// <summary>
         /// Handles user by validating input and saving the new user to the database. 
@@ -52,17 +49,17 @@ namespace MVCApplication.Controllers
             string.IsNullOrEmpty(password) ||
             string.IsNullOrEmpty(username) ||
             string.IsNullOrEmpty(fullname)
-            ? GraveMind(Account.Register, "users", "Register",
-                populate: async m => { m.Error = "All Fields are required"; await Task.CompletedTask; })
-            : GraveMind(Account.Register, "users", "Register", 
-                save: async () => await _db.Register(password, email, username, fullname, !string.IsNullOrEmpty(adminPassword) && adminPassword.ToLower().Trim() == "test" ? "admin" : "user") != null, validMsg: "Registered completed", redirct: () => RedirectToAction("Login"), errorMsg: "Cannot Register");
+            ? GraveMind(Account.Register, Store[MethodCode.RegisterBlocked].Table, Store[MethodCode.RegisterBlocked].Title,
+                populate: async m => { m.Error = Store[MethodCode.RegisterBlocked].ErrorMsg; await Task.CompletedTask; })
+            : GraveMind(Account.Register, Store[MethodCode.Register].Table, Store[MethodCode.Register].Title, 
+                save: async () => await _db.Register(password, email, username, fullname, !string.IsNullOrEmpty(adminPassword) && adminPassword.ToLower().Trim() == "test" ? "admin" : "user") != null, errorMsg: Store[MethodCode.Register].ErrorMsg, successMsg: Store[MethodCode.Register].SuccessMsg, redirect: () => RedirectToAction("Login"));
 
         /// <summary>
         /// Displays the login page or redirects if the user is already authenticated.
         /// </summary>
         /// <param name="returnUrl">Optional return URL after login</param>
         [HttpGet("/Account/Login")]
-        public IActionResult Login(string? returnUrl = null) => IsAuth ? RedirectToAction("Index", "Home") : View(Account.Login, Build(returnUrl: returnUrl));
+        public Task<IActionResult> Login(string? returnUrl = null) => !IsAuth ? GraveMind(Account.Login, Store[MethodCode.Login].Table, Store[MethodCode.Login].Title, redirect: () => Redirect(returnUrl)) : Task.FromResult<IActionResult>(RedirectToAction("Index", "Home"));
 
         /// <summary>
         /// Handles user login by validating credentials and setting session data.
@@ -72,18 +69,28 @@ namespace MVCApplication.Controllers
         /// <param name="returnurl">Optional return URL after login</param>
         /// <returns>Redirects on success or returns the view with errors</returns>
         [HttpPost("/Account/Login")]
-        public async Task<IActionResult> Login(string password, string email, string? returnurl = null) => string.IsNullOrEmpty(email) || string.IsNullOrEmpty(password)
-            ? View(Account.Login, new Func<AndInTheDarknessBindThem>(() => { var m = Build(returnUrl: returnurl); m.Error = "Email and Password Required"; return m; })())
-            : await _db.Login(password, email) is { } user
-                ? new Func<IActionResult>(() => {
-                    HttpContext.Session.SetString("user", user.Email ?? "");
-                    HttpContext.Session.SetString("role", user.Role ?? "");
-                    return !string.IsNullOrEmpty(returnurl) && Url.IsLocalUrl(returnurl) ? Redirect(returnurl) : RedirectToAction("Index", "Home");
-                })() 
-                : View(Account.Login, new Func<AndInTheDarknessBindThem>(() => { 
-                    var m = Build(returnUrl: returnurl); 
-                    m.Error = "Login Invalid";
-                    return m; })());
+        public Task<IActionResult> Login(string password, string email, string? returnurl = null) =>
+            string.IsNullOrEmpty(email) || string.IsNullOrEmpty(password)
+                ? GraveMind(Account.Login, Store[MethodCode.Login].Table, Store[MethodCode.Login].Title,
+                    populate: m => { m.Error = Store[MethodCode.LoginInvalid].ErrorMsg; return Task.CompletedTask; })
+                : GraveMind(Account.Login, Store[MethodCode.Login].Table, Store[MethodCode.Login].Title,
+                    save: async () =>
+                    {
+                        var user = await _db.Login(password, email);
+
+                        if (user == null)
+                            return false;
+
+                        HttpContext.Session.SetString("user", user.Email ?? "");
+                        HttpContext.Session.SetString("role", user.Role ?? "");
+                        
+                        return true;
+                    },
+                    redirect: () =>
+                        !string.IsNullOrEmpty(returnurl) && Url.IsLocalUrl(returnurl)
+                            ? Redirect(returnurl)
+                            : RedirectToAction("Index", "Home"),
+                    errorMsg: Store[MethodCode.Login].ErrorMsg, successMsg: Store[MethodCode.Login].SuccessMsg);
 
         /// <summary>
         /// Logs the user out by clearing the session and redirects to the login page.

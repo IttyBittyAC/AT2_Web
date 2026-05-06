@@ -3,6 +3,7 @@ using MVCApplication.Data;
 using MVCApplication.Models;
 using System.Diagnostics;
 using static MVCApplication.Helpers.V;
+using static MVCApplication.Helpers.MessageDictionary;
 
 namespace MVCApplication.Controllers
 {
@@ -39,21 +40,21 @@ namespace MVCApplication.Controllers
         /// <returns>Home view</returns>
         [HttpGet("/")]
         [HttpGet("/Home")]
-        public Task<IActionResult> Index() => GraveMind(Home.Index, "home", "Home");
+        public Task<IActionResult> Index() => GraveMind(Home.Index, Store[MethodCode.HomeIndex].Table, Store[MethodCode.HomeIndex].Title);
 
         /// <summary>
         /// Displays the announcements page.
         /// </summary>
         /// <returns>Announcements view</returns>
         [HttpGet("/Announcements")]
-        public Task<IActionResult> Announcements() => GraveMind(Home.Announcements, "announcements", "We have something to announce");
+        public Task<IActionResult> Announcements() => GraveMind(Home.Announcements, Store[MethodCode.HomeAnnouncements].Table, Store[MethodCode.HomeAnnouncements].Title);
 
         /// <summary>
         /// Displays the feedback form page.
         /// </summary>
         /// <returns>Feedback form view</returns>
         [HttpGet("/Feedback")]
-        public Task<IActionResult> Feedback() => GraveMind(Home.Feedback, "feedback", "Feedback Form");
+        public Task<IActionResult> Feedback() => GraveMind(Home.Feedback, Store[MethodCode.HomeFeedBack].Table, Store[MethodCode.HomeFeedBack].Title);
 
         /// <summary>
         /// Handles feedback form submission by validating input and saving the feedback to the database.
@@ -62,13 +63,14 @@ namespace MVCApplication.Controllers
         /// <returns>Redirects on success or returns the view with errors</returns>
         [HttpPost("/Feedback")]
         public Task<IActionResult> Feedback(Feedback feedback) => !ModelState.IsValid
-            ? GraveMind(Home.Feedback, "feedback", "Feedback",
-                populate: async m => { m.Error = "All Fields are required";
+            ? GraveMind(Home.Feedback, Store[MethodCode.HomeFeedBackInvalid].Table, Store[MethodCode.HomeFeedBackInvalid].Title,
+                populate: async m => { m.Error = Store[MethodCode.HomeFeedBackInvalid].ErrorMsg;
                     await Task.CompletedTask; })
-            : GraveMind(Home.Feedback, "feedback", "Feedback",
+            : GraveMind(Home.Feedback, Store[MethodCode.HomeFeedBack].Table, Store[MethodCode.HomeFeedBack].Title,
                 save: () => _db.SaveFeedback(feedback),
-                validMsg: "Submitted form to our database",
-                redirct: () => RedirectToAction("Index"));
+                errorMsg: Store[MethodCode.HomeFeedBack].ErrorMsg,
+                successMsg: Store[MethodCode.HomeFeedBack].SuccessMsg,
+                redirect: () => RedirectToAction("Index"));
 
 
         /// <summary>
@@ -76,7 +78,7 @@ namespace MVCApplication.Controllers
         /// </summary>
         /// <returns>FAQ view</returns>
         [HttpGet("/FAQ")]
-        public Task<IActionResult> FAQ() => GraveMind(Home.FAQ, "faq", "FAQ");
+        public Task<IActionResult> FAQ() => GraveMind(Home.FAQ, Store[MethodCode.HomeFAQ].Table, Store[MethodCode.HomeFAQ].Title);
 
         /// <summary>
         /// Displays the confirmation page.

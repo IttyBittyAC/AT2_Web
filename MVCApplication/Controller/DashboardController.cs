@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MVCApplication.Data;
 using MVCApplication.Models;
+using static MVCApplication.Helpers.MessageDictionary;
 using static MVCApplication.Helpers.V;
 
 namespace MVCApplication.Controllers
@@ -24,7 +25,7 @@ namespace MVCApplication.Controllers
         /// </summary>
         /// <returns>Dashboard view</returns>
         [HttpGet("/Dashboard")]
-        public Task<IActionResult> Index() => GraveMind(Dashboard.Index, "dashboard", "Dashboard", auth: true);
+        public Task<IActionResult> Index() => GraveMind(Dashboard.Index, Store[MethodCode.DashBoardIndex].Table, Store[MethodCode.DashBoardIndex].Title, auth: true);
 
         /// <summary>
         /// Handles HTTP GET requests for the My Bookings dashboard view, retrieving and displaying bookings associated
@@ -37,8 +38,8 @@ namespace MVCApplication.Controllers
         [HttpGet("/Dashboard/MyBookings")]
         public Task<IActionResult> MyBookings() => GraveMind(
             Dashboard.MyBookings,
-            "bookings",
-            "My Bookings",
+            Store[MethodCode.DashBoardBooking].Table,
+            Store[MethodCode.DashBoardBooking].Title,
             populate: async m =>
             {
                 var email = User.Identity?.Name;
@@ -52,7 +53,8 @@ namespace MVCApplication.Controllers
                 var (bs, _) = await _db.GetBookingByEmail(email);
                 m.Bookings = bs ?? [];
             },
-            errorMsg: "No Bookings found of user",
+            errorMsg: Store[MethodCode.DashBoardBooking].ErrorMsg,
+            successMsg: Store[MethodCode.DashBoardBooking].SuccessMsg,
             auth: true
         );
 
@@ -69,8 +71,8 @@ namespace MVCApplication.Controllers
         [HttpGet("/Dashboard/Profile")]
         public Task<IActionResult> Profile() => GraveMind(
             Dashboard.Profile,
-            "users",
-            "Profile",
+            Store[MethodCode.DashBoardProfile].Table,
+            Store[MethodCode.DashBoardProfile].Title,
             populate: async m =>
             {
                 var email = User.Identity?.Name;
@@ -84,7 +86,8 @@ namespace MVCApplication.Controllers
                 var (_, user) = await _db.GetUserByEmail(email);
                 m.User = user;
             },
-            errorMsg: "User not found",
+            errorMsg: Store[MethodCode.DashBoardProfile].ErrorMsg,
+            successMsg: Store[MethodCode.DashBoardProfile].SuccessMsg,
             auth: true
         );
     }
