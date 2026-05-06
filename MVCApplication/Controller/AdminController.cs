@@ -2,6 +2,7 @@
 using MVCApplication.Data;
 using MVCApplication.Models;
 using static MVCApplication.Helpers.V;
+using static MVCApplication.Helpers.MessageDictionary;
 
 namespace MVCApplication.Controllers
 {
@@ -22,22 +23,22 @@ namespace MVCApplication.Controllers
         /// </summary>
         /// <returns>Admin dashboard view</returns>
         [HttpGet("/Admin")]
-        public Task<IActionResult> Index() => GraveMind(Admin.Index, "admin", "Admin", admin: true);
+        public Task<IActionResult> Index() => GraveMind(Admin.Index, Store[MethodCode.AdminIndex].Table, Store[MethodCode.AdminIndex].Title, admin: true);
 
         /// <summary>
         /// Displays all announcements for admin management. Requires admin access.
         /// </summary>
         /// <returns>Announcements view</returns>
         [HttpGet("/Admin/Announcements")]
-        public Task<IActionResult> Announcements() => GraveMind(Admin.Announcements, "announcements", "Announcements", admin: true);
+        public Task<IActionResult> Announcements() => GraveMind(Admin.Announcements, Store[MethodCode.AdminAnnouncements].Table, Store[MethodCode.AdminAnnouncements].Title, admin: true);
 
         /// <summary>
         /// Displays all users and populates the model with user data from the database. Requires admin access.
         /// </summary>
         /// <returns>Users view with data</returns>
         [HttpGet("/Admin/Users")]
-        public Task<IActionResult> Users() => GraveMind(Admin.Users, "users", "View all users", admin: true,
-            populate: async m => { var (users, _) = await _db.GetUser(null); m.Users = users ?? []; }, errorMsg: "No users Found");
+        public Task<IActionResult> Users() => GraveMind(Admin.Users, Store[MethodCode.AdminUsers].Table, Store[MethodCode.AdminUsers].Title, admin: true,
+            populate: async m => { var (users, _) = await _db.GetUser(null); m.Users = users ?? []; }, errorMsg: Store[MethodCode.AdminUsers].ErrorMsg, successMsg: Store[MethodCode.AdminUsers].SuccessMsg);
 
         /// <summary>
         /// Handles user management actions such as create, update, and delete.
@@ -49,24 +50,36 @@ namespace MVCApplication.Controllers
         /// <returns>Redirects on success or returns the view with errors</returns>
         [HttpPost("/Admin/Users")]
         public Task<IActionResult> Users(List<int>? id, List<User> users, User? user, string action) => string.IsNullOrEmpty(action)
-            ? GraveMind(Admin.Users, "users", "View All Users", admin: true,
+            ? GraveMind(Admin.Users, Store[MethodCode.AdminUsersInvalid].Table, Store[MethodCode.AdminUsersInvalid].Title, admin: true,
                 populate: async m => { var (users, _) = await _db.GetUser(null); m.Users = users ?? []; },
-                errorMsg: "No action specified")
+                errorMsg: Store[MethodCode.AdminUsersInvalid].ErrorMsg)
             : action == "delete" && id != null
-                ? GraveMind(Admin.Users, admin: true,
-                    validMsg: "Successfully deleted user",
+                ? GraveMind(Admin.Users,
+                    Store[MethodCode.AdminUsersDelete].Table,
+                    Store[MethodCode.AdminUsersDelete].Title,
+                    admin: true,
+                    errorMsg: Store[MethodCode.AdminUsersDelete].ErrorMsg,
+                    successMsg: Store[MethodCode.AdminUsersDelete].SuccessMsg,
                     save: () => _db.DeleteUsers(id),
-                    redirct: () => RedirectToAction("Users"))
+                    redirect: () => RedirectToAction("Users"))
             : action == "update" && users != null
-                ? GraveMind(Admin.Users, admin: true,
-                    validMsg: "Successfully updated user",
+                ? GraveMind(Admin.Users,
+                    Store[MethodCode.AdminUsersUpdate].Table,
+                    Store[MethodCode.AdminUsersUpdate].Title,
+                    admin: true,
+                    errorMsg: Store[MethodCode.AdminUsersUpdate].ErrorMsg, 
+                    successMsg: Store[MethodCode.AdminUsersUpdate].SuccessMsg,
                     save: async () => await _db.UpdateUser(users) > 0,
-                    redirct: () => RedirectToAction("Users"))
+                    redirect: () => RedirectToAction("Users"))
             : action == "create" && user != null
-                ? GraveMind(Admin.Users, admin: true,
-                    validMsg: "Successfully created user",
+                ? GraveMind(Admin.Users,
+                    Store[MethodCode.AdminUsersCreate].Table,
+                    Store[MethodCode.AdminUsersCreate].Title,
+                    admin: true,
+                    errorMsg: Store[MethodCode.AdminUsersCreate].ErrorMsg,
+                    successMsg: Store[MethodCode.AdminUsersCreate].SuccessMsg,
                     save: () => _db.SaveUser(user),
-                    redirct: () => RedirectToAction("Users"))
+                    redirect: () => RedirectToAction("Users"))
             : Task.FromResult(NotFound() as IActionResult);
 
         /// <summary>
@@ -74,8 +87,8 @@ namespace MVCApplication.Controllers
         /// </summary>
         /// <returns>Events view with data</returns>
         [HttpGet("/Admin/Events")]
-        public Task<IActionResult> Events() => GraveMind(Admin.Events, "events", "Events", admin: true,
-            populate: async m => { var (e, _) = await _db.GetEvent(null); m.Events = e ?? []; }, errorMsg: "No events Found");
+        public Task<IActionResult> Events() => GraveMind(Admin.Events, Store[MethodCode.AdminEvents].Table, Store[MethodCode.AdminEvents].Title, admin: true,
+            populate: async m => { var (e, _) = await _db.GetEvent(null); m.Events = e ?? []; }, errorMsg: Store[MethodCode.AdminEvents].ErrorMsg, successMsg: Store[MethodCode.AdminEvents].SuccessMsg);
 
         /// <summary>
         /// Handles event management actions such as create, update, and delete.
@@ -87,24 +100,36 @@ namespace MVCApplication.Controllers
         /// <returns>Redirects on success or returns the view with errors</returns>
         [HttpPost("/Admin/Events")]
         public Task<IActionResult> Events(List<int>? id, List<Event> events, Event? singleEvent, string action) => string.IsNullOrEmpty(action)
-            ? GraveMind(Admin.Events, "events", "View All Events", admin: true,
+            ? GraveMind(Admin.Events, Store[MethodCode.AdminEventsInvalid].Table, Store[MethodCode.AdminEventsInvalid].Title, admin: true,
                 populate: async m => { var (Events, _) = await _db.GetEvent(null); m.Events = Events ?? []; },
-                errorMsg: "No action specified")
+                errorMsg: Store[MethodCode.AdminEventsInvalid].ErrorMsg)
             : action == "delete" && id != null
-                ? GraveMind(Admin.Events, admin: true,
-                    validMsg: "Successfully deleted event",
+                ? GraveMind(Admin.Events,
+                    Store[MethodCode.AdminEventsDelete].Table,
+                    Store[MethodCode.AdminEventsDelete].Title,
+                    admin: true,
+                    errorMsg: Store[MethodCode.AdminEventsDelete].ErrorMsg,
+                    successMsg: Store[MethodCode.AdminEventsDelete].SuccessMsg,
                     save: () => _db.DeleteEvents(id),
-                    redirct: () => RedirectToAction("Events"))
+                    redirect: () => RedirectToAction("Events"))
             : action == "update" && events != null
-                ? GraveMind(Admin.Events, admin: true,
-                    validMsg: "Successfully updated event",
+                ? GraveMind(Admin.Events,
+                    Store[MethodCode.AdminEventsUpdate].Table,
+                    Store[MethodCode.AdminEventsUpdate].Title,
+                    admin: true,
+                    errorMsg: Store[MethodCode.AdminEventsUpdate].ErrorMsg,
+                    successMsg: Store[MethodCode.AdminEventsUpdate].SuccessMsg,
                     save: async () => await _db.UpdateEvent(events) > 0,
-                    redirct: () => RedirectToAction("Events"))
+                    redirect: () => RedirectToAction("Events"))
             : action == "create" && singleEvent != null
-                ? GraveMind(Admin.Events, admin: true,
-                    validMsg: "Successfully created event",
+                ? GraveMind(Admin.Events,
+                    Store[MethodCode.AdminEventsCreate].Table,
+                    Store[MethodCode.AdminEventsCreate].Title,
+                    admin: true,
+                    errorMsg: Store[MethodCode.AdminEventsCreate].ErrorMsg, 
+                    successMsg: Store[MethodCode.AdminEventsCreate].SuccessMsg,
                     save: () => _db.SaveEvent(singleEvent),
-                    redirct: () => RedirectToAction("Events"))
+                    redirect: () => RedirectToAction("Events"))
             : Task.FromResult(NotFound() as IActionResult);
 
         /// <summary>
@@ -112,8 +137,8 @@ namespace MVCApplication.Controllers
         /// </summary>
         /// <returns>Feedback view with data</returns>
         [HttpGet("/Admin/FeedBack")]
-        public Task<IActionResult> Feedback() => GraveMind(Admin.Feedback, "feedbacks", "Feedback Forms", admin: true,
-            populate: async m => { var (f, _) = await _db.GetFeedback(null); m.Feedbacks = f ?? []; }, errorMsg: "No feedbacks Found");
+        public Task<IActionResult> Feedback() => GraveMind(Admin.Feedback, Store[MethodCode.AdminFeedback].Table, Store[MethodCode.AdminFeedback].Title, admin: true,
+            populate: async m => { var (f, _) = await _db.GetFeedback(null); m.Feedbacks = f ?? []; }, errorMsg: Store[MethodCode.AdminFeedback].ErrorMsg, successMsg: Store[MethodCode.AdminFeedback].SuccessMsg);
 
         /// <summary>
         /// Handles feedback management actions such as create, update, and delete.
@@ -125,24 +150,36 @@ namespace MVCApplication.Controllers
         /// <returns>Redirects on success or returns the view with errors</returns>
         [HttpPost("/Admin/FeedBack")]
         public Task<IActionResult> Feedback(List<int>? id, List<Feedback> feedbacks, Feedback? feedback, string action) => string.IsNullOrEmpty(action)
-            ? GraveMind(Admin.Feedback, "feedbacks", "View All Feedbacks", admin: true,
+            ? GraveMind(Admin.Feedback, Store[MethodCode.AdminFeedbackInvalid].Table, Store[MethodCode.AdminFeedbackInvalid].Title, admin: true,
                 populate: async m => { var (f, _) = await _db.GetFeedback(null); m.Feedbacks = f ?? []; },
-                errorMsg: "No action specified")
+                errorMsg: Store[MethodCode.AdminFeedbackInvalid].ErrorMsg)
             : action == "delete" && id != null
-                ? GraveMind(Admin.Feedback, admin: true,
-                    validMsg: "Successfully deleted feedback",
+                ? GraveMind(Admin.Feedback,
+                    Store[MethodCode.AdminFeedbackDelete].Table,
+                    Store[MethodCode.AdminFeedbackDelete].Title,
+                    admin: true,
+                    errorMsg: Store[MethodCode.AdminFeedbackDelete].ErrorMsg,
+                    successMsg: Store[MethodCode.AdminFeedbackDelete].SuccessMsg,
                     save: () => _db.DeleteFeedbacks(id),
-                    redirct: () => RedirectToAction("Feedback"))
+                    redirect: () => RedirectToAction("Feedback"))
             : action == "update" && feedbacks != null
-                ? GraveMind(Admin.Feedback, admin: true,
-                    validMsg: "Successfully updated feedback",
+                ? GraveMind(Admin.Feedback,
+                    Store[MethodCode.AdminFeedbackUpdate].Table,
+                    Store[MethodCode.AdminFeedbackUpdate].Title,
+                    admin: true,
+                    errorMsg: Store[MethodCode.AdminFeedbackUpdate].ErrorMsg,
+                    successMsg: Store[MethodCode.AdminFeedbackUpdate].SuccessMsg,
                     save: async () => await _db.UpdateFeedback(feedbacks) > 0,
-                    redirct: () => RedirectToAction("Feedback"))
+                    redirect: () => RedirectToAction("Feedback"))
             : action == "create" && feedback != null
-                ? GraveMind(Admin.Feedback, admin: true,
-                    validMsg: "Successfully created feedback",
+                ? GraveMind(Admin.Feedback,
+                    Store[MethodCode.AdminFeedbackCreate].Table,
+                    Store[MethodCode.AdminFeedbackCreate].Title,
+                    admin: true,
+                    errorMsg: Store[MethodCode.AdminFeedbackCreate].ErrorMsg,
+                    successMsg: Store[MethodCode.AdminFeedbackCreate].SuccessMsg,
                     save: () => _db.SaveFeedback(feedback),
-                    redirct: () => RedirectToAction("Feedback"))
+                    redirect: () => RedirectToAction("Feedback"))
             : Task.FromResult(NotFound() as IActionResult);
 
 
@@ -154,8 +191,10 @@ namespace MVCApplication.Controllers
         [HttpGet("/Admin/Logs")]
         public Task<IActionResult> Logs() => GraveMind(
             Admin.Logs,
-            "logs",
-            "Application Logs",
+            Store[MethodCode.AdminLogs].Table,
+            Store[MethodCode.AdminLogs].Title,
+            errorMsg: Store[MethodCode.AdminLogs].ErrorMsg,
+            successMsg: Store[MethodCode.AdminLogs].SuccessMsg,
             admin: true,
             populate: async m =>
             {
