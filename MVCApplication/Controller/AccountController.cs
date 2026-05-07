@@ -19,6 +19,8 @@ namespace MVCApplication.Controllers
         /// Initializes a new instance of the AccountController class with the provided database context,
         /// </summary>  
         /// <param name="db">Application database context</param>
+        /// <param name="adminSettings">Admin Password string</param>
+        /// <param name="logger">Logging Context for Controller Logger</param>
         public AccountController(AppDb db, ILogger<AccountController> logger, IOptions<AdminSettings> adminSettings) : base(db,logger)
         {
             _adminSettings = adminSettings.Value;

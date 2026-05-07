@@ -14,6 +14,7 @@ namespace MVCApplication.Controllers
         /// <summary>
         /// Initializes a new instance of the EventsController class with the provided database context.
         /// </summary>
+        /// <param name="logger">Logging Context for Controller Logger</param>
         /// <param name="db">Application database context</param>
         public EventsController(AppDb db, ILogger<EventsController> logger) : base(db,logger)
         {

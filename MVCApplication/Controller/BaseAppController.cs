@@ -137,7 +137,7 @@ namespace MVCApplication.Controllers
                             m.Error = op.ErrorMsg;
                             return View(view, m);
                         }
-                        m.Success = op.SuccessMsg ?? "Completed(No Message Specified)";
+                        TempData["Success"] = op.SuccessMsg ?? "Completed(No Message Specified)";
 
                         return redirect == null ? RedirectToAction("Index") : redirect();
                     })()
@@ -158,6 +158,8 @@ namespace MVCApplication.Controllers
                             m.Error = op.ErrorMsg ?? "ERROR: Operation Failed";
                             return NotFound();
                         }
+                        m.Success = TempData["Success"] as string;
+                        TempData["Success"] = null;
                         return View(view, m);
                     })());
         /// <summary>
