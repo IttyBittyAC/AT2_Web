@@ -40,21 +40,21 @@ namespace MVCApplication.Controllers
         /// <returns>Home view</returns>
         [HttpGet("/")]
         [HttpGet("/Home")]
-        public Task<IActionResult> Index() => GraveMind(Home.Index, Store[MethodCode.HomeIndex].Table, Store[MethodCode.HomeIndex].Title);
+        public Task<IActionResult> Index() => GraveMind(Home.Index, MethodCode.HomeIndex);
 
         /// <summary>
         /// Displays the announcements page.
         /// </summary>
         /// <returns>Announcements view</returns>
         [HttpGet("/Announcements")]
-        public Task<IActionResult> Announcements() => GraveMind(Home.Announcements, Store[MethodCode.HomeAnnouncements].Table, Store[MethodCode.HomeAnnouncements].Title);
+        public Task<IActionResult> Announcements() => GraveMind(Home.Announcements, MethodCode.HomeAnnouncements);
 
         /// <summary>
         /// Displays the feedback form page.
         /// </summary>
         /// <returns>Feedback form view</returns>
         [HttpGet("/Feedback")]
-        public Task<IActionResult> Feedback() => GraveMind(Home.Feedback, Store[MethodCode.HomeFeedBack].Table, Store[MethodCode.HomeFeedBack].Title);
+        public Task<IActionResult> Feedback() => GraveMind(Home.Feedback, MethodCode.HomeFeedBack);
 
         /// <summary>
         /// Handles feedback form submission by validating input and saving the feedback to the database.
@@ -63,13 +63,11 @@ namespace MVCApplication.Controllers
         /// <returns>Redirects on success or returns the view with errors</returns>
         [HttpPost("/Feedback")]
         public Task<IActionResult> Feedback(Feedback feedback) => !ModelState.IsValid
-            ? GraveMind(Home.Feedback, Store[MethodCode.HomeFeedBackInvalid].Table, Store[MethodCode.HomeFeedBackInvalid].Title,
+            ? GraveMind(Home.Feedback, MethodCode.HomeFeedBackInvalid,
                 populate: async m => { m.Error = Store[MethodCode.HomeFeedBackInvalid].ErrorMsg;
                     await Task.CompletedTask; })
-            : GraveMind(Home.Feedback, Store[MethodCode.HomeFeedBack].Table, Store[MethodCode.HomeFeedBack].Title,
+            : GraveMind(Home.Feedback, MethodCode.HomeFeedBack,
                 save: () => _db.SaveFeedback(feedback),
-                errorMsg: Store[MethodCode.HomeFeedBack].ErrorMsg,
-                successMsg: Store[MethodCode.HomeFeedBack].SuccessMsg,
                 redirect: () => RedirectToAction("Index"));
 
 
@@ -78,7 +76,7 @@ namespace MVCApplication.Controllers
         /// </summary>
         /// <returns>FAQ view</returns>
         [HttpGet("/FAQ")]
-        public Task<IActionResult> FAQ() => GraveMind(Home.FAQ, Store[MethodCode.HomeFAQ].Table, Store[MethodCode.HomeFAQ].Title);
+        public Task<IActionResult> FAQ() => GraveMind(Home.FAQ, MethodCode.HomeFAQ);
 
         /// <summary>
         /// Displays the confirmation page.

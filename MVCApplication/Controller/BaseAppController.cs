@@ -1,9 +1,10 @@
 ﻿using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using MVCApplication.Data;
-using MVCApplication.Helpers;
 using MVCApplication.Models;
-using System.Linq;
+using static MVCApplication.Helpers.UserRole;
+using static MVCApplication.Helpers.MessageDictionary;
+using MVCApplication.Helpers;
 
 namespace MVCApplication.Controllers
 {
@@ -36,7 +37,7 @@ namespace MVCApplication.Controllers
         {
             get
             {
-                return HttpContext.Session.GetString("user") != null;
+                return HttpContext.Session.GetString(SessionKeys.Type) != null;
             }
         }
 
@@ -47,7 +48,7 @@ namespace MVCApplication.Controllers
         {
             get
             {
-                return HttpContext.Session.GetString("role") == "admin";
+                return HttpContext.Session.GetString(SessionKeys.Role) == admin.ToString();
             }
         }
 
@@ -63,8 +64,8 @@ namespace MVCApplication.Controllers
         {
             return AndInTheDarknessBindThem.Build(
                 table,
-                HttpContext.Session.GetString("user"),
-                HttpContext.Session.GetString("role"),
+                HttpContext.Session.GetString(SessionKeys.Type),
+                HttpContext.Session.GetString(SessionKeys.Role),
                 title,
                 returnUrl
             );
@@ -103,46 +104,40 @@ namespace MVCApplication.Controllers
         /// We Trade One Villain for Another 
         /// </summary>
         /// <param name="view"> Page to be displayed (Required) </param>
-        /// <param name="table"> Table name set onto model for View </param>
-        /// <param name="title"> Title of page set onto model for Views </param>
+        /// <param name="controllerOp">Key of Dict containing value pair of UX parameters</param>
         /// <param name="auth"> If True, required authenticated user </param>
         /// <param name="admin"> If True, required authenticated admin </param>
         /// <param name="populate"> Optional delegate that populates the view model with data from db before rendering the view </param>
         /// <param name="check"> Optional delegate that validates model and returns false to trigger 404 </param>
         /// <param name="save"> Optional delegate that does POST operations </param>
         /// <param name="redirect"> Optional delegate that stores where to be redirected to after a POST </param>
-        /// <param name="successMsg"> Optional message for successfull POST </param>
-        /// <param name="errorMsg"> Optional message for a failed operation or validation </param>
         /// <returns> An IActionResult representing either a view, redirect, or error response </returns>
 
-        protected Task<IActionResult> GraveMind(string view, string table = "", string? title = null,
+        protected Task<IActionResult> GraveMind(string view, MethodCode controllerOp,
             bool auth = false, bool admin = false,
             Func<AndInTheDarknessBindThem, Task>? populate = null,
             Func<AndInTheDarknessBindThem, bool>? check = null,
             Func<Task<bool>>? save = null,
-            Func<IActionResult>? redirect = null,
-            string? successMsg = null, string? errorMsg = null)
+            Func<IActionResult>? redirect = null)
             => 
-            logWrapper(HttpContext.Request.Path.Value ?? view, e: errorMsg, s: successMsg, 
+            logWrapper(HttpContext.Request.Path.Value ?? view, e: Store[controllerOp].ErrorMsg, s: Store[controllerOp].SuccessMsg, 
                 async() =>           
                     // Gate 1 (Auth and Admin)
                     Guard(requireAdmin: admin, requireAuth: auth) is { } r 
-                    ? await new Func<Task<IActionResult>>(() =>
-                    {
-                        return Task.FromResult(r);
-                    })() : save != null
+                    ? r : save != null
                     // Gate 2 POST
                     ? await new Func<Task<IActionResult>>(async () =>
                     {
-                        var m = Build(table, title);
+                        var op = Store[controllerOp];
+                        var m = Build(op.Table, op.Title);
                         var s = await save();
 
                         if (!s)
                         {
-                            m.Error = errorMsg;
+                            m.Error = op.ErrorMsg;
                             return View(view, m);
                         }
-                        SetSuccess(s, successMsg ?? "done");
+                        m.Success = op.SuccessMsg ?? "Completed(No Message Specified)";
 
                         return redirect == null ? RedirectToAction("Index") : redirect();
                     })()
@@ -150,7 +145,8 @@ namespace MVCApplication.Controllers
                     // Gate 3 GET
                     : await new Func<Task<IActionResult>>(async () =>
                     {
-                        var m = Build(table, title);
+                        var op = Store[controllerOp];
+                        var m = Build(op.Table, op.Title);
 
                         if (populate != null)
                         {
@@ -159,7 +155,7 @@ namespace MVCApplication.Controllers
 
                         if (check != null && !check(m))
                         {
-                            m.Error = errorMsg ?? "not found";
+                            m.Error = op.ErrorMsg ?? "ERROR: Operation Failed";
                             return NotFound();
                         }
                         return View(view, m);
@@ -172,29 +168,12 @@ namespace MVCApplication.Controllers
         /// <returns> IActionResult redirect to login if session data doesnt match required params set, otherwise null </returns>
         protected IActionResult? Guard(bool requireAdmin = false, bool requireAuth = false) => (requireAuth || requireAdmin) && !IsAuth ? RedirectToAction("Login", "Account") : requireAdmin && !IsAdmin ? new StatusCodeResult(403) : null;
 
-        /// <summary>
-        /// Method to pass information to view on redirect about status of operation
-        /// </summary>
-        /// <param name="saved"> determines if message is set </param>
-        /// <param name="message"> message to be sent to page </param>
-        protected void SetSuccess(bool saved, string message)
-        {
-            if (saved)
-            {
-                TempData["Success"] = message;
-            }
-            else
-            {
-                TempData["Success"] = null;
-            }
-        }
-
         private async Task SaveLog(bool isError, string view, string message)
         {
             try
             {
-                string userName = HttpContext.Session.GetString("user") ?? "Guest";
-                string role = HttpContext.Session.GetString("role") ?? "Guest";
+                string userName = HttpContext.Session.GetString(SessionKeys.Type) ?? "Guest";
+                string role = HttpContext.Session.GetString(SessionKeys.Role) ?? "Guest";
 
                 await _db.SaveLog(new Log
                 {

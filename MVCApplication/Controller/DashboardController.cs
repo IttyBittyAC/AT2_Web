@@ -25,7 +25,7 @@ namespace MVCApplication.Controllers
         /// </summary>
         /// <returns>Dashboard view</returns>
         [HttpGet("/Dashboard")]
-        public Task<IActionResult> Index() => GraveMind(Dashboard.Index, Store[MethodCode.DashBoardIndex].Table, Store[MethodCode.DashBoardIndex].Title, auth: true);
+        public Task<IActionResult> Index() => GraveMind(Dashboard.Index, MethodCode.DashBoardIndex, auth: true);
 
         /// <summary>
         /// Handles HTTP GET requests for the My Bookings dashboard view, retrieving and displaying bookings associated
@@ -38,8 +38,7 @@ namespace MVCApplication.Controllers
         [HttpGet("/Dashboard/MyBookings")]
         public Task<IActionResult> MyBookings() => GraveMind(
             Dashboard.MyBookings,
-            Store[MethodCode.DashBoardBooking].Table,
-            Store[MethodCode.DashBoardBooking].Title,
+            MethodCode.DashBoardBooking,
             populate: async m =>
             {
                 var email = User.Identity?.Name;
@@ -53,8 +52,6 @@ namespace MVCApplication.Controllers
                 var (bs, _) = await _db.GetBookingByEmail(email);
                 m.Bookings = bs ?? [];
             },
-            errorMsg: Store[MethodCode.DashBoardBooking].ErrorMsg,
-            successMsg: Store[MethodCode.DashBoardBooking].SuccessMsg,
             auth: true
         );
 
@@ -71,8 +68,7 @@ namespace MVCApplication.Controllers
         [HttpGet("/Dashboard/Profile")]
         public Task<IActionResult> Profile() => GraveMind(
             Dashboard.Profile,
-            Store[MethodCode.DashBoardProfile].Table,
-            Store[MethodCode.DashBoardProfile].Title,
+            MethodCode.DashBoardProfile,
             populate: async m =>
             {
                 var email = User.Identity?.Name;
@@ -86,8 +82,6 @@ namespace MVCApplication.Controllers
                 var (_, user) = await _db.GetUserByEmail(email);
                 m.User = user;
             },
-            errorMsg: Store[MethodCode.DashBoardProfile].ErrorMsg,
-            successMsg: Store[MethodCode.DashBoardProfile].SuccessMsg,
             auth: true
         );
     }
