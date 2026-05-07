@@ -24,15 +24,15 @@ namespace MVCApplication.Controllers
         /// </summary>
         /// <returns>Events view with data</returns>
         [HttpGet("/Events")]
-        public Task<IActionResult> Index() => GraveMind(Events.Index, Store[MethodCode.EventsIndex].Table, Store[MethodCode.EventsIndex].Title, 
-            populate: async m => { var (events, _) = await _db.GetEvent(null); m.Events = events ?? [];}, errorMsg: Store[MethodCode.EventsIndex].ErrorMsg, successMsg: Store[MethodCode.EventsIndex].SuccessMsg);
+        public Task<IActionResult> Index() => GraveMind(Events.Index, MethodCode.EventsIndex, 
+            populate: async m => { var (events, _) = await _db.GetEvent(null); m.Events = events ?? [];});
 
         /// <summary>
         /// Displays the event creation page for authenticated users.
         /// </summary>
         /// <returns>Create event view</returns>
         [HttpGet("/Events/Create")]
-        public Task<IActionResult> Create() => GraveMind(Events.Create, Store[MethodCode.EventsCreate].Table, Store[MethodCode.EventsCreate].Title, auth: true);
+        public Task<IActionResult> Create() => GraveMind(Events.Create, MethodCode.EventsCreate, auth: true);
 
         /// <summary>
         /// Handles event creation by validating input and saving the new event to the database.
@@ -41,13 +41,10 @@ namespace MVCApplication.Controllers
         /// <returns>Redirects on success or returns the view with errors</returns>
         [HttpPost("/Events/Create")]
         public Task<IActionResult> Create(Event singleEvent) => !ModelState.IsValid 
-            ? GraveMind(Events.Create, Store[MethodCode.EventsCreateInvalid].Table, Store[MethodCode.EventsCreateInvalid].Title, auth: true, 
-                populate: async m => { m.Event = singleEvent; await Task.CompletedTask;}, 
-                errorMsg: Store[MethodCode.EventsCreateInvalid].ErrorMsg)  
-            : GraveMind(Events.Create, Store[MethodCode.EventsCreate].Table, Store[MethodCode.EventsCreate].Title,
-                auth: true,
-                errorMsg: Store[MethodCode.EventsCreate].ErrorMsg,
-                successMsg: Store[MethodCode.EventsCreate].SuccessMsg, 
+            ? GraveMind(Events.Create, MethodCode.EventsCreateInvalid, auth: true, 
+                populate: async m => { m.Event = singleEvent; await Task.CompletedTask;})  
+            : GraveMind(Events.Create, MethodCode.EventsCreate,
+                auth: true, 
                 save: () =>  _db.SaveEvent(singleEvent), 
                 redirect: () => RedirectToAction("Details"));
 
@@ -56,7 +53,7 @@ namespace MVCApplication.Controllers
         /// </summary>
         /// <returns>Event details view</returns>
         [HttpGet("/Events/Details")]
-        public Task<IActionResult> Details() => GraveMind(Events.Details, "events", "Event details");
+        public Task<IActionResult> Details() => GraveMind(Events.Details, MethodCode.EventsDetails);
 
         /// <summary>
         /// Retrieves and displays specific event details based on the provided ID.
@@ -65,13 +62,11 @@ namespace MVCApplication.Controllers
         /// <returns>Event details view with data or error if not found</returns>
         [HttpGet("/Events/{id}")]
         public Task<IActionResult> Details(int id) => 
-            GraveMind(Events.Details, Store[MethodCode.EventsDetails].Table, Store[MethodCode.EventsDetails].Title, 
+            GraveMind(Events.Details, MethodCode.EventsDetails, 
                 populate: async m => { 
                     var (_, _event) = await _db.GetEvent(id); 
                     m.Event = _event; 
                 }, 
-                check: m => m.Event != null,
-                errorMsg: Store[MethodCode.EventsDetails].ErrorMsg,
-                successMsg: Store[MethodCode.EventsDetails].SuccessMsg);
+                check: m => m.Event != null);
     }
 }
