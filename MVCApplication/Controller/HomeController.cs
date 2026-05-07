@@ -16,6 +16,7 @@ namespace MVCApplication.Controllers
         /// Initializes a new instance of the HomeController class with the provided database context.
         /// </summary>
         /// <param name="db">Application database context</param>
+        /// <param name="logger">Logging Context for Controller Logger</param>
         public HomeController(AppDb db, ILogger<HomeController> logger) : base(db, logger)
         {
         }
