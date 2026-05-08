@@ -22,10 +22,10 @@
         </div>
     }
 
-    @if (TempData["Success"] != null)
+    @if (!string.IsNullOrEmpty(Model.Success))
     {
         <div class="alert success">
-            <strong>✓ Success:</strong> @TempData["Success"]
+            <strong>✓ Success:</strong> @Model.Success
         </div>
     }
 
