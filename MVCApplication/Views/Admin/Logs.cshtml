@@ -1,0 +1,78 @@
+@model MVCApplication.Models.AndInTheDarknessBindThem
+
+@{
+    ViewData["Title"] = "Admin - Logs";
+    Layout = "_Layout";
+}
+
+<div class="container">
+    <h1 class="title has-text-centered">Application Logs</h1>
+
+    @if (!Model.IsAdmin)
+    {
+        <div class="notification is-danger">
+            You do not have permission to view this page.
+        </div>
+    }
+    else
+    {
+        @if (!string.IsNullOrEmpty(Model.Error))
+        {
+            <div class="notification is-danger">@Model.Error</div>
+        }
+
+        @if (!string.IsNullOrEmpty(Model.Success))
+        {
+            <div class="notification is-success">@Model.Success</div>
+        }
+
+        <section class="box">
+            <h2 class="subtitle">System Activity</h2>
+            <p class="help">Review recorded application activity, errors, and request outcomes.</p>
+
+            @if (Model.Logs is null || !Model.Logs.Any())
+            {
+                <div class="notification is-warning">No logs are available.</div>
+            }
+            else
+            {
+                <div class="table-container">
+                    <table class="table is-fullwidth is-striped is-hoverable">
+                        <thead>
+                            <tr>
+                                <th>Status</th>
+                                <th>Date / Time</th>
+                                <th>User</th>
+                                <th>Role</th>
+                                <th>View</th>
+                                <th>Message</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var log in Model.Logs.OrderByDescending(l => l.DateTime))
+                            {
+                                <tr>
+                                    <td>
+                                        @if (log.IsError)
+                                        {
+                                            <span class="tag is-danger">Error</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="tag is-success">Success</span>
+                                        }
+                                    </td>
+                                    <td>@log.DateTime.ToString("yyyy-MM-dd HH:mm:ss")</td>
+                                    <td>@log.UserName</td>
+                                    <td>@log.Role</td>
+                                    <td>@log.View</td>
+                                    <td style="white-space: pre-wrap; word-break: break-word;">@log.Message</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+        </section>
+    }
+</div>
