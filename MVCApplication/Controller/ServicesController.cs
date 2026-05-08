@@ -2,19 +2,22 @@
 using MVCApplication.Data;
 using MVCApplication.Models;
 using static MVCApplication.Helpers.V;
+using static MVCApplication.Helpers.MessageDictionary;
+using static MVCApplication.Helpers.ActionEnums;
 
 namespace MVCApplication.Controllers
 {
     /// <summary>
     /// Controller responsible for handling service booking actions such as viewing bookings, booking services, and viewing booking details.
     /// </summary>
-    public class ServicesController : BaseAppController
+    public class ServicesController : BaseAppController<ServicesController>
     {
         /// <summary>
         /// Initializes a new instance of the ServicesController class with the provided database context.
         /// </summary>
         /// <param name="db">Application database context</param>
-        public ServicesController(AppDb db) : base(db)
+        /// <param name="logger">Logging Context for Controller Logger</param>
+        public ServicesController(AppDb db, ILogger<ServicesController> logger) : base(db, logger)
         {
         }
 
@@ -24,8 +27,8 @@ namespace MVCApplication.Controllers
         /// <param name="id">Optional booking ID</param>
         /// <returns>Services view with booking data</returns>
         [HttpGet("/Services")]
-        public Task<IActionResult> Index(int? id) => GraveMind(Services.Index, "bookings", "List of all bookings select one to view details", 
-            populate: async m => { var (bs, b) = await _db.GetBooking(id); m.Bookings = bs ?? []; m.Booking = b;});
+        public Task<IActionResult> Index(int? id) => GraveMind(Services.Index, MethodCode.ServiceIndex,
+            populate: async m => { var (bs, b) = await _db.GetBooking(id); m.Bookings = bs ?? []; m.Booking = b; });
 
         /// <summary>
         /// Handles user actions from the services page such as navigating to details or booking pages.
@@ -34,12 +37,20 @@ namespace MVCApplication.Controllers
         /// <param name="action">Action to perform (Details or Book)</param>
         /// <returns>Redirects based on action or returns the view</returns>
         [HttpPost("/Services")]
-        public IActionResult Index(int id, string action) => !string.IsNullOrEmpty(action) 
-            ? action == "Details" 
-                ? RedirectToAction("Details", new { Id = id }) 
-                : action == "Book" ? RedirectToAction("Book") 
-                    : NotFound() 
-            : View(Services.Index);
+        public Task<IActionResult> Index(int id, ServiceAction? action) => action == null
+        ? GraveMind(Services.Index,
+            MethodCode.ServiceIndex)
+        : action switch
+        {
+            ServiceAction.Details => GraveMind(Services.Index,
+                MethodCode.ServiceDetail,
+                save: () => Task.FromResult(true),redirect: () => RedirectToAction("Details", new { id })),
+
+            ServiceAction.Book => GraveMind(Services.Index,
+                MethodCode.ServiceBook,
+                save: () => Task.FromResult(true),redirect: () => RedirectToAction("Book")),
+            _ => Task.FromResult<IActionResult>(NotFound())
+        };
 
         /// <summary>
         /// Displays details for a specific booking.
@@ -47,14 +58,14 @@ namespace MVCApplication.Controllers
         /// <param name="id">Booking ID</param>
         /// <returns>Booking details view or error if not found</returns>
         [HttpGet("/Services/Details/{Id}")]
-        public Task<IActionResult> Details(int id) => GraveMind(Services.Details, "bookings", "Services", populate: async m => { var (_, b) = await _db.GetBooking(id); m.Booking = b; }, check: m => m.Booking != null, errorMsg: "Nothing in bookings set");
+        public Task<IActionResult> Details(int id) => GraveMind(Services.Details, MethodCode.ServiceDetail, populate: async m => { var (_, b) = await _db.GetBooking(id); m.Booking = b; }, check: m => m.Booking != null);
         
         /// <summary>
         /// Displays the booking page for authenticated users.
         /// </summary>
         /// <returns>Booking form view</returns>
         [HttpGet("/Services/Book")]
-        public Task<IActionResult> Book() => GraveMind(Services.Book, "bookings", "Book smt", auth : true);
+        public Task<IActionResult> Book() => GraveMind(Services.Book,MethodCode.ServiceBook, auth : true);
 
         /// <summary>
         /// Handles booking submission by validating input and saving the booking to the database.
@@ -63,11 +74,9 @@ namespace MVCApplication.Controllers
         /// <returns>Redirects on success or returns the view with errors</returns>
         [HttpPost("/Services/Book")]
         public Task<IActionResult> Book(Booking booking) => ModelState.IsValid 
-            ? GraveMind(Services.Book, "bookings", "Book something", 
-                save: async () => await _db.SaveBooking(booking), 
-                validMsg: "Thank you for making a booking") 
-            : GraveMind(Services.Book, "bookings", "Book something", 
-                populate: async m => { m.Booking = booking; await Task.CompletedTask;}, 
-                errorMsg: "Please fill in all fields");
+            ? GraveMind(Services.Book, MethodCode.ServiceBook, 
+                save: async () => await _db.SaveBooking(booking)) 
+            : GraveMind(Services.Book, MethodCode.ServiceBookInvalid, 
+                populate: async m => { m.Booking = booking; await Task.CompletedTask;});
     }
 }

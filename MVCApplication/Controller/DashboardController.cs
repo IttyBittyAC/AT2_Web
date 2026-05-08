@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MVCApplication.Data;
 using MVCApplication.Models;
+using static MVCApplication.Helpers.MessageDictionary;
 using static MVCApplication.Helpers.V;
 
 namespace MVCApplication.Controllers
@@ -9,13 +10,14 @@ namespace MVCApplication.Controllers
     /// This controller is responsible for handling user dashboard-related actions, 
     /// such as displaying the main dashboard, user bookings, and profile information.
     /// </summary>
-    public class DashboardController : BaseAppController
+    public class DashboardController : BaseAppController<DashboardController>
     {
         /// <summary>
         /// Initializes a new instance of the DashboardController class with the provided database context.
         /// </summary>
         /// <param name="db">Application database context</param>
-        public DashboardController(AppDb db) : base(db)
+        /// <param name="logger">Logging Context for Controller Logger</param>
+        public DashboardController(AppDb db, ILogger<DashboardController> logger) : base(db, logger)
         {
         }
 
@@ -24,7 +26,7 @@ namespace MVCApplication.Controllers
         /// </summary>
         /// <returns>Dashboard view</returns>
         [HttpGet("/Dashboard")]
-        public Task<IActionResult> Index() => GraveMind(Dashboard.Index, "dashboard", "Dashboard", auth: true);
+        public Task<IActionResult> Index() => GraveMind(Dashboard.Index, MethodCode.DashBoardIndex, auth: true);
 
         /// <summary>
         /// Handles HTTP GET requests for the My Bookings dashboard view, retrieving and displaying bookings associated
@@ -37,8 +39,7 @@ namespace MVCApplication.Controllers
         [HttpGet("/Dashboard/MyBookings")]
         public Task<IActionResult> MyBookings() => GraveMind(
             Dashboard.MyBookings,
-            "bookings",
-            "My Bookings",
+            MethodCode.DashBoardBooking,
             populate: async m =>
             {
                 var email = User.Identity?.Name;
@@ -52,7 +53,6 @@ namespace MVCApplication.Controllers
                 var (bs, _) = await _db.GetBookingByEmail(email);
                 m.Bookings = bs ?? [];
             },
-            errorMsg: "No Bookings found of user",
             auth: true
         );
 
@@ -69,8 +69,7 @@ namespace MVCApplication.Controllers
         [HttpGet("/Dashboard/Profile")]
         public Task<IActionResult> Profile() => GraveMind(
             Dashboard.Profile,
-            "users",
-            "Profile",
+            MethodCode.DashBoardProfile,
             populate: async m =>
             {
                 var email = User.Identity?.Name;
@@ -84,7 +83,6 @@ namespace MVCApplication.Controllers
                 var (_, user) = await _db.GetUserByEmail(email);
                 m.User = user;
             },
-            errorMsg: "User not found",
             auth: true
         );
     }

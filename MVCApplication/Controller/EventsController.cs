@@ -2,19 +2,21 @@
 using MVCApplication.Data;
 using MVCApplication.Models;
 using static MVCApplication.Helpers.V;
+using static MVCApplication.Helpers.MessageDictionary;
 
 namespace MVCApplication.Controllers
 {
     /// <summary>
     /// Controller responsible for handling event-related actions such as viewing, creating, and displaying event details.
     /// </summary>
-    public class EventsController : BaseAppController
+    public class EventsController : BaseAppController<EventsController>
     {
         /// <summary>
         /// Initializes a new instance of the EventsController class with the provided database context.
         /// </summary>
+        /// <param name="logger">Logging Context for Controller Logger</param>
         /// <param name="db">Application database context</param>
-        public EventsController(AppDb db) : base(db)
+        public EventsController(AppDb db, ILogger<EventsController> logger) : base(db,logger)
         {
         }
 
@@ -23,7 +25,7 @@ namespace MVCApplication.Controllers
         /// </summary>
         /// <returns>Events view with data</returns>
         [HttpGet("/Events")]
-        public Task<IActionResult> Index() => GraveMind(Events.Index, "events", "Events", 
+        public Task<IActionResult> Index() => GraveMind(Events.Index, MethodCode.EventsIndex, 
             populate: async m => { var (events, _) = await _db.GetEvent(null); m.Events = events ?? [];});
 
         /// <summary>
@@ -31,7 +33,7 @@ namespace MVCApplication.Controllers
         /// </summary>
         /// <returns>Create event view</returns>
         [HttpGet("/Events/Create")]
-        public Task<IActionResult> Create() => GraveMind(Events.Create, "events", "Make an event", auth: true );
+        public Task<IActionResult> Create() => GraveMind(Events.Create, MethodCode.EventsCreate, auth: true);
 
         /// <summary>
         /// Handles event creation by validating input and saving the new event to the database.
@@ -40,20 +42,19 @@ namespace MVCApplication.Controllers
         /// <returns>Redirects on success or returns the view with errors</returns>
         [HttpPost("/Events/Create")]
         public Task<IActionResult> Create(Event singleEvent) => !ModelState.IsValid 
-            ? GraveMind(Events.Create, "events", "Make an event", auth: true, 
-                populate: async m => { m.Event = singleEvent; await Task.CompletedTask;}, 
-                errorMsg: "Please fill in all fields")  
-            : GraveMind(Events.Create, auth: true,  
-                validMsg: "Made event successfully", 
+            ? GraveMind(Events.Create, MethodCode.EventsCreateInvalid, auth: true, 
+                populate: async m => { m.Event = singleEvent; await Task.CompletedTask;})  
+            : GraveMind(Events.Create, MethodCode.EventsCreate,
+                auth: true, 
                 save: () =>  _db.SaveEvent(singleEvent), 
-                redirct: () => RedirectToAction("Details"));
+                redirect: () => RedirectToAction("Details"));
 
         /// <summary>
         /// Displays the event details page.
         /// </summary>
         /// <returns>Event details view</returns>
         [HttpGet("/Events/Details")]
-        public Task<IActionResult> Details() => GraveMind(Events.Details, "events", "Event details");
+        public Task<IActionResult> Details() => GraveMind(Events.Details, MethodCode.EventsDetails);
 
         /// <summary>
         /// Retrieves and displays specific event details based on the provided ID.
@@ -62,12 +63,11 @@ namespace MVCApplication.Controllers
         /// <returns>Event details view with data or error if not found</returns>
         [HttpGet("/Events/{id}")]
         public Task<IActionResult> Details(int id) => 
-            GraveMind(Events.Details, "events", "Event Details", 
+            GraveMind(Events.Details, MethodCode.EventsDetails, 
                 populate: async m => { 
                     var (_, _event) = await _db.GetEvent(id); 
                     m.Event = _event; 
                 }, 
-                check: m => m.Event != null,
-                errorMsg: "Event not found");
+                check: m => m.Event != null);
     }
 }

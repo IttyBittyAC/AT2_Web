@@ -1,5 +1,6 @@
 using MVCApplication.Data;
 using MVCApplication.XMLServices;
+using MVCApplication.Models.Seeding;
 
 namespace MVCApplication
 {
@@ -14,6 +15,8 @@ namespace MVCApplication
 
             //Register XML configuration service (loads Config/*.xml)
             builder.Services.AddSingleton<IXMLConfigService, XMLConfigService>();
+            builder.Services.Configure<AdminSettings>(builder.Configuration.GetSection("AdminSettings"));
+
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
