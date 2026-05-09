@@ -15,11 +15,11 @@ namespace MVCApplication.Data
         public async Task SeedAdminUser()
         {
             using var s = new SqliteConnection(_conn);
-            var exist = await s.ExecuteScalarAsync<int>("select count(1) from users where role = 'admin'");
+            var exist = await s.ExecuteScalarAsync<int>("SELECT count(1) FROM users WHERE role = 'admin'");
             if (exist > 0) return;
 
             var hashedPassword = BCrypt.Net.BCrypt.EnhancedHashPassword(_adminSettings.SeedPassword);
-            var id = await s.ExecuteScalarAsync<int>(@"insert into users(Email, PasswordHash, Username, FullName, Role) values(@email, @hash, @username, @fullname, 'admin')  returning id",  new { email = "admin@example.com", hash = hashedPassword, username = "admin",fullname = "Admin User" });
+            var id = await s.ExecuteScalarAsync<int>(@"INSERT INTO users(Email, PasswordHash, Username, FullName, Role) VALUES (@email, @hash, @username, @fullName, 'admin')  RETURNING id",  new { email = "admin@example.com", hash = hashedPassword, username = "admin", fullName = "Admin User" });
         }
     }
 }
