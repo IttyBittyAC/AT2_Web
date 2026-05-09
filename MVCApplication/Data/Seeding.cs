@@ -23,14 +23,44 @@ namespace MVCApplication.Data
             var id = await s.ExecuteScalarAsync<int>(@"INSERT INTO users(Email, PasswordHash, Username, FullName, Role) VALUES (@Email, @Hash, @Username, @FullName, 'admin')  RETURNING id", new { Email = email, Hash = hashedPassword, Username = "admin", FullName = "Admin User" });
         }
 
+        public async Task SeedUser()
+        {
+            using var conn = new SqliteConnection(_conn);
+            var exist = await conn.ExecuteScalarAsync<int>("SELECT count(1) FROM users WHERE role = 'user'");
+            if (exist > 0) return;
+
+            string hashedPassword = BCrypt.Net.BCrypt.EnhancedHashPassword("user123");
+            string email = "user@example.com";
+            int id = await conn.ExecuteScalarAsync<int>(
+                @"INSERT INTO users(Email, PasswordHash, Username, FullName, Role)
+                VALUES (@Email, @Hash, @Username, @FullName, 'user')  
+                RETURNING id", 
+                new 
+                { 
+                    Email = email, 
+                    Hash = hashedPassword, 
+                    Username = "TestUser", 
+                    FullName = "Test User"
+                });
+        }
+
         public async Task SeedBooking()
         {
             using var conn = new SqliteConnection(_conn);
             var exist = await conn.ExecuteScalarAsync<int>("SELECT count(1) FROM bookings");
-
             if (exist > 0) return;
 
 
+            int id = await conn.ExecuteScalarAsync<int>(
+                @"INSERT INTO bookings(, FullName, Email, BookingDate) 
+                VALUES (@Id, @FullName, @Email, @BookingDate)
+                RETURNING id", 
+                new
+                { 
+                    FullName = "Test User", 
+                    Email = "user@example.com", 
+                    BookingDate = DateTime.UtcNow 
+                });
         }
         public async Task SeedFeedback()
         {
@@ -38,6 +68,19 @@ namespace MVCApplication.Data
             var exist = await conn.ExecuteScalarAsync<int>("SELECT count(1) FROM feedback");
             if (exist > 0) return;
 
+            int id = await conn.ExecuteScalarAsync<int>(
+                @"INSERT INTO feedback(FullName, Email, Type, Heading, Message, WantsContact) 
+                VALUES (@FullName, @Email, @Type, @Heading, @Message, @WantsContact)
+                RETURNING id", 
+                new
+                { 
+                    FullName = "Test User", 
+                    Email = "user@example.com", 
+                    Type = "Comment", 
+                    Heading = "Great service!",
+                    Message = "Great service!", 
+                    WantsContact = 0
+                });
         }
 
         public async Task SeedEvent()
@@ -45,14 +88,19 @@ namespace MVCApplication.Data
             using var conn = new SqliteConnection(_conn);
             var exist = await conn.ExecuteScalarAsync<int>("SELECT count(1) FROM events");
             if (exist > 0) return;
-        }
 
-        public async Task SeedUser()
-        {
-            using var conn = new SqliteConnection(_conn);
-            var exist = await conn.ExecuteScalarAsync<int>("SELECT count(1) FROM users WHERE role = 'user'");
-            if (exist > 0) return;
-            var hashedPassword = BCrypt.Net.BCrypt.EnhancedHashPassword("user123");
+
+            int id = await conn.ExecuteScalarAsync<int>(@"
+            INSERT INTO events (Title, Description, Location, EventDate) 
+            VALUES (@Title, @Description, @Location, @EventDate) 
+            RETURNING Id",
+            new
+            {
+                Title = "Community Meetup",
+                Description = "A casual meetup for local community members.",
+                Location = "Town Hall, Perth",
+                EventDate = DateTime.UtcNow.AddDays(14)
+            });
         }
     }
 }
