@@ -11,7 +11,7 @@ namespace MVCApplication.Data
     {
         private readonly AdminSettings _adminSettings;
         private readonly string _conn;
-        public Seeding(IConfiguration cfg, IOptions<AdminSettings> adminSettings) => (_conn, _adminSettings) = (cfg.GetConnectionString("Default") ?? "Data Source=app.db", adminSettings.Value);  
+        public Seeding(IConfiguration cfg, IOptions<AdminSettings> adminSettings) => (_conn, _adminSettings) = (cfg.GetConnectionString("Default") ?? "Data Source=app.db", adminSettings.Value);
         public async Task SeedAdminUser()
         {
             using var s = new SqliteConnection(_conn);
@@ -20,7 +20,39 @@ namespace MVCApplication.Data
 
             var hashedPassword = BCrypt.Net.BCrypt.EnhancedHashPassword(_adminSettings.SeedPassword);
             var email = _adminSettings.SeedEmail;
-            var id = await s.ExecuteScalarAsync<int>(@"INSERT INTO users(Email, PasswordHash, Username, FullName, Role) VALUES (@Email, @Hash, @Username, @FullName, 'admin')  RETURNING id",  new { Email = email, Hash = hashedPassword, Username = "admin", FullName = "Admin User" });
+            var id = await s.ExecuteScalarAsync<int>(@"INSERT INTO users(Email, PasswordHash, Username, FullName, Role) VALUES (@Email, @Hash, @Username, @FullName, 'admin')  RETURNING id", new { Email = email, Hash = hashedPassword, Username = "admin", FullName = "Admin User" });
+        }
+
+        public async Task SeedBooking()
+        {
+            using var conn = new SqliteConnection(_conn);
+            var exist = await conn.ExecuteScalarAsync<int>("SELECT count(1) FROM bookings");
+
+            if (exist > 0) return;
+
+
+        }
+        public async Task SeedFeedback()
+        {
+            using var conn = new SqliteConnection(_conn);
+            var exist = await conn.ExecuteScalarAsync<int>("SELECT count(1) FROM feedback");
+            if (exist > 0) return;
+
+        }
+
+        public async Task SeedEvent()
+        {
+            using var conn = new SqliteConnection(_conn);
+            var exist = await conn.ExecuteScalarAsync<int>("SELECT count(1) FROM events");
+            if (exist > 0) return;
+        }
+
+        public async Task SeedUser()
+        {
+            using var conn = new SqliteConnection(_conn);
+            var exist = await conn.ExecuteScalarAsync<int>("SELECT count(1) FROM users WHERE role = 'user'");
+            if (exist > 0) return;
+            var hashedPassword = BCrypt.Net.BCrypt.EnhancedHashPassword("user123");
         }
     }
 }
