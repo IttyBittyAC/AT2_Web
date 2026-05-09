@@ -44,24 +44,7 @@ namespace MVCApplication.Data
                 });
         }
 
-        public async Task SeedBooking()
-        {
-            using var conn = new SqliteConnection(_conn);
-            var exist = await conn.ExecuteScalarAsync<int>("SELECT count(1) FROM bookings");
-            if (exist > 0) return;
 
-
-            int id = await conn.ExecuteScalarAsync<int>(
-                @"INSERT INTO bookings(, FullName, Email, BookingDate) 
-                VALUES (@Id, @FullName, @Email, @BookingDate)
-                RETURNING id", 
-                new
-                { 
-                    FullName = "Test User", 
-                    Email = "user@example.com", 
-                    BookingDate = DateTime.UtcNow 
-                });
-        }
         public async Task SeedFeedback()
         {
             using var conn = new SqliteConnection(_conn);
@@ -102,5 +85,26 @@ namespace MVCApplication.Data
                 EventDate = DateTime.UtcNow.AddDays(14)
             });
         }
+
+        public async Task SeedBooking()
+        {
+            using var conn = new SqliteConnection(_conn);
+            var exist = await conn.ExecuteScalarAsync<int>("SELECT count(1) FROM bookings");
+            if (exist > 0) return;
+
+
+            int id = await conn.ExecuteScalarAsync<int>(
+                @"INSERT INTO bookings(FullName, Email, BookingDate) 
+                VALUES (@FullName, @Email, @BookingDate)
+                RETURNING id",
+                new
+                {
+                    FullName = "Test User",
+                    Email = "user@example.com",
+                    BookingDate = DateTime.UtcNow
+                });
+        }
+
+
     }
 }
