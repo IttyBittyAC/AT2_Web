@@ -19,7 +19,8 @@ namespace MVCApplication.Data
             if (exist > 0) return;
 
             var hashedPassword = BCrypt.Net.BCrypt.EnhancedHashPassword(_adminSettings.SeedPassword);
-            var id = await s.ExecuteScalarAsync<int>(@"INSERT INTO users(Email, PasswordHash, Username, FullName, Role) VALUES (@email, @hash, @username, @fullName, 'admin')  RETURNING id",  new { email = "admin@example.com", hash = hashedPassword, username = "admin", fullName = "Admin User" });
+            var email = _adminSettings.SeedEmail;
+            var id = await s.ExecuteScalarAsync<int>(@"INSERT INTO users(Email, PasswordHash, Username, FullName, Role) VALUES (@Email, @Hash, @Username, @FullName, 'admin')  RETURNING id",  new { Email = email, Hash = hashedPassword, Username = "admin", FullName = "Admin User" });
         }
     }
 }

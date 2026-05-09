@@ -2,6 +2,7 @@
 {
     public class AdminSettings
     {
-        public string SeedPassword { get; set; } = "";
+        public string SeedEmail { get; set; } = "admin@email.com";
+        public string SeedPassword { get; set; } = "Admin123";
     }
 }
