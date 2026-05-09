@@ -8,7 +8,7 @@ namespace MVCApplication.Data
     public partial class AppDb
     {
         private readonly string _conn; //Connection string for SQLite database
-        private readonly ILogger _logger; //Logger for error handling
+        private readonly ILogger<AppDb> _logger; //Logger for error handling
 
         public AppDb(IConfiguration cfg, ILogger<AppDb> logger)
         {
@@ -47,24 +47,24 @@ namespace MVCApplication.Data
             }
         }
 
-        public async Task<User?> Register(string password, string email, string username, string fullname, string role)
+        public async Task<User?> Register(string password, string email, string username, string fullName, string role)
         {
             try
             {
                 using SqliteConnection con = new SqliteConnection(_conn);
 
                 // Check if user with the same email already exists
-                int UserExist = await con.ExecuteScalarAsync<int>(
+                int userExists = await con.ExecuteScalarAsync<int>(
                     "SELECT count(1) FROM users WHERE Email = @email",
                     new { email });
 
-                if (UserExist > 0) 
+                if (userExists > 0) 
                     return null;
 
                 //  Insert new user and return the created user
                 int id = await con.ExecuteScalarAsync<int>(
-                    @"INSERT INTO users (Email, PasswordHash, Username, FullName, Role) VALUES (@email, @hash, @username, @fullname, @role) RETURNING id",
-                    new { email, hash = BCrypt.Net.BCrypt.EnhancedHashPassword(password), username, fullname, role });
+                    @"INSERT INTO users (Email, PasswordHash, Username, FullName, Role) VALUES (@email, @hash, @username, @fullName, @role) RETURNING id",
+                    new { email, hash = BCrypt.Net.BCrypt.EnhancedHashPassword(password), username, fullName, role });
 
                 return await con.QueryFirstOrDefaultAsync<User>(
                     "SELECT * FROM users WHERE Id = @id", new { id });
@@ -96,14 +96,14 @@ namespace MVCApplication.Data
                         Username      text not null,
                         FullName      text not null,
                         Role          text not null default 'user',
-                        created_at    datetime default current_timestamp
+                        CreatedAt     datetime default current_timestamp
                     );
                     CREATE TABLE IF NOT EXISTS events (
                         Id              integer primary key autoincrement,
                         Title           text not null,
                         Description     text not null,
                         Location        text not null,
-                        EventDate            datetime default current_timestamp
+                        EventDate       datetime default current_timestamp
                     );
                     CREATE TABLE IF NOT EXISTS feedback (
                         Id             integer  primary key autoincrement,
@@ -113,7 +113,7 @@ namespace MVCApplication.Data
                         Heading        text     not null,
                         Message        text     not null,
                         WantsContact  integer  not null default 0,
-                        submitted_date datetime default current_timestamp
+                        SubmittedDate datetime default current_timestamp
                     );
                     CREATE TABLE IF NOT EXISTS bookings (
                         Id              integer primary key autoincrement,
@@ -150,7 +150,7 @@ namespace MVCApplication.Data
 
                 // If id is provided, return the specific user, otherwise return all users
                 return id is not null ?
-                    (new List<User>(), (await con.QueryFirstOrDefaultAsync<User>("SELECT * FROM users WHERE id = @id", new { id }))) : ((await con.QueryAsync<User>("SELECT * FROM users ORDER BY created_at ASC")).ToList(), null);
+                    (new List<User>(), (await con.QueryFirstOrDefaultAsync<User>("SELECT * FROM users WHERE Id = @id", new { id }))) : ((await con.QueryAsync<User>("SELECT * FROM users ORDER BY CreatedAt ASC")).ToList(), null);
             }
             catch (SqliteException ex)
             {
@@ -177,7 +177,7 @@ namespace MVCApplication.Data
                 using SqliteConnection con = new SqliteConnection(_conn);
 
                 // Return user by email
-                return (new List<User>(), await con.QueryFirstOrDefaultAsync<User>("SELECT * FROM users WHERE email = @Email", new { Email = email }));
+                return (new List<User>(), await con.QueryFirstOrDefaultAsync<User>("SELECT * FROM users WHERE Email = @Email", new { Email = email }));
             }
             catch (SqliteException ex)
             {
@@ -199,7 +199,7 @@ namespace MVCApplication.Data
 
                 // If id is provided, return the specific event, otherwise return all events
                 return id is not null ?
-                    (new List<Event>(), (await con.QueryFirstOrDefaultAsync<Event>("SELECT * FROM events WHERE id = @id", new { id }))) : ((await con.QueryAsync<Event>("SELECT * FROM events ORDER BY date ASC")).ToList(), null);
+                    (new List<Event>(), (await con.QueryFirstOrDefaultAsync<Event>("SELECT * FROM events WHERE Id = @id", new { id }))) : ((await con.QueryAsync<Event>("SELECT * FROM events ORDER BY EventDate ASC")).ToList(), null);
             }
             catch (SqliteException ex)
             {
@@ -227,7 +227,7 @@ namespace MVCApplication.Data
 
                 // If id is provided, return the specific booking, otherwise return all bookings
                 return id is not null ?
-                    (new List<Booking>(), (await con.QueryFirstOrDefaultAsync<Booking>("SELECT * FROM bookings WHERE id = @id", new { id }))) : ((await con.QueryAsync<Booking>("SELECT * FROM bookings ORDER BY date ASC")).ToList(), null);
+                    (new List<Booking>(), (await con.QueryFirstOrDefaultAsync<Booking>("SELECT * FROM bookings WHERE Id = @id", new { id }))) : ((await con.QueryAsync<Booking>("SELECT * FROM bookings ORDER BY BookingDate ASC")).ToList(), null);
             }
             catch (SqliteException ex)
             {
@@ -254,7 +254,7 @@ namespace MVCApplication.Data
                 using var c = new SqliteConnection(_conn);
 
                 // Return bookings by email
-                return ((await c.QueryAsync<Booking>("SELECT * FROM bookings WHERE email = @Email ORDER BY date ASC", new { Email = email })).ToList(), null);
+                return ((await c.QueryAsync<Booking>("SELECT * FROM bookings WHERE Email = @Email ORDER BY BookingDate ASC", new { Email = email })).ToList(), null);
             }
             catch (SqliteException ex)
             {
@@ -276,7 +276,7 @@ namespace MVCApplication.Data
 
                 // If id is provided, return the specific feedback, otherwise return all feedback
                 return id is not null ?
-                    (new List<Feedback>(), (await con.QueryFirstOrDefaultAsync<Feedback>("SELECT * FROM feedback WHERE id = @id", new { id }))) : ((await con.QueryAsync<Feedback>("SELECT * FROM feedback ORDER BY submitted_date ASC")).ToList(), null);
+                    (new List<Feedback>(), (await con.QueryFirstOrDefaultAsync<Feedback>("SELECT * FROM feedback WHERE Id = @id", new { id }))) : ((await con.QueryAsync<Feedback>("SELECT * FROM feedback ORDER BY SubmittedDate ASC")).ToList(), null);
             }
             catch (SqliteException ex)
             {
@@ -327,8 +327,8 @@ namespace MVCApplication.Data
 
                 // Return true if at least one row was affected (i.e., feedback was inserted)
                 return await c.ExecuteAsync(
-                    @"INSERT INTO feedback(fullname, email, type, heading, message, wants_contact, submitted_date) 
-                      VALUES (@FullName, @Email, @Type, @Heading, @Message, @WantsContact, @Date)", 
+                    @"INSERT INTO feedback(Fullname, Email, Type, Heading, Message, WantsContact, SubmittedDate) 
+                      VALUES (@FullName, @Email, @Type, @Heading, @Message, @WantsContact, @SubmittedDate)", 
                     feedback) > 0;
             }
             catch (SqliteException ex)
@@ -343,23 +343,23 @@ namespace MVCApplication.Data
             }
         }
 
-        public async Task<bool> SaveEvent(Event _event)
+        public async Task<bool> SaveEvent(Event eventItem)
         {
             try
             {
                 using SqliteConnection con = new SqliteConnection(_conn);
 
                 // Return true if at least one row was affected (i.e., event was inserted)
-                return await con.ExecuteAsync(@"INSERT INTO events(title , description, location, date) VALUES (@title, @description, @location, @date)", _event) > 0;
+                return await con.ExecuteAsync(@"INSERT INTO events(Title, Description, Location, EventDate) VALUES (@Title, @Description, @Location, @EventDate)", eventItem) > 0;
             }
             catch (SqliteException ex)
             {
-                _logger.LogError(ex, "Database error during SaveEvent for title {Title}", _event.Title);
+                _logger.LogError(ex, "Database error during SaveEvent for title {Title}", eventItem.Title);
                 return false;
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Unexpected error during SaveEvent for title {Title}", _event.Title);
+                _logger.LogError(ex, "Unexpected error during SaveEvent for title {Title}", eventItem.Title);
                 throw;
             }
         }
@@ -371,7 +371,7 @@ namespace MVCApplication.Data
                 using SqliteConnection con = new SqliteConnection(_conn);
 
                 // Return true if at least one row was affected (i.e., booking was inserted)
-                return await con.ExecuteAsync(@"INSERT INTO bookings(fullname , email, date) VALUES (@FullName, @Email, @Date)", booking) > 0;
+                return await con.ExecuteAsync(@"INSERT INTO bookings(FullName , Email, BookingDate) VALUES (@FullName, @Email, @BookingDate)", booking) > 0;
             }
             catch (SqliteException ex)
             {
@@ -406,7 +406,7 @@ namespace MVCApplication.Data
                     if (sets.Count == 0) continue; // No fields to update, skip this user
 
                     // Execute the update statement for the user
-                    affected += await con.ExecuteAsync($"UPDATE users SET {string.Join(",", sets)} WHERE id = @Id", user);
+                    affected += await con.ExecuteAsync($"UPDATE users SET {string.Join(",", sets)} WHERE Id = @Id", user);
                 }
                 return affected;
             }
@@ -432,19 +432,19 @@ namespace MVCApplication.Data
                 int affected = 0;
 
                 // Loop through each feedback and build dynamic SQL for updating only the provided fields
-                foreach (Feedback feed in feedbacks)
+                foreach (Feedback feedback in feedbacks)
                 {
                     List<string> sets = new List<string>();
-                    if (feed.Heading is not null) sets.Add("heading = @Heading");
-                    if (feed.FullName is not null) sets.Add("fullname = @Fullname");
-                    if (feed.Type is not null) sets.Add("type = @Type");
-                    if (feed.Email is not null) sets.Add("email = @Email");
-                    if (feed.Message is not null) sets.Add("message = @Message");
+                    if (feedback.Heading is not null) sets.Add("Heading = @Heading");
+                    if (feedback.FullName is not null) sets.Add("FullName = @FullName");
+                    if (feedback.Type is not null) sets.Add("Type = @Type");
+                    if (feedback.Email is not null) sets.Add("Email = @Email");
+                    if (feedback.Message is not null) sets.Add("Message = @Message");
 
                     if (sets.Count == 0) continue; // No fields to update, skip this feedback
 
                     //Execute the update statement for the feedback
-                    affected += await con.ExecuteAsync($"UPDATE feedback SET {string.Join(",", sets)} WHERE id = @Id", feed);
+                    affected += await con.ExecuteAsync($"UPDATE feedback SET {string.Join(",", sets)} WHERE Id = @Id", feedback);
                 }
                 return affected;
             }
@@ -460,9 +460,9 @@ namespace MVCApplication.Data
             }
         }
 
-        public async Task<int> UpdateEvent(List<Event> _event)
+        public async Task<int> UpdateEvent(List<Event> events)
         {
-            if (_event == null || _event.Count == 0) return 0;
+            if (events == null || events.Count == 0) return 0;
 
             try
             {
@@ -470,18 +470,18 @@ namespace MVCApplication.Data
                 int affected = 0;
 
                 // Loop through each event and build dynamic SQL for updating only the provided fields
-                foreach (Event eve in _event)
+                foreach (Event eventItem in events)
                 {
                     List<string> sets = new List<string>();
-                    if (eve.Title is not null) sets.Add("title = @Title");
-                    if (eve.Description is not null) sets.Add("description = @Description");
-                    if (eve.Location is not null) sets.Add("location = @Location");
-                    if (eve.EventDate != DateTime.MinValue) sets.Add("date = @EventDate");
+                    if (eventItem.Title is not null) sets.Add("Title = @Title");
+                    if (eventItem.Description is not null) sets.Add("Description = @Description");
+                    if (eventItem.Location is not null) sets.Add("Location = @Location");
+                    if (eventItem.EventDate != DateTime.MinValue) sets.Add("EventDate = @EventDate");
 
                     if (sets.Count == 0) continue; // No fields to update, skip this event
 
                     //Execute the update statement for the event
-                    affected += await con.ExecuteAsync($"UPDATE events SET {string.Join(",", sets)} WHERE id = @Id", eve);
+                    affected += await con.ExecuteAsync($"UPDATE events SET {string.Join(",", sets)} WHERE Id = @Id", eventItem);
                 }
                 return affected;
             }
@@ -510,14 +510,14 @@ namespace MVCApplication.Data
                 foreach (Booking booking in bookings)
                 {
                     List<string> sets = new List<string>();
-                    if (booking.FullName is not null) sets.Add("fullname = @FullName");
-                    if (booking.Email is not null) sets.Add("email = @Email");
-                    if (booking.BookingDate != DateTime.MinValue) sets.Add("date = @BookingDate");
+                    if (booking.FullName is not null) sets.Add("FullName = @FullName");
+                    if (booking.Email is not null) sets.Add("Email = @Email");
+                    if (booking.BookingDate != DateTime.MinValue) sets.Add("BookingDate = @BookingDate");
 
                     if (sets.Count == 0) continue; // No fields to update, skip this booking
 
                     //Execute the update statement for the booking
-                    affected += await con.ExecuteAsync($"UPDATE bookings SET {string.Join(",", sets)} WHERE id = @Id", booking);
+                    affected += await con.ExecuteAsync($"UPDATE bookings SET {string.Join(",", sets)} WHERE Id = @Id", booking);
                 }
                 return affected;
             }
@@ -542,7 +542,7 @@ namespace MVCApplication.Data
                 using SqliteConnection con = new SqliteConnection(_conn);
 
                 // Return true if at least one row was affected (i.e., user(s) were deleted)
-                return (await con.ExecuteAsync("DELETE FROM users WHERE id IN @Ids", new { Ids = id }) > 0);
+                return (await con.ExecuteAsync("DELETE FROM users WHERE Id IN @Ids", new { Ids = id }) > 0);
             }
             catch (SqliteException ex)
             {
@@ -565,7 +565,7 @@ namespace MVCApplication.Data
                 using SqliteConnection con = new SqliteConnection(_conn);
 
                 // Return true if at least one row was affected (i.e., feedback(s) were deleted)
-                return (await con.ExecuteAsync("DELETE FROM feedback WHERE id IN @Ids", new { Ids = id }) > 0);
+                return (await con.ExecuteAsync("DELETE FROM feedback WHERE Id IN @Ids", new { Ids = id }) > 0);
             }
             catch (SqliteException ex)
             {
@@ -588,7 +588,7 @@ namespace MVCApplication.Data
                 using SqliteConnection con = new SqliteConnection(_conn);
 
                 // Return true if at least one row was affected (i.e., event(s) were deleted)
-                return (await con.ExecuteAsync("DELETE FROM events WHERE id IN @Ids", new { Ids = id }) > 0);
+                return (await con.ExecuteAsync("DELETE FROM events WHERE Id IN @Ids", new { Ids = id }) > 0);
             }
             catch (SqliteException ex)
             {
@@ -611,7 +611,7 @@ namespace MVCApplication.Data
                 using SqliteConnection con = new SqliteConnection(_conn);
 
                 // Return true if at least one row was affected (i.e., booking(s) were deleted)
-                return (await con.ExecuteAsync("DELETE FROM bookings WHERE id IN @Ids", new { Ids = id }) > 0);
+                return (await con.ExecuteAsync("DELETE FROM bookings WHERE Id IN @Ids", new { Ids = id }) > 0);
             }
             catch (SqliteException ex)
             {

@@ -15,7 +15,7 @@ namespace MVCApplication.Models
         public string Message { get; set; } = string.Empty;
         public string Type { get; set; } = string.Empty;
 
-        public DateTime Date { get; set; } = DateTime.UtcNow;
+        public DateTime SubmittedDate { get; set; } = DateTime.UtcNow;
 
         public bool WantsContact { get; set; } = false;
     }
