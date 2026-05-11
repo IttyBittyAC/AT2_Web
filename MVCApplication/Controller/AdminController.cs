@@ -106,7 +106,7 @@ namespace MVCApplication.Controllers
                 ? GraveMind(Admin.Events,
                     MethodCode.AdminEventsCreate,
                     admin: true,
-                    save: () => _db.SaveEvent(singleEvent),
+                    save: async () => { (bool l, _) = await _db.SaveEvent(singleEvent);  return l; },
                     redirect: () => RedirectToAction("Events"))
             : Task.FromResult(NotFound() as IActionResult);
 
