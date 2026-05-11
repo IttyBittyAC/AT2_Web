@@ -343,19 +343,23 @@ namespace MVCApplication.Data
             }
         }
 
-        public async Task<bool> SaveEvent(Event eventItem)
+        public async Task<(bool, int)> SaveEvent(Event eventItem)
         {
             try
             {
                 using SqliteConnection con = new SqliteConnection(_conn);
 
-                // Return true if at least one row was affected (i.e., event was inserted)
-                return await con.ExecuteAsync(@"INSERT INTO events(Title, Description, Location, EventDate) VALUES (@Title, @Description, @Location, @EventDate)", eventItem) > 0;
+                int id = await con.ExecuteScalarAsync<int>(
+                    @"INSERT INTO events(Title, Description, Location, EventDate) 
+                      VALUES (@Title, @Description, @Location, @EventDate)
+                      RETURNING Id", eventItem);
+                return (id > 0, id);
+
             }
             catch (SqliteException ex)
             {
                 _logger.LogError(ex, "Database error during SaveEvent for title {Title}", eventItem.Title);
-                return false;
+                return (false, 0);
             }
             catch (Exception ex)
             {
