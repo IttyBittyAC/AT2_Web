@@ -39,15 +39,16 @@ namespace MVCApplication.Controllers
         /// Handles event creation by validating input and saving the new event to the database.
         /// </summary>
         /// <param name="singleEvent">Event object containing user input data</param>
+        /// <param name="id">Id to be redirected to</param>
         /// <returns>Redirects on success or returns the view with errors</returns>
         [HttpPost("/Events/Create")]
-        public Task<IActionResult> Create(Event singleEvent) => !ModelState.IsValid 
+        public Task<IActionResult> Create(Event singleEvent, int? id) => !ModelState.IsValid 
             ? GraveMind(Events.Create, MethodCode.EventsCreateInvalid, auth: true, 
                 populate: async m => { m.Event = singleEvent; await Task.CompletedTask;})  
             : GraveMind(Events.Create, MethodCode.EventsCreate,
                 auth: true, 
-                save: () =>  _db.SaveEvent(singleEvent), 
-                redirect: () => RedirectToAction("Details"));
+                save:  async () => { (bool l,int i) = await _db.SaveEvent(singleEvent); id = i; return l;  }, 
+                redirect: () => RedirectToAction($"Details", new {id}));
 
         /// <summary>
         /// Displays the event details page.
@@ -61,7 +62,7 @@ namespace MVCApplication.Controllers
         /// </summary>
         /// <param name="id">Event ID</param>
         /// <returns>Event details view with data or error if not found</returns>
-        [HttpGet("/Events/{id}")]
+        [HttpGet("/Events/Details/{id}")]
         public Task<IActionResult> Details(int id) => 
             GraveMind(Events.Details, MethodCode.EventsDetails, 
                 populate: async m => { 
