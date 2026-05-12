@@ -42,7 +42,7 @@ namespace MVCApplication.Controllers
             MethodCode.DashBoardBooking,
             populate: async m =>
             {
-                var email = User.Identity?.Name;
+                string? email = HttpContext.Session.GetString("user") ?? User.Identity?.Name;
 
                 if (string.IsNullOrEmpty(email))
                 {
@@ -57,24 +57,19 @@ namespace MVCApplication.Controllers
         );
 
         /// <summary>
-        /// Handles HTTP GET requests for the user profile dashboard view, retrieving and displaying the profile
-        /// information for the currently authenticated user.
+        /// Displays the current logged-in user's profile information.
         /// </summary>
-        /// <remarks>The user must be authenticated to access this endpoint. If the user is not
-        /// authenticated or cannot be found, an error message is displayed instead of the profile
-        /// information.</remarks>
-        /// <returns>A task that represents the asynchronous operation. The task result contains an <see cref="IActionResult"/>
-        /// that renders the profile view for the authenticated user, or an error view if the user is not found or not
-        /// authenticated.</returns>
+        /// <returns>Profile view with current user data</returns>
         [HttpGet("/Dashboard/Profile")]
         public Task<IActionResult> Profile() => GraveMind(
             Dashboard.Profile,
             MethodCode.DashBoardProfile,
+            auth: true,
             populate: async m =>
             {
-                var email = User.Identity?.Name;
+                string? email = HttpContext.Session.GetString("user") ?? User.Identity?.Name;
 
-                if (string.IsNullOrEmpty(email))
+                if (string.IsNullOrWhiteSpace(email))
                 {
                     m.User = null;
                     return;
@@ -82,8 +77,61 @@ namespace MVCApplication.Controllers
 
                 var (_, user) = await _db.GetUserByEmail(email);
                 m.User = user;
+
+                var (bookings, _) = await _db.GetBookingByEmail(email);
+                m.Bookings = bookings ?? [];
             },
-            auth: true
+            check: m => m.User != null
+        );
+
+        /// <summary>
+        /// Updates the current logged-in user's profile information.
+        /// </summary>
+        /// <param name="updatedUser">Updated user details from the profile form</param>
+        /// <returns>Redirects back to the profile page</returns>
+        [HttpPost("/Dashboard/Profile")]
+        public Task<IActionResult> Profile(User updatedUser) => GraveMind(
+            Dashboard.Profile,
+            MethodCode.DashBoardProfileUpdate,
+            auth: true,
+            save: async () =>
+            {
+                string? currentEmail = HttpContext.Session.GetString("user") ?? User.Identity?.Name;
+
+                if (string.IsNullOrWhiteSpace(currentEmail))
+                {
+                    return false;
+                }
+
+                var (_, currentUser) = await _db.GetUserByEmail(currentEmail);
+
+                if (currentUser == null)
+                {
+                    return false;
+                }
+
+                if (string.IsNullOrWhiteSpace(updatedUser.Username) ||
+                    string.IsNullOrWhiteSpace(updatedUser.FullName) ||
+                    string.IsNullOrWhiteSpace(updatedUser.Email))
+                {
+                    return false;
+                }
+
+                currentUser.Username = updatedUser.Username;
+                currentUser.FullName = updatedUser.FullName;
+                currentUser.Email = updatedUser.Email;
+
+                int affected = await _db.UpdateUser(new List<User> { currentUser });
+
+                if (affected > 0)
+                {
+                    HttpContext.Session.SetString("user", currentUser.Email);
+                    return true;
+                }
+
+                return false;
+            },
+            redirect: () => RedirectToAction("Profile")
         );
     }
 }
