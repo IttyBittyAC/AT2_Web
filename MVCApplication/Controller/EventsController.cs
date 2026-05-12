@@ -1,8 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MVCApplication.Data;
+using MVCApplication.Helpers;
 using MVCApplication.Models;
-using static MVCApplication.Helpers.V;
 using static MVCApplication.Helpers.MessageDictionary;
+using static MVCApplication.Helpers.V;
 
 namespace MVCApplication.Controllers
 {
@@ -70,5 +71,30 @@ namespace MVCApplication.Controllers
                     m.Event = _event; 
                 }, 
                 check: m => m.Event != null);
+
+        /// <summary>
+        /// Registers the current logged-in user for an event.
+        /// </summary>
+        /// <param name="id">Event ID</param>
+        /// <returns>Redirects back to the event details page</returns>
+        [HttpPost("/Events/Register/{id}")]
+        public Task<IActionResult> Register(int id) => GraveMind(
+            Events.Details,
+            MethodCode.EventsRegister,
+            auth: true,
+            save: async () =>
+            {
+                string? email = HttpContext.Session.GetString(SessionKeys.Type);
+
+                if (string.IsNullOrWhiteSpace(email))
+                {
+                    return false;
+                }
+
+                return await _db.SaveEventBooking(id, email);
+            },
+            redirect: () => RedirectToAction("Details", new { id }));
     }
+
+
 }

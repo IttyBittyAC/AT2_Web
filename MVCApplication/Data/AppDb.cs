@@ -117,9 +117,13 @@ namespace MVCApplication.Data
                     );
                     CREATE TABLE IF NOT EXISTS bookings (
                         Id              integer primary key autoincrement,
+                        UserId          integer,
+                        EventId         integer,
                         FullName        text not null,
                         Email           text not null,
-                        BookingDate     datetime
+                        BookingDate     datetime,
+                        FOREIGN KEY(UserId) REFERENCES users(Id),
+                        FOREIGN KEY(EventId) REFERENCES events(Id)
                     );
                     CREATE TABLE IF NOT EXISTS logs (
                         Id integer primary key autoincrement,
@@ -142,6 +146,27 @@ namespace MVCApplication.Data
             }
         }
 
+        //-------------------------------
+        //SAVE BOOKING METHOD TO DO PLACING HERE SO YOU CAN FIND IT EASY
+        //-------------------------------
+        /// <summary>
+        /// Saves an event registration as a booking for the current user.
+        /// </summary>
+        /// <param name="eventId">Selected event ID.</param>
+        /// <param name="email">Current logged-in user's email.</param>
+        /// <returns>True if saved successfully, otherwise false.</returns>
+        public async Task<bool> SaveEventBooking(int eventId, string email)
+        {
+            await Task.CompletedTask;
+
+            // TODO: DB team to implement:
+            // - Find user by email
+            // - Check event exists
+            // - Check duplicate booking does not exist
+            // - Insert booking with UserId, EventId, FullName, Email, BookingDate
+
+            return false;
+        }
         public async Task<(List<User>?, User?)> GetUser(int? id)
         {
             try
