@@ -36,6 +36,10 @@ namespace MVCApplication
                 var seed = scope.ServiceProvider.GetRequiredService<Seeding>();
                 await db.EnsureCreated();
                 await seed.SeedAdminUser();
+                await seed.SeedUser();
+                await seed.SeedFeedback();
+                await seed.SeedEvent();
+                await seed.SeedBooking();
             }
 
             // Configure the HTTP request pipeline.

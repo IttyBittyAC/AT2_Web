@@ -77,7 +77,7 @@
                 <div class="field">
                     <label class="label">Date</label>
                     <div class="control">
-                        <input class="input" type="datetime-local" name="feedback.Date" />
+                        <input class="input" type="datetime-local" name="feedback.SubmittedDate" />
                     </div>
                 </div>
 
@@ -139,7 +139,7 @@
                                     <td>@fb.FullName</td>
                                     <td>@fb.Email</td>
                                     <td>@fb.Type</td>
-                                    <td>@fb.Date.ToString("yyyy-MM-dd HH:mm")</td>
+                                    <td>@fb.SubmittedDate.ToString("yyyy-MM-dd HH:mm")</td>
                                     <td>@(fb.WantsContact ? "Yes" : "No")</td>
                                 </tr>
                             }
@@ -211,7 +211,7 @@
                             <div class="field">
                                 <label class="label">Date</label>
                                 <div class="control">
-                                    <input class="input" type="datetime-local" name="feedbacks[@i].Date" value="@(fb.Date.ToString("yyyy-MM-ddTHH:mm"))" />
+                                    <input class="input" type="datetime-local" name="feedbacks[@i].SubmittedDate" value="@(fb.SubmittedDate.ToString("yyyy-MM-ddTHH:mm"))" />
                                 </div>
                             </div>
 

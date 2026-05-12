@@ -131,7 +131,7 @@ namespace MVCApplication.Controllers
                         var op = Store[controllerOp];
                         var m = Build(op.Table, op.Title);
                         var s = await save();
-
+                        
                         if (!s)
                         {
                             m.Error = op.ErrorMsg;
