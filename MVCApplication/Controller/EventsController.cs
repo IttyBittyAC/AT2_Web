@@ -78,7 +78,7 @@ namespace MVCApplication.Controllers
         /// <param name="id">Event ID</param>
         /// <returns>Redirects back to the event details page</returns>
         [HttpPost("/Events/Register/{id}")]
-        public Task<IActionResult> Register(int id) => GraveMind(
+        public Task<IActionResult> Register(int eventId) => GraveMind(
             Events.Details,
             MethodCode.EventsRegister,
             auth: true,
@@ -91,9 +91,9 @@ namespace MVCApplication.Controllers
                     return false;
                 }
 
-                return await _db.SaveEventBooking(id, email);
+                return await _db.SaveEventBooking(eventId, email);
             },
-            redirect: () => RedirectToAction("Details", new { id }));
+            redirect: () => RedirectToAction("Details", new { id = eventId }));
     }
 
 
