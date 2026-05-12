@@ -52,8 +52,16 @@
                                     continue;
                                 }
 
+                                var linkText = item.Text == "My Bookings" && currentRole == "admin"
+                                    ? "All Bookings"
+                                    : item.Text;
+
+                                var linkUrl = item.Text == "My Bookings" && currentRole == "admin"
+                                    ? "/Admin/Bookings"
+                                    : item.Url;
+
                                 <li class="nav-item">
-                                    <a class="nav-link text-dark" href="@item.Url">@item.Text</a>
+                                    <a class="nav-link text-dark" href="@linkUrl">@linkText</a>
                                 </li>
                             }
                         }
