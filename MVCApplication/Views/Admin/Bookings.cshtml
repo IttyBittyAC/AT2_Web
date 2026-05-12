@@ -1,0 +1,64 @@
+@model MVCApplication.Models.AndInTheDarknessBindThem
+
+@{
+    ViewData["Title"] = "Admin - Bookings";
+    Layout = "_Layout";
+}
+
+<div class="container">
+    <h1 class="title has-text-centered">Bookings (Admin)</h1>
+
+    @if (!Model.IsAdmin)
+    {
+        <div class="notification is-danger">
+            You do not have permission to view this page.
+        </div>
+    }
+    else
+    {
+        @if (!string.IsNullOrEmpty(Model.Error))
+        {
+            <div class="notification is-danger">@Model.Error</div>
+        }
+
+        @if (!string.IsNullOrEmpty(Model.Success))
+        {
+            <div class="notification is-success">@Model.Success</div>
+        }
+
+        <section class="box">
+            <h2 class="subtitle">All Bookings</h2>
+
+            @if (Model.Bookings is null || !Model.Bookings.Any())
+            {
+                <div class="notification is-warning">No bookings available.</div>
+            }
+            else
+            {
+                <div class="table-container">
+                    <table class="table is-fullwidth is-striped is-hoverable">
+                        <thead>
+                            <tr>
+                                <th>Booking ID</th>
+                                <th>Full Name</th>
+                                <th>Email</th>
+                                <th>Booking Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var booking in Model.Bookings.OrderByDescending(b => b.BookingDate))
+                            {
+                                <tr>
+                                    <td>@booking.Id</td>
+                                    <td>@booking.FullName</td>
+                                    <td>@booking.Email</td>
+                                    <td>@booking.BookingDate.ToString("yyyy-MM-dd")</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+        </section>
+    }
+</div>
