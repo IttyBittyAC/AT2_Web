@@ -29,6 +29,8 @@
         public List<User> Users { get; set; } = [];
         public Log? Log { get; set; }
         public List<Log> Logs { get; set; } = [];
+        public Announcement? Announcement { get; set; }
+        public List<Announcement> Announcements { get; set; } = [];
 
         public static AndInTheDarknessBindThem Build(string table, string? currentUser, string? currentRole, string? title = null, string? returnurl = null) =>
             new AndInTheDarknessBindThem
