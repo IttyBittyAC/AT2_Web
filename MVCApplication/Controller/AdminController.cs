@@ -150,6 +150,45 @@ namespace MVCApplication.Controllers
                     redirect: () => RedirectToAction("Feedback"))
             : Task.FromResult(NotFound() as IActionResult);
 
+        /// <summary>
+        /// Displays all booking entries and populates the model with booking data from the database. Requires admin access.
+        /// </summary>
+        /// <returns>Booking view with data</returns>
+        [HttpGet("/Admin/Bookings")]
+        public Task<IActionResult> Bookings() => GraveMind(Admin.Bookings, MethodCode.AdminBookings, admin: true,
+            populate: async m => { var (f, _) = await _db.GetBooking(null); m.Bookings = f ?? []; });
+
+        /// <summary>
+        /// Handles booking management actions such as create, update, and delete.
+        /// </summary>
+        /// <param name="id">List of booking IDs for delete operations</param>
+        /// <param name="bookings">List of booking entries for update operations</param>
+        /// <param name="booking">Single booking entry for create operations</param>
+        /// <param name="action">Action to perform (create, update, delete)</param>
+        /// <returns>Redirects on success or returns the view with errors</returns>
+        [HttpPost("/Admin/Bookings")]
+        public Task<IActionResult> Bookings(List<int>? id, List<Booking>? bookings, Booking? booking, AdminUserAction? action) => action == null
+            ? GraveMind(Admin.Bookings, MethodCode.AdminBookingsInvalid, admin: true,
+                populate: async m => { var (f, _) = await _db.GetBooking(null); m.Bookings = f ?? []; })
+            : action == AdminUserAction.Delete && id != null
+                ? GraveMind(Admin.Bookings,
+                    MethodCode.AdminBookingsDelete,
+                    admin: true,
+                    save: () => _db.DeleteBookings(id),
+                    redirect: () => RedirectToAction("Bookings"))
+            : action == AdminUserAction.Update && bookings != null
+                ? GraveMind(Admin.Bookings,
+                    MethodCode.AdminBookingsUpdate,
+                    admin: true,
+                    save: async () => await _db.UpdateBooking(bookings) > 0,
+                    redirect: () => RedirectToAction("Bookings"))
+            : action == AdminUserAction.Create && booking != null
+                ? GraveMind(Admin.Bookings,
+                    MethodCode.AdminBookingsCreate,
+                    admin: true,
+                    save: () => _db.SaveBooking(booking),
+                    redirect: () => RedirectToAction("Bookings"))
+            : Task.FromResult(NotFound() as IActionResult);
 
 
         /// <summary>

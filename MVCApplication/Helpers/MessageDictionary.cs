@@ -38,6 +38,11 @@ namespace MVCApplication.Helpers
             AdminFeedbackDelete,
             AdminFeedbackUpdate,
             AdminFeedbackCreate,
+            AdminBookings,
+            AdminBookingsInvalid,
+            AdminBookingsDelete,
+            AdminBookingsUpdate,
+            AdminBookingsCreate,
             AdminLogs,
 
             // Services
@@ -97,6 +102,11 @@ namespace MVCApplication.Helpers
             [MethodCode.AdminFeedbackDelete] = new("feedbacks", "Delete a Feedback Form", "Could not delete", "Successfully deleted Feedback Form"),
             [MethodCode.AdminFeedbackUpdate] = new("feedbacks", "Update a Feedback Form", "Could not update", "Successfully updated Feedback Form"),
             [MethodCode.AdminFeedbackCreate] = new("feedbacks", "Create a Feedback Form", "Could not create", "Successfully created Feedback Form"),
+            [MethodCode.AdminBookings] = new("bookings", "Booking Forms", "No Bookings Found", "Displayed Bookings"),
+            [MethodCode.AdminBookingsInvalid] = new("booking", "View All Bookings ", "No action specified", null),
+            [MethodCode.AdminBookingsDelete] = new("booking", "Delete a Booking", "Could not delete", "Successfully deleted Booking"),
+            [MethodCode.AdminBookingsUpdate] = new("booking", "Update a Booking", "Could not update", "Successfully updated Booking"),
+            [MethodCode.AdminBookingsCreate] = new("booking", "Create a Booking", "Could not create", "Successfully created Booking"),
             [MethodCode.AdminLogs] = new("logs", "Application Logs", "Failed to Load or retrieve Logs", "Loaded Logs"),
 
             // Services Controller
