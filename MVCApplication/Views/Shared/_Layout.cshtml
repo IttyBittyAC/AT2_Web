@@ -42,7 +42,7 @@
                         {
                             foreach (var item in mainMenu.Items)
                             {
-                                if (item.Text == "My Bookings" && currentUser == null)
+                                if ((item.Text == "Dashboard" || item.Text == "My Bookings") && currentUser == null)
                                 {
                                     continue;
                                 }
