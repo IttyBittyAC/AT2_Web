@@ -42,6 +42,7 @@
             public const string Index = "~/Views/Services/Index.cshtml";
             public const string Book = "~/Views/Services/Book.cshtml";
             public const string Details = "~/Views/Services/ServiceDetails.cshtml";
+            public const string RatesEnquiries = "~/Views/Services/RatesEnquiries.cshtml";
         }
     }
 }

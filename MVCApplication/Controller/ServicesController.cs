@@ -78,5 +78,14 @@ namespace MVCApplication.Controllers
                 save: async () => await _db.SaveBooking(booking)) 
             : GraveMind(Services.Book, MethodCode.ServiceBookInvalid, 
                 populate: async m => { m.Booking = booking; await Task.CompletedTask;});
+
+        /// <summary>
+        /// Displays the rates enquiries page with pricing information for services.
+        /// </summary>
+        /// <returns>Rates enquiries view</returns>
+        [HttpGet("/Services/RatesEnquiries")]
+        public Task<IActionResult> RatesEnquiries() => GraveMind(
+            Services.RatesEnquiries,
+            MethodCode.ServiceRatesEnquiries);
     }
 }
