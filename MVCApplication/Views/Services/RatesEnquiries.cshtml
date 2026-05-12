@@ -1,0 +1,115 @@
+﻿@model MVCApplication.Models.AndInTheDarknessBindThem
+@{
+    ViewData["Title"] = "Rates Enquiries";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/rates-enquries.css" asp-append-version="true" />
+}
+
+<div class="rates-container">
+    <header class="rates-header">
+        <h1>Pricing & Rates</h1>
+        <p class="rates-lead">Need specific pricing? See typical rates below or send us an enquiry and we'll get back to you within 2 business days.</p>
+    </header>
+
+    <main class="rates-main">
+        <section class="pricing-section" aria-labelledby="pricing-heading">
+            <h2 id="pricing-heading">Typical Rates</h2>
+
+            <div class="pricing-grid">
+                <div class="price-card">
+                    <h3>Waste Management</h3>
+                    <ul>
+                        <li>Standard bin collection: $12 per collection</li>
+                        <li>Bulk item removal: $45 per item</li>
+                        <li>Recycling pickup (special): $18 per collection</li>
+                    </ul>
+                </div>
+
+                <div class="price-card">
+                    <h3>Facility Rental</h3>
+                    <ul>
+                        <li>Community hall hire: $120 per hour</li>
+                        <li>Meeting room: $50 per hour</li>
+                        <li>Weekend rate (hall): $450 flat (4 hours)</li>
+                    </ul>
+                </div>
+
+                <div class="price-card">
+                    <h3>Equipment Rental</h3>
+                    <ul>
+                        <li>Projector: $25 per day</li>
+                        <li>PA system: $60 per day</li>
+                        <li>Chair (per item): $1 per day</li>
+                    </ul>
+                </div>
+
+                <div class="price-card">
+                    <h3>Maintenance Call-Out</h3>
+                    <ul>
+                        <li>Standard call-out: $60 (up to 1 hour)</li>
+                        <li>Hourly labour: $40 per hour thereafter</li>
+                    </ul>
+                </div>
+
+                <div class="price-card">
+                    <h3>Parking Permits</h3>
+                    <ul>
+                        <li>Resident permit: $30 per month</li>
+                        <li>Visitor permit (daily): $5</li>
+                    </ul>
+                </div>
+
+                <div class="price-card">
+                    <h3>Community Transport</h3>
+                    <ul>
+                        <li>Shuttle hire: $60 per hour</li>
+                        <li>Event transfer (fixed): $150 (up to 3 hours)</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <aside class="enquiry-section" aria-labelledby="enquiry-heading">
+            <h2 id="enquiry-heading">Ask About Pricing</h2>
+
+            <form method="post" action="/Services/RatesEnquiries" class="enquiry-form">
+                @Html.AntiForgeryToken()
+
+                <label for="Name">Full name</label>
+                <input id="Name" name="Name" type="text" required />
+
+                <label for="Email">Email</label>
+                <input id="Email" name="Email" type="email" required />
+
+                <label for="Service">Service of interest</label>
+                <select id="Service" name="Service" required>
+                    <option value="">-- Choose a service --</option>
+                    <option>Waste Management</option>
+                    <option>Facility Rental</option>
+                    <option>Equipment Rental</option>
+                    <option>Maintenance Request</option>
+                    <option>Parking Permit</option>
+                    <option>Community Transport</option>
+                    <option>Other</option>
+                </select>
+
+                <label for="Message">Details / requirements</label>
+                <textarea id="Message" name="Message" rows="5" placeholder="Tell us what you need..." required></textarea>
+
+                <label for="PreferredContact">Preferred contact method</label>
+                <select id="PreferredContact" name="PreferredContact">
+                    <option>Email</option>
+                    <option>Phone</option>
+                </select>
+
+                <button type="submit" class="btn-primary">Send Enquiry</button>
+            </form>
+        </aside>
+    </main>
+
+    <footer class="rates-footer">
+        <p>Prices shown are indicative. Final charges may vary based on scope, location and availability.</p>
+    </footer>
+</div>
