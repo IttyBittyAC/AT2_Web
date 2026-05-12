@@ -27,7 +27,45 @@
         }
 
         <section class="box">
-            <h2 class="subtitle">All Bookings</h2>
+            <h2 class="subtitle">Create New Booking</h2>
+            <form method="post" action="/Admin/Bookings">
+                @Html.AntiForgeryToken()
+                <input type="hidden" name="action" value="create" />
+
+                <div class="field">
+                    <label class="label">Full name</label>
+                    <div class="control">
+                        <input class="input" type="text" name="booking.FullName" placeholder="Your full name" required />
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label class="label">Email</label>
+                    <div class="control">
+                        <input class="input" type="email" name="booking.Email" placeholder="you@example.com" required />
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label class="label">Booking date</label>
+                    <div class="control">
+                        <input class="input" type="datetime-local" name="booking.BookingDate" required />
+                    </div>
+                </div>
+
+                <div class="field is-grouped">
+                    <div class="control">
+                        <button type="submit" class="button is-primary">Create Booking</button>
+                    </div>
+                    <div class="control">
+                        <button type="reset" class="button is-light">Reset</button>
+                    </div>
+                </div>
+            </form>
+        </section>
+
+        <section class="box">
+            <h2 class="subtitle">Manage Bookings</h2>
 
             @if (Model.Bookings is null || !Model.Bookings.Any())
             {
@@ -35,29 +73,89 @@
             }
             else
             {
-                <div class="table-container">
-                    <table class="table is-fullwidth is-striped is-hoverable">
-                        <thead>
-                            <tr>
-                                <th>Booking ID</th>
-                                <th>Full Name</th>
-                                <th>Email</th>
-                                <th>Booking Date</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var booking in Model.Bookings.OrderByDescending(b => b.BookingDate))
-                            {
+                <form method="post" action="/Admin/Bookings">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" name="action" value="delete" />
+
+                    <div class="table-container">
+                        <table class="table is-fullwidth is-striped is-hoverable">
+                            <thead>
                                 <tr>
-                                    <td>@booking.Id</td>
-                                    <td>@booking.FullName</td>
-                                    <td>@booking.Email</td>
-                                    <td>@booking.BookingDate.ToString("yyyy-MM-dd")</td>
+                                    <th></th>
+                                    <th>Booking ID</th>
+                                    <th>Full Name</th>
+                                    <th>Email</th>
+                                    <th>Booking Date</th>
                                 </tr>
-                            }
-                        </tbody>
-                    </table>
-                </div>
+                            </thead>
+                            <tbody>
+                                @for (var i = 0; i < Model.Bookings.Count; i++)
+                                {
+                                    var booking = Model.Bookings[i];
+                                    <tr>
+                                        <td>
+                                            <input type="checkbox" name="id" value="@booking.Id" />
+                                        </td>
+                                        <td>@booking.Id</td>
+                                        <td>@booking.FullName</td>
+                                        <td>@booking.Email</td>
+                                        <td>@booking.BookingDate.ToString("yyyy-MM-dd HH:mm")</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="field is-grouped">
+                        <div class="control">
+                            <button type="submit" class="button is-danger">Delete selected</button>
+                        </div>
+                    </div>
+                </form>
+
+                <hr />
+
+                <form method="post" action="/Admin/Bookings">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" name="action" value="update" />
+
+                    @for (var i = 0; i < Model.Bookings.Count; i++)
+                    {
+                        var booking = Model.Bookings[i];
+                        <div class="box">
+                            <input type="hidden" name="bookings[@i].Id" value="@booking.Id" />
+                            <input type="hidden" name="bookings[@i].UserId" value="@booking.UserId" />
+                            <input type="hidden" name="bookings[@i].EventId" value="@booking.EventId" />
+
+                            <div class="field">
+                                <label class="label">Full name</label>
+                                <div class="control">
+                                    <input class="input" type="text" name="bookings[@i].FullName" value="@booking.FullName" required />
+                                </div>
+                            </div>
+
+                            <div class="field">
+                                <label class="label">Email</label>
+                                <div class="control">
+                                    <input class="input" type="email" name="bookings[@i].Email" value="@booking.Email" required />
+                                </div>
+                            </div>
+
+                            <div class="field">
+                                <label class="label">Booking date</label>
+                                <div class="control">
+                                    <input class="input" type="datetime-local" name="bookings[@i].BookingDate" value="@(booking.BookingDate.ToString("yyyy-MM-ddTHH:mm"))" required />
+                                </div>
+                            </div>
+                        </div>
+                    }
+
+                    <div class="field is-grouped">
+                        <div class="control">
+                            <button type="submit" class="button is-primary">Save updates</button>
+                        </div>
+                    </div>
+                </form>
             }
         </section>
     }
