@@ -30,9 +30,43 @@ namespace MVCApplication.Controllers
         /// <summary>
         /// Displays all announcements for admin management. Requires admin access.
         /// </summary>
-        /// <returns>Announcements view</returns>
+        /// <returns>Announcements view with data</returns>
         [HttpGet("/Admin/Announcements")]
-        public Task<IActionResult> Announcements() => GraveMind(Admin.Announcements, MethodCode.AdminAnnouncements, admin: true);
+        public Task<IActionResult> Announcements() => GraveMind(
+            Admin.Announcements,
+            MethodCode.AdminAnnouncements,
+            admin: true,
+            populate: async m =>
+            {
+                m.Announcements = await _db.GetAnnouncements() ?? [];
+            });
+        /// <summary>
+        /// Handles announcement creation from the admin panel.
+        /// </summary>
+        /// <param name="announcement">Announcement object containing admin input data</param>
+        /// <returns>Redirects back to admin announcements on success</returns>
+        [HttpPost("/Admin/Announcements")]
+        public Task<IActionResult> Announcements(Announcement announcement) => !ModelState.IsValid
+            ? GraveMind(
+                Admin.Announcements,
+                MethodCode.AdminAnnouncementsInvalid,
+                admin: true,
+                populate: async m =>
+                {
+                    m.Error = Store[MethodCode.AdminAnnouncementsInvalid].ErrorMsg;
+                    m.Announcement = announcement;
+                    m.Announcements = await _db.GetAnnouncements() ?? [];
+                })
+            : GraveMind(
+                Admin.Announcements,
+                MethodCode.AdminAnnouncementsCreate,
+                admin: true,
+                save: async () =>
+                {
+                    announcement.PostedDate = DateTime.UtcNow;
+                    return await _db.SaveAnnouncement(announcement);
+                },
+                redirect: () => RedirectToAction("Announcements"));
 
         /// <summary>
         /// Displays all users and populates the model with user data from the database. Requires admin access.

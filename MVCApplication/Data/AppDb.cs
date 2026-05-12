@@ -147,7 +147,7 @@ namespace MVCApplication.Data
         }
 
         //-------------------------------
-        //SAVE BOOKING METHOD TO DO PLACING HERE SO YOU CAN FIND IT EASY
+        //STUBS FOR REQUIRED WORK - To be implemented by DB team after initial setup and testing of DB connection and tables
         //-------------------------------
         /// <summary>
         /// Saves an event registration as a booking for the current user.
@@ -167,6 +167,21 @@ namespace MVCApplication.Data
 
             return false;
         }
+        public async Task<List<Announcement>?> GetAnnouncements()
+        {
+            await Task.CompletedTask;
+            return [];
+        }
+
+        public async Task<bool> SaveAnnouncement(Announcement announcement)
+        {
+            await Task.CompletedTask;
+            return false;
+        }
+
+        //-------------------------------------------
+        //end of stubs for required work - below are implemented methods for DB interactions with error handling and logging
+        //-------------------------------------------------------
         public async Task<(List<User>?, User?)> GetUser(int? id)
         {
             try
