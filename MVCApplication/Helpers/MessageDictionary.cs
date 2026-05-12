@@ -44,6 +44,8 @@ namespace MVCApplication.Helpers
             AdminBookingsUpdate,
             AdminBookingsCreate,
             AdminLogs,
+            AdminAnnouncementsCreate,
+            AdminAnnouncementsInvalid,
 
             // Services
             ServiceIndex,
@@ -76,7 +78,7 @@ namespace MVCApplication.Helpers
         {
             // Home Controller
             [MethodCode.HomeIndex] = new("home", "Home", null, null),
-            [MethodCode.HomeAnnouncements] = new("announcements", "We have something to announce", null, null),
+            [MethodCode.HomeAnnouncements] = new("announcements", "Announcements", "Could not load announcements", "Loaded announcements"),
             [MethodCode.HomeFeedBack] = new("feedback", "Feedback Form", "Failed to Save to DataBase", "Submitted form to our database"),
             [MethodCode.HomeFeedBackInvalid] = new("feedback", "Feedback Form", "All Fields are required", null),
             [MethodCode.HomeFAQ] = new("faq", "FAQ", null, null),
@@ -89,7 +91,9 @@ namespace MVCApplication.Helpers
 
             // Admin Controller
             [MethodCode.AdminIndex] = new("admin", "Admin", null, null),
-            [MethodCode.AdminAnnouncements] = new("announcements", "Announcements", null, null),
+            [MethodCode.AdminAnnouncements] = new("announcements", "Manage Announcements", "Could not load announcements", "Loaded announcements"),
+            [MethodCode.AdminAnnouncementsCreate] = new("announcements", "Create Announcement", "Could not create announcement", "Successfully created announcement"),
+            [MethodCode.AdminAnnouncementsInvalid] = new("announcements", "Create Announcement", "Please fill in all fields", null),
             [MethodCode.AdminUsers] = new("users", "View all users", "No users Found", "Displayed Users"),
             [MethodCode.AdminUsersInvalid] = new("users", "View All Users", "No action specified", null),
             [MethodCode.AdminUsersDelete] = new("users", "Delete a User","Could not delete", "Successfully deleted user"),

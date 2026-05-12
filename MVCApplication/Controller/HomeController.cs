@@ -44,11 +44,17 @@ namespace MVCApplication.Controllers
         public Task<IActionResult> Index() => GraveMind(Home.Index, MethodCode.HomeIndex);
 
         /// <summary>
-        /// Displays the announcements page.
+        /// Displays the announcements page with announcement data from the database.
         /// </summary>
-        /// <returns>Announcements view</returns>
+        /// <returns>Announcements view with data</returns>
         [HttpGet("/Announcements")]
-        public Task<IActionResult> Announcements() => GraveMind(Home.Announcements, MethodCode.HomeAnnouncements);
+        public Task<IActionResult> Announcements() => GraveMind(
+            Home.Announcements,
+            MethodCode.HomeAnnouncements,
+            populate: async m =>
+            {
+                m.Announcements = await _db.GetAnnouncements() ?? [];
+            });
 
         /// <summary>
         /// Displays the feedback form page.
