@@ -50,6 +50,7 @@ namespace MVCApplication.Helpers
             DashBoardIndex,
             DashBoardBooking,
             DashBoardProfile,
+            DashBoardProfileUpdate,
 
             // Events
             EventsIndex,
@@ -109,6 +110,7 @@ namespace MVCApplication.Helpers
             [MethodCode.DashBoardIndex] = new("dashboard", "Dashboard", null, null),
             [MethodCode.DashBoardBooking] = new("bookings", "My Bookings", "No Bookings found of user", "Retrieved All Booking from your user profile"),
             [MethodCode.DashBoardProfile] = new("users","Profile", "User not found", "Welcome to Your Profile"),
+            [MethodCode.DashBoardProfileUpdate] = new("users", "Update Profile", "Could not update profile", "Profile updated successfully"),
 
             // Events Controller
             [MethodCode.EventsIndex] = new("events", "Events", "Error Getting all events", "Retrieved and Displayed all events"),
