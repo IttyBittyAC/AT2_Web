@@ -57,6 +57,7 @@ namespace MVCApplication.Helpers
             EventsCreate,
             EventsCreateInvalid,
             EventsDetails,
+            EventsRegister,
 
         }
         public record Info(
@@ -117,6 +118,7 @@ namespace MVCApplication.Helpers
             [MethodCode.EventsCreate] = new("events", "Make an event", "Unable to Make Event", "Made event successfully"),
             [MethodCode.EventsCreateInvalid] = new("events", "Make an event", "Please fill in all fields", null),
             [MethodCode.EventsDetails] = new("events", "Event Details", "Event not found", "Found Event"),
+            [MethodCode.EventsRegister] = new("bookings", "Register for Event", "Could not register for event", "Registered for event successfully"),
         };
     }
 }
