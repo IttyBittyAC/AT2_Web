@@ -8,22 +8,18 @@
 }
 
 <div class="event-details-container">
-    <!-- Back Button -->
     <a href="/Events" class="back-button">
         ← Back to All Events
     </a>
 
     @if (Model.Event != null)
     {
-        <!-- Event Header -->
         <div class="event-detail-header">
             <h1 class="event-detail-title">@Model.Event.Title</h1>
             <p class="event-detail-subtitle">Join us for this exciting community event!</p>
         </div>
 
-        <!-- Event Content -->
         <div class="event-detail-content">
-            <!-- Date & Location Info -->
             <div class="event-info-grid">
                 <div class="info-box">
                     <div class="info-box-label">📅 Date & Time</div>
@@ -41,7 +37,6 @@
                 </div>
             </div>
 
-            <!-- Description Section -->
             <div class="event-detail-section">
                 <h2 class="section-title">
                     <span class="section-icon">📝</span>
@@ -52,7 +47,6 @@
                 </div>
             </div>
 
-            <!-- Additional Info Section -->
             <div class="event-detail-section">
                 <h2 class="section-title">
                     <span class="section-icon">ℹ️</span>
@@ -67,13 +61,19 @@
                 </div>
             </div>
 
-            <!-- Action Buttons -->
             <div class="event-actions">
                 @if (Model.IsAuth)
                 {
-                    <a href="/Events/Register/@Model.Event.Id" class="btn-action btn-primary">
-                        ✓ Register for This Event
-                    </a>
+                    <form method="post"
+                          asp-controller="Events"
+                          asp-action="Register"
+                          asp-route-id="@Model.Event.Id"
+                          style="display:inline;">
+                        <button type="submit" class="btn-action btn-primary">
+                            ✓ Register for This Event
+                        </button>
+                    </form>
+
                     <a href="/Feedback" class="btn-action btn-secondary">
                         💬 Contact Organizer
                     </a>
@@ -84,6 +84,7 @@
                         🔐 Login to Register
                     </a>
                 }
+
                 <a href="/Events" class="btn-action btn-secondary">
                     📅 View All Events
                 </a>
@@ -92,7 +93,6 @@
     }
     else
     {
-        <!-- Error State -->
         <div class="error-state">
             <div class="error-state-icon">❌</div>
             <h2>Event Not Found</h2>
