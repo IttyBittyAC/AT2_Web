@@ -45,6 +45,7 @@ namespace MVCApplication.Helpers
             ServiceDetail,
             ServiceBook,
             ServiceBookInvalid,
+            ServiceRatesEnquiries,
 
             // DashBoard
             DashBoardIndex,
@@ -106,6 +107,7 @@ namespace MVCApplication.Helpers
             [MethodCode.ServiceDetail] = new("bookings", "Services", "Nothing in bookings set", null),
             [MethodCode.ServiceBook] = new("bookings", "Book Something Please", "Failed to Book", "Thank you for making a booking"),
             [MethodCode.ServiceBookInvalid] = new("bookings", "Book Something Please", "Please fill in all fields", null),
+            [MethodCode.ServiceRatesEnquiries] = new("rates", "Rates Enquiries", null, "Displayed Rates Enquiries"),
 
             // DashBoard Controller
             [MethodCode.DashBoardIndex] = new("dashboard", "Dashboard", null, null),
