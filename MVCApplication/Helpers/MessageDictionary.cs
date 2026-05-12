@@ -109,7 +109,7 @@ namespace MVCApplication.Helpers
             [MethodCode.AdminBookingsInvalid] = new("booking", "View All Bookings ", "No action specified", null),
             [MethodCode.AdminBookingsDelete] = new("booking", "Delete a Booking", "Could not delete", "Successfully deleted Booking"),
             [MethodCode.AdminBookingsUpdate] = new("booking", "Update a Booking", "Could not update", "Successfully updated Booking"),
-            [MethodCode.AdminBookingsCreate] = new("booking", "Create a Booking", "Could not create", "Successfully created Booking"),
+            [MethodCode.AdminBookingsCreate] = new("booking", "Create a Booking", "Could not create", "Successfully created Bookings"),
             [MethodCode.AdminLogs] = new("logs", "Application Logs", "Failed to Load or retrieve Logs", "Loaded Logs"),
 
             // Services Controller
