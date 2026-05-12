@@ -52,13 +52,19 @@
                                     continue;
                                 }
 
-                                var linkText = item.Text == "My Bookings" && currentRole == "admin"
-                                    ? "All Bookings"
-                                    : item.Text;
+                                var linkText = item.Text;
+                                var linkUrl = item.Url;
 
-                                var linkUrl = item.Text == "My Bookings" && currentRole == "admin"
-                                    ? "/Admin/Bookings"
-                                    : item.Url;
+                                if (item.Text == "My Bookings" && currentRole == "admin")
+                                {
+                                    linkText = "All Bookings";
+                                    linkUrl = "/Admin/Bookings";
+                                }
+                                else if (item.Text == "Feedback" && currentRole == "admin")
+                                {
+                                    linkText = "All Feedback";
+                                    linkUrl = "/Admin/FeedBack";
+                                }
 
                                 <li class="nav-item">
                                     <a class="nav-link text-dark" href="@linkUrl">@linkText</a>

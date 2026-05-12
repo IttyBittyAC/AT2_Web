@@ -9,6 +9,6 @@
 		<Item text="FAQ" url="/FAQ" order ="6"/>
 		<Item text="Dashboard" url="/Dashboard" order ="7"/>
 		<Item text="My Bookings" url="/Dashboard/MyBookings" order ="8"/>
-		<Item text="Admin" url="/Admin/Users" order ="9"/>
+		<Item text="Admin" url="/Admin" order ="9"/>
 	</Menu>
 </Menus>
