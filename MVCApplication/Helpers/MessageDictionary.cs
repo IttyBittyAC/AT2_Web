@@ -50,17 +50,20 @@ namespace MVCApplication.Helpers
             ServiceDetail,
             ServiceBook,
             ServiceBookInvalid,
+            ServiceRatesEnquiries,
 
             // DashBoard
             DashBoardIndex,
             DashBoardBooking,
             DashBoardProfile,
+            DashBoardProfileUpdate,
 
             // Events
             EventsIndex,
             EventsCreate,
             EventsCreateInvalid,
             EventsDetails,
+            EventsRegister,
 
         }
         public record Info(
@@ -114,17 +117,20 @@ namespace MVCApplication.Helpers
             [MethodCode.ServiceDetail] = new("bookings", "Services", "Nothing in bookings set", null),
             [MethodCode.ServiceBook] = new("bookings", "Book Something Please", "Failed to Book", "Thank you for making a booking"),
             [MethodCode.ServiceBookInvalid] = new("bookings", "Book Something Please", "Please fill in all fields", null),
+            [MethodCode.ServiceRatesEnquiries] = new("rates", "Rates Enquiries", null, "Displayed Rates Enquiries"),
 
             // DashBoard Controller
             [MethodCode.DashBoardIndex] = new("dashboard", "Dashboard", null, null),
             [MethodCode.DashBoardBooking] = new("bookings", "My Bookings", "No Bookings found of user", "Retrieved All Booking from your user profile"),
             [MethodCode.DashBoardProfile] = new("users","Profile", "User not found", "Welcome to Your Profile"),
+            [MethodCode.DashBoardProfileUpdate] = new("users", "Update Profile", "Could not update profile", "Profile updated successfully"),
 
             // Events Controller
             [MethodCode.EventsIndex] = new("events", "Events", "Error Getting all events", "Retrieved and Displayed all events"),
             [MethodCode.EventsCreate] = new("events", "Make an event", "Unable to Make Event", "Made event successfully"),
             [MethodCode.EventsCreateInvalid] = new("events", "Make an event", "Please fill in all fields", null),
             [MethodCode.EventsDetails] = new("events", "Event Details", "Event not found", "Found Event"),
+            [MethodCode.EventsRegister] = new("bookings", "Register for Event", "Could not register for event", "Registered for event successfully"),
         };
     }
 }
