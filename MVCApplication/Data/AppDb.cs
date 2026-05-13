@@ -157,7 +157,64 @@ namespace MVCApplication.Data
         /// <returns>True if saved successfully, otherwise false.</returns>
         public async Task<bool> SaveEventBooking(int eventId, string email)
         {
-            await Task.CompletedTask;
+            try
+            {
+                using SqliteConnection con = new SqliteConnection(_conn);
+
+                User? user = await con.QueryFirstOrDefaultAsync<User>("SELECT * FROM users WHERE Email = @Email",
+                    new { Email = email });
+
+                if (user == null)
+                {
+                    _logger.LogWarning("Attempt to save event booking for non-existent user with email {Email}", email);
+                    return false;
+                }
+
+                int eventExists = await con.ExecuteScalarAsync<int>(
+                    "SELECT count(1) FROM events WHERE Id = @EventId",
+                    new { EventId = eventId });
+
+                if (eventExists == 0)
+                {
+                    _logger.LogWarning("Attempt to save event booking for non-existent event with ID {EventId}", eventId);
+                    return false;
+                }
+
+                int alreadyRegistered = await con.ExecuteScalarAsync<int>(
+                    "SELECT count(1) FROM bookings WHERE UserId = @UserId AND EventId = @EventId",
+                    new { UserId = user.Id, EventId = eventId });
+
+                if (alreadyRegistered > 0)
+                {
+                    _logger.LogWarning("Attempt to save duplicate event booking for user {UserId} and event {EventId}", user.Id, eventId);
+                    return false;
+                }
+
+                return await con.ExecuteAsync(
+                    @"INSERT INTO bookings(UserId, EventId, FullName, Email, BookingDate) 
+                  VALUES (@UserId, @EventId, @FullName, @Email, @BookingDate)",
+                    new
+                    {
+                        UserId = user.Id,
+                        EventId = eventId,
+                        user.FullName,
+                        user.Email,
+                        BookingDate = DateTime.UtcNow
+                    }) > 0;
+            }
+            catch (SqliteException ex)
+            {
+                _logger.LogError(ex, "Database error during SaveEventBooking for email {Email} and event ID {EventId}", email, eventId);
+                return false;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Unexpected error during SaveEventBooking for email {Email} and event ID {EventId}", email, eventId);
+                throw;
+            }
+
+
+
 
             // TODO: DB team to implement:
             // - Find user by email
