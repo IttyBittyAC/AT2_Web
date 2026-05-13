@@ -212,17 +212,6 @@ namespace MVCApplication.Data
                 _logger.LogError(ex, "Unexpected error during SaveEventBooking for email {Email} and event ID {EventId}", email, eventId);
                 throw;
             }
-
-
-
-
-            // TODO: DB team to implement:
-            // - Find user by email
-            // - Check event exists
-            // - Check duplicate booking does not exist
-            // - Insert booking with UserId, EventId, FullName, Email, BookingDate
-
-            return false;
         }
         public async Task<List<Announcement>?> GetAnnouncements()
         {
@@ -472,7 +461,9 @@ namespace MVCApplication.Data
                 using SqliteConnection con = new SqliteConnection(_conn);
 
                 // Return true if at least one row was affected (i.e., booking was inserted)
-                return await con.ExecuteAsync(@"INSERT INTO bookings(FullName , Email, BookingDate) VALUES (@FullName, @Email, @BookingDate)", booking) > 0;
+                return await con.ExecuteAsync(@"
+                    INSERT INTO bookings(UserId, EventId, FullName, Email, BookingDate) 
+                    VALUES (@UserId, @EventId, @FullName, @Email, @BookingDate)", booking) > 0;
             }
             catch (SqliteException ex)
             {
