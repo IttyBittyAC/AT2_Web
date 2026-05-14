@@ -40,6 +40,7 @@ namespace MVCApplication
                 await seed.SeedFeedback();
                 await seed.SeedEvent();
                 await seed.SeedBooking();
+                await seed.SeedAnnouncements();
             }
 
             // Configure the HTTP request pipeline.

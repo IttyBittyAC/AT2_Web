@@ -105,6 +105,22 @@ namespace MVCApplication.Data
                 });
         }
 
+        public async Task SeedAnnouncements()
+        {
+            using var conn = new SqliteConnection(_conn);
+            var exist = await conn.ExecuteScalarAsync<int>("SELECT count(1) FROM announcements");
+            if (exist > 0) return;
 
+            int id = await conn.ExecuteScalarAsync<int>(
+                @"INSERT INTO announcements(Title, Message, PostedDate) 
+                VALUES (@Title, @Message, @PostedDate)
+                RETURNING id",
+                new
+                {
+                    Title = "New Community Center Opening",
+                    Message = "We are excited to announce the opening of our new community center next month!",
+                    PostedDate = DateTime.UtcNow
+                });
+        }
     }
 }
