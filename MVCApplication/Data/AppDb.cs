@@ -222,20 +222,19 @@ namespace MVCApplication.Data
         //--------------------------------------------------------------------------------
         //THIS METHOD HAS NOT BEEN TESTED AND HAS BEEN IMPLEMENTED AS AN IDENTICAL STRUCTURE TO OTHER GET METHODS - To be tested and debugged by DB team when implementing announcements functionality
         //--------------------------------------------------------------------------------
-        public async Task<(List<Announcement>?, Announcement?)> GetAnnouncements(int? id)
+        public async Task<List<Announcement>?> GetAnnouncements()
         {
             try
             {
                 using SqliteConnection con = new SqliteConnection(_conn);
 
                 //Retrieve announcements from the database
-                return id is not null?
-                    (new List<Announcement>(), (await con.QueryFirstOrDefaultAsync<Announcement>("SELECT * FROM users WHERE Id = @id", new { id }))) : ((await con.QueryAsync<Announcement>("SELECT * FROM announcements ORDER BY PostedDate DESC")).ToList(), null);
+                return (await con.QueryAsync<Announcement>("SELECT * FROM announcements ORDER BY PostedDate DESC")).ToList();
             }
             catch (SqliteException ex)
             {
                 _logger.LogError(ex, "Database error during GetAnnouncements");
-                return (null, null);
+                return null;
             }
             catch (Exception ex)
             {

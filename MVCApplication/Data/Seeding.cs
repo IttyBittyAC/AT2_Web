@@ -107,8 +107,20 @@ namespace MVCApplication.Data
 
         public async Task SeedAnnouncements()
         {
-            //TODO: Implement seeding for announcements
-            await Task.CompletedTask;
+            using var conn = new SqliteConnection(_conn);
+            var exist = await conn.ExecuteScalarAsync<int>("SELECT count(1) FROM announcements");
+            if (exist > 0) return;
+
+            int id = await conn.ExecuteScalarAsync<int>(
+                @"INSERT INTO announcements(Title, Content, PostedDate) 
+                VALUES (@Title, @Content, @PostedDate)
+                RETURNING id",
+                new
+                {
+                    Title = "New Community Center Opening",
+                    Content = "We are excited to announce the opening of our new community center next month!",
+                    PostedDate = DateTime.UtcNow
+                });
         }
     }
 }
