@@ -112,13 +112,13 @@ namespace MVCApplication.Data
             if (exist > 0) return;
 
             int id = await conn.ExecuteScalarAsync<int>(
-                @"INSERT INTO announcements(Title, Content, PostedDate) 
-                VALUES (@Title, @Content, @PostedDate)
+                @"INSERT INTO announcements(Title, Message, PostedDate) 
+                VALUES (@Title, @Message, @PostedDate)
                 RETURNING id",
                 new
                 {
                     Title = "New Community Center Opening",
-                    Content = "We are excited to announce the opening of our new community center next month!",
+                    Message = "We are excited to announce the opening of our new community center next month!",
                     PostedDate = DateTime.UtcNow
                 });
         }
