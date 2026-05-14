@@ -105,6 +105,10 @@ namespace MVCApplication.Data
                 });
         }
 
-
+        public async Task SeedAnnouncements()
+        {
+            //TODO: Implement seeding for announcements
+            await Task.CompletedTask;
+        }
     }
 }

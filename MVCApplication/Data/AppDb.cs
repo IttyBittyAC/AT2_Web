@@ -125,6 +125,12 @@ namespace MVCApplication.Data
                         FOREIGN KEY(UserId) REFERENCES users(Id),
                         FOREIGN KEY(EventId) REFERENCES events(Id)
                     );
+                    CREATE TABLE IF NOT EXISTS announcements (
+                        Id              integer primary key autoincrement,
+                        Title           text not null,
+                        Message         text not null,
+                        PostedDate      datetime default current_timestamp
+                    );
                     CREATE TABLE IF NOT EXISTS logs (
                         Id integer primary key autoincrement,
                         IsError integer not null default 0,
@@ -213,16 +219,59 @@ namespace MVCApplication.Data
                 throw;
             }
         }
-        public async Task<List<Announcement>?> GetAnnouncements()
+        //--------------------------------------------------------------------------------
+        //THIS METHOD HAS NOT BEEN TESTED AND HAS BEEN IMPLEMENTED AS AN IDENTICAL STRUCTURE TO OTHER GET METHODS - To be tested and debugged by DB team when implementing announcements functionality
+        //--------------------------------------------------------------------------------
+        public async Task<(List<Announcement>?, Announcement?)> GetAnnouncements(int? id)
         {
-            await Task.CompletedTask;
-            return [];
-        }
+            try
+            {
+                using SqliteConnection con = new SqliteConnection(_conn);
 
+                //Retrieve announcements from the database
+                return id is not null?
+                    (new List<Announcement>(), (await con.QueryFirstOrDefaultAsync<Announcement>("SELECT * FROM users WHERE Id = @id", new { id }))) : ((await con.QueryAsync<Announcement>("SELECT * FROM announcements ORDER BY PostedDate DESC")).ToList(), null);
+            }
+            catch (SqliteException ex)
+            {
+                _logger.LogError(ex, "Database error during GetAnnouncements");
+                return (null, null);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Unexpected error during GetAnnouncements");
+                throw;
+            }
+        }
+        //--------------------------------------------------------------------------------
+        //THIS METHOD HAS NOT BEEN TESTED AND HAS BEEN IMPLEMENTED AS AN IDENTICAL STRUCTURE TO OTHER GET METHODS - To be tested and debugged by DB team when implementing announcements functionality
+        //--------------------------------------------------------------------------------
         public async Task<bool> SaveAnnouncement(Announcement announcement)
         {
-            await Task.CompletedTask;
-            return false;
+            /*
+             * TODO: Implement method to take from form and save an announcement to table in the database
+             * Should use email from session to find current user and get their UserID, check the event exists, check they are not already registered,
+             * then save the booking to the database with UserID, EventID, FullName, Email, and BookingDate
+             */
+            try
+            {
+                using SqliteConnection con = new SqliteConnection(_conn);
+
+                // Return true if at least one row was affected (i.e., user was inserted)
+                return await con.ExecuteAsync(@"
+                    INSERT INTO announcements(Id, Title, Message, PostedDate) 
+                    VALUES (@Id, @Title, @Message, @PostedDate)", announcement) > 0;
+            }
+            catch (SqliteException ex)
+            {
+                _logger.LogError(ex, "Database error during SaveAnnouncement for title {Title}", announcement.Title);
+                return false;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Unexpected error during SaveAnnouncement for title {Title}", announcement.Title);
+                throw;
+            }
         }
 
         //-------------------------------------------
