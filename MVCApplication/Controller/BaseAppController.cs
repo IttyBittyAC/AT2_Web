@@ -131,9 +131,14 @@ namespace MVCApplication.Controllers
                         var op = Store[controllerOp];
                         var m = Build(op.Table, op.Title);
                         var s = await save();
-                        
+
                         if (!s)
                         {
+                            if (populate != null)
+                            {
+                                await populate(m);
+                            }
+
                             m.Error = op.ErrorMsg;
                             return View(view, m);
                         }
