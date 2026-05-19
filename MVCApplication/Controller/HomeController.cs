@@ -37,11 +37,23 @@ namespace MVCApplication.Controllers
 
         /// <summary>
         /// Displays the home page.
+        /// Populates announcements and events so they render on the index view.
         /// </summary>
         /// <returns>Home view</returns>
         [HttpGet("/")]
         [HttpGet("/Home")]
-        public Task<IActionResult> Index() => GraveMind(Home.Index, MethodCode.HomeIndex);
+        public Task<IActionResult> Index() => GraveMind(
+            Home.Index,
+            MethodCode.HomeIndex,
+            populate: async m =>
+            {
+                // populate upcoming events
+                var (events, _) = await _db.GetEvent(null);
+                m.Events = events ?? [];
+
+                // populate announcements
+                m.Announcements = await _db.GetAnnouncements() ?? [];
+            });
 
         /// <summary>
         /// Displays the announcements page with announcement data from the database.
