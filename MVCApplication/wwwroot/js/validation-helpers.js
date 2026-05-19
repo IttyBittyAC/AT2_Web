@@ -95,20 +95,61 @@ const ValidationHelpers = {
         return { valid: true, message: '' };
     },
 
-    // Show error on input - UPDATED
-    showError: function(inputElement, errorElement, message) {
-        inputElement.classList.add('invalid');
-        inputElement.classList.remove('valid');
-        errorElement.textContent = message;
-        errorElement.style.visibility = 'visible';  // Changed from display
+    // Reject obvious script/HTML patterns in input (client-side defensive check)
+    validateNoScript: function(value, fieldName = 'This field') {
+        if (!value || value.trim() === '') return { valid: true, message: '' };
+
+        // Common patterns: <script>, </script>, javascript: URIs, inline event handlers (on...)
+        const patterns = [
+            /<\s*script\b/i,
+            /<\s*\/\s*script\s*>/i,
+            /javascript\s*:/i,
+            /on\w+\s*=/i
+        ];
+
+        for (const p of patterns) {
+            if (p.test(value)) {
+                return { valid: false, message: `Invalid input for ${fieldName}: scripts or HTML are not allowed` };
+            }
+        }
+
+        return { valid: true, message: '' };
     },
 
-    // Clear error from input - UPDATED
+    // Show error on input - UPDATED (guard errorElement to avoid runtime exceptions)
+    showError: function(inputElement, errorElement, message) {
+        if (inputElement && !inputElement.classList.contains('invalid')) {
+            inputElement.classList.add('invalid');
+        }
+        if (inputElement && inputElement.classList.contains('valid')) {
+            inputElement.classList.remove('valid');
+        }
+
+        if (errorElement) {
+            errorElement.textContent = message || '';
+            errorElement.style.visibility = message ? 'visible' : 'hidden';
+        }
+
+        // Provide accessible state
+        if (inputElement) {
+            inputElement.setAttribute('aria-invalid', 'true');
+        }
+    },
+
+    // Clear error from input - UPDATED (guard errorElement)
     clearError: function(inputElement, errorElement) {
-        inputElement.classList.remove('invalid');
-        inputElement.classList.add('valid');
-        errorElement.textContent = '';
-        errorElement.style.visibility = 'hidden';  // Changed from display
+        if (inputElement) {
+            inputElement.classList.remove('invalid');
+            if (!inputElement.classList.contains('valid')) {
+                inputElement.classList.add('valid');
+            }
+            inputElement.removeAttribute('aria-invalid');
+        }
+
+        if (errorElement) {
+            errorElement.textContent = '';
+            errorElement.style.visibility = 'hidden';
+        }
     },
 
     // Clear all errors in a form
@@ -118,11 +159,12 @@ const ValidationHelpers = {
         
         errorElements.forEach(el => {
             el.textContent = '';
-            el.style.visibility = 'hidden';  // Changed from display
+            el.style.visibility = 'hidden';
         });
         
         inputElements.forEach(el => {
             el.classList.remove('invalid', 'valid');
+            el.removeAttribute('aria-invalid');
         });
     }
 };

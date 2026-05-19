@@ -16,6 +16,12 @@ document.addEventListener('DOMContentLoaded', function() {
         const fullname = fullnameInput.value.trim();
         const errorElement = document.getElementById('fullnameError');
 
+        const scriptCheck = ValidationHelpers.validateNoScript(fullname, 'Full name');
+        if (!scriptCheck.valid) {
+            ValidationHelpers.showError(fullnameInput, errorElement, scriptCheck.message);
+            return false;
+        }
+
         const requiredCheck = ValidationHelpers.validateRequired(fullname, 'Full name');
         if (!requiredCheck.valid) {
             ValidationHelpers.showError(fullnameInput, errorElement, requiredCheck.message);
@@ -35,6 +41,12 @@ document.addEventListener('DOMContentLoaded', function() {
     function validateUsername() {
         const username = usernameInput.value.trim();
         const errorElement = document.getElementById('usernameError');
+
+        const scriptCheck = ValidationHelpers.validateNoScript(username, 'Username');
+        if (!scriptCheck.valid) {
+            ValidationHelpers.showError(usernameInput, errorElement, scriptCheck.message);
+            return false;
+        }
 
         const requiredCheck = ValidationHelpers.validateRequired(username, 'Username');
         if (!requiredCheck.valid) {
@@ -56,6 +68,12 @@ document.addEventListener('DOMContentLoaded', function() {
         const email = emailInput.value.trim();
         const errorElement = document.getElementById('emailError');
 
+        const scriptCheck = ValidationHelpers.validateNoScript(email, 'Email');
+        if (!scriptCheck.valid) {
+            ValidationHelpers.showError(emailInput, errorElement, scriptCheck.message);
+            return false;
+        }
+
         const requiredCheck = ValidationHelpers.validateRequired(email, 'Email');
         if (!requiredCheck.valid) {
             ValidationHelpers.showError(emailInput, errorElement, requiredCheck.message);
@@ -74,6 +92,12 @@ document.addEventListener('DOMContentLoaded', function() {
     function validatePassword() {
         const password = passwordInput.value;
         const errorElement = document.getElementById('passwordError');
+
+        const scriptCheck = ValidationHelpers.validateNoScript(password, 'Password');
+        if (!scriptCheck.valid) {
+            ValidationHelpers.showError(passwordInput, errorElement, scriptCheck.message);
+            return false;
+        }
 
         const requiredCheck = ValidationHelpers.validateRequired(password, 'Password');
         if (!requiredCheck.valid) {
@@ -95,6 +119,12 @@ document.addEventListener('DOMContentLoaded', function() {
         const password = passwordInput.value;
         const confirmPassword = confirmPasswordInput.value;
         const errorElement = document.getElementById('confirmPasswordError');
+
+        const scriptCheck = ValidationHelpers.validateNoScript(confirmPassword, 'Password confirmation');
+        if (!scriptCheck.valid) {
+            ValidationHelpers.showError(confirmPasswordInput, errorElement, scriptCheck.message);
+            return false;
+        }
 
         const requiredCheck = ValidationHelpers.validateRequired(confirmPassword, 'Password confirmation');
         if (!requiredCheck.valid) {
