@@ -1,0 +1,145 @@
+.home-wrapper {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 40px 20px 60px;
+}
+
+.dashboard {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 40px;
+    border-radius: 12px;
+    margin-bottom: 30px;
+    box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+}
+
+.dashboard h2 {
+    font-size: 2.4rem;
+    margin-bottom: 12px;
+    font-weight: 700;
+    line-height: 1.2;
+}
+
+.dashboard p {
+    font-size: 1.05rem;
+    line-height: 1.8;
+    margin-bottom: 0;
+    opacity: 0.95;
+}
+
+.info-section {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 24px;
+    margin-bottom: 30px;
+}
+
+.info-card {
+    background: white;
+    border: 1px solid #e0e0e0;
+    border-radius: 12px;
+    padding: 30px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.info-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+}
+
+.info-card h3 {
+    color: #2c3e50;
+    font-size: 1.5rem;
+    margin-bottom: 18px;
+    padding-bottom: 10px;
+    border-bottom: 3px solid #3498db;
+}
+
+.info-card ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.info-card li {
+    background: #f8f9fa;
+    border-left: 4px solid #667eea;
+    border-radius: 8px;
+    padding: 16px 18px;
+    margin-bottom: 14px;
+    color: #555;
+    line-height: 1.7;
+}
+
+.info-card li:last-child {
+    margin-bottom: 0;
+}
+
+.info-card strong {
+    color: #2c3e50;
+    font-size: 1.05rem;
+}
+
+.info-card small {
+    display: inline-block;
+    margin: 6px 0 8px;
+    color: #7f8c8d;
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+.contact {
+    background: white;
+    border: 1px solid #e0e0e0;
+    border-radius: 12px;
+    padding: 35px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.contact h2 {
+    color: #2c3e50;
+    font-size: 1.8rem;
+    margin-bottom: 18px;
+    padding-bottom: 10px;
+    border-bottom: 3px solid #3498db;
+}
+
+.contact p {
+    margin-bottom: 12px;
+    color: #555;
+    font-size: 1.05rem;
+    line-height: 1.8;
+}
+
+.contact p:last-child {
+    margin-bottom: 0;
+}
+
+@media (max-width: 768px) {
+    .home-wrapper {
+        padding: 30px 16px 50px;
+    }
+
+    .dashboard {
+        padding: 28px 24px;
+    }
+
+    .dashboard h2 {
+        font-size: 1.9rem;
+    }
+
+    .info-section {
+        grid-template-columns: 1fr;
+    }
+
+    .info-card,
+    .contact {
+        padding: 24px;
+    }
+
+    .info-card h3,
+    .contact h2 {
+        font-size: 1.35rem;
+    }
+}
