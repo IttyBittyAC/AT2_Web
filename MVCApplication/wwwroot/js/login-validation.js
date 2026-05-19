@@ -13,6 +13,12 @@ document.addEventListener('DOMContentLoaded', function() {
         const email = emailInput.value.trim();
         const errorElement = document.getElementById('emailError');
 
+        const scriptCheck = ValidationHelpers.validateNoScript(email, 'Email');
+        if (!scriptCheck.valid) {
+            ValidationHelpers.showError(emailInput, errorElement, scriptCheck.message);
+            return false;
+        }
+
         const requiredCheck = ValidationHelpers.validateRequired(email, 'Email');
         if (!requiredCheck.valid) {
             ValidationHelpers.showError(emailInput, errorElement, requiredCheck.message);
@@ -31,6 +37,12 @@ document.addEventListener('DOMContentLoaded', function() {
     function validatePassword() {
         const password = passwordInput.value;
         const errorElement = document.getElementById('passwordError');
+
+        const scriptCheck = ValidationHelpers.validateNoScript(password, 'Password');
+        if (!scriptCheck.valid) {
+            ValidationHelpers.showError(passwordInput, errorElement, scriptCheck.message);
+            return false;
+        }
 
         const requiredCheck = ValidationHelpers.validateRequired(password, 'Password');
         if (!requiredCheck.valid) {
