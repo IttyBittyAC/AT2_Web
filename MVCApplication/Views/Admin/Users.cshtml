@@ -5,12 +5,21 @@
     Layout = "_Layout";
 }
 
-<div class="container">
-    <h1 class="title has-text-centered">Users (Admin)</h1>
+@section Styles {
+    <link rel="stylesheet" href="~/css/admin-users.css" asp-append-version="true" />
+}
+
+<div class="admin-users-page">
+    <div class="admin-users-header">
+        <h1 class="admin-users-title">Manage Users</h1>
+        <p class="admin-users-subtitle">
+            Create new users, update account details, and remove users when needed.
+        </p>
+    </div>
 
     @if (!Model.IsAdmin)
     {
-        <div class="notification is-danger">
+        <div class="admin-message admin-message-error">
             You do not have permission to view this page.
         </div>
     }
@@ -18,134 +27,170 @@
     {
         @if (!string.IsNullOrEmpty(Model.Error))
         {
-            <div class="notification is-danger">@Model.Error</div>
-        }
-        @if (!string.IsNullOrEmpty(Model.Success))
-        {
-            <div class="notification is-success">@Model.Success</div>
+            <div class="admin-message admin-message-error">@Model.Error</div>
         }
 
-        <section class="box">
-            <h2 class="subtitle">Create user</h2>
-            <form method="post" action="/Admin/Users">
+        @if (!string.IsNullOrEmpty(Model.Success))
+        {
+            <div class="admin-message admin-message-success">@Model.Success</div>
+        }
+
+        <section class="admin-panel">
+            <h2 class="admin-panel-title">Create User</h2>
+
+            <form method="post" action="/Admin/Users" class="admin-form">
                 @Html.AntiForgeryToken()
                 <input type="hidden" name="action" value="create" />
 
-                <div class="field">
-                    <label class="label">Username</label>
-                    <div class="control">
-                        <input class="input" type="text" name="user.Username" placeholder="username" />
+                <div class="admin-field-grid">
+                    <div class="admin-field">
+                        <label class="admin-label" for="user_Username">Username</label>
+                        <input id="user_Username"
+                               class="admin-input"
+                               type="text"
+                               name="user.Username"
+                               placeholder="username" />
+                    </div>
+
+                    <div class="admin-field">
+                        <label class="admin-label" for="user_FullName">Full Name</label>
+                        <input id="user_FullName"
+                               class="admin-input"
+                               type="text"
+                               name="user.FullName"
+                               placeholder="Full name" />
                     </div>
                 </div>
 
-                <div class="field">
-                    <label class="label">Full name</label>
-                    <div class="control">
-                        <input class="input" type="text" name="user.FullName" placeholder="Full name" />
+                <div class="admin-field-grid">
+                    <div class="admin-field">
+                        <label class="admin-label" for="user_Email">Email</label>
+                        <input id="user_Email"
+                               class="admin-input"
+                               type="email"
+                               name="user.Email"
+                               placeholder="email@example.com" />
+                    </div>
+
+                    <div class="admin-field">
+                        <label class="admin-label" for="user_Role">Role</label>
+                        <select id="user_Role" class="admin-select" name="user.Role">
+                            <option value="user">user</option>
+                            <option value="admin">admin</option>
+                        </select>
                     </div>
                 </div>
 
-                <div class="field">
-                    <label class="label">Email</label>
-                    <div class="control">
-                        <input class="input" type="email" name="user.Email" placeholder="email@example.com" />
-                    </div>
+                <div class="admin-field">
+                    <label class="admin-label" for="user_PasswordHash">Password</label>
+                    <input id="user_PasswordHash"
+                           class="admin-input"
+                           type="password"
+                           name="user.PasswordHash"
+                           placeholder="password (optional)" />
                 </div>
 
-                <div class="field">
-                    <label class="label">Role</label>
-                    <div class="control">
-                        <div class="select">
-                            <select name="user.Role">
-                                <option value="user">user</option>
-                                <option value="admin">admin</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Optional: password posted into PasswordHash field (backend decides how to store) -->
-                <div class="field">
-                    <label class="label">Password</label>
-                    <div class="control">
-                        <input class="input" type="password" name="user.PasswordHash" placeholder="password (optional)" />
-                    </div>
-                </div>
-
-                <div class="field is-grouped">
-                    <div class="control">
-                        <button type="submit" class="button is-primary">Create</button>
-                    </div>
-                    <div class="control">
-                        <button type="reset" class="button is-light">Reset</button>
-                    </div>
+                <div class="admin-actions">
+                    <button type="submit" class="admin-btn admin-btn-primary">Create User</button>
+                    <button type="reset" class="admin-btn admin-btn-secondary">Reset</button>
                 </div>
             </form>
         </section>
 
-        <section class="box">
-            <h2 class="subtitle">Manage users</h2>
+        <section class="admin-panel">
+            <div class="admin-panel-heading">
+                <h2 class="admin-panel-title">Existing Users</h2>
+                <p class="admin-panel-help">Update user details below or select users to delete.</p>
+            </div>
 
             @if (Model.Users == null || !Model.Users.Any())
             {
-                <div class="notification is-warning">No users found.</div>
+                <div class="admin-empty-state">
+                    No users found.
+                </div>
             }
             else
             {
-                <form method="post" action="/Admin/Users" id="usersForm">
+                <form method="post" action="/Admin/Users" id="usersForm" class="admin-update-form">
                     @Html.AntiForgeryToken()
                     <input type="hidden" id="action" name="action" value="" />
 
-                    <div class="table-container">
-                        <table class="table is-fullwidth is-striped is-hoverable">
-                            <thead>
-                                <tr>
-                                    <th><input type="checkbox" id="selectAll" /></th>
-                                    <th>Username</th>
-                                    <th>Full name</th>
-                                    <th>Email</th>
-                                    <th>Role</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @for (var i = 0; i < Model.Users.Count; i++)
-                                {
-                                    var u = Model.Users[i];
-                                    <tr>
-                                        <td>
-                                            <input type="checkbox" name="id" value="@u.Id" class="rowCheck" />
-                                        </td>
-                                        <td>
-                                            <input class="input" type="hidden" name="users[@i].Id" value="@u.Id" />
-                                            <input class="input" type="text" name="users[@i].Username" value="@u.Username" />
-                                        </td>
-                                        <td>
-                                            <input class="input" type="text" name="users[@i].FullName" value="@u.FullName" />
-                                        </td>
-                                        <td>
-                                            <input class="input" type="email" name="users[@i].Email" value="@u.Email" />
-                                        </td>
-                                        <td>
-                                            <div class="select">
-                                                <select name="users[@i].Role">
-                                                    <option value="user" selected="@(u.Role == "user")">user</option>
-                                                    <option value="admin" selected="@(u.Role == "admin")">admin</option>
-                                                </select>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                }
-                            </tbody>
-                        </table>
+                    <div class="admin-select-all">
+                        <label class="admin-checkbox-label" for="selectAll">
+                            <input type="checkbox" id="selectAll" />
+                            <span>Select all users</span>
+                        </label>
                     </div>
 
-                    <div class="field is-grouped">
-                        <div class="control">
-                            <button type="submit" class="button is-link" onclick="document.getElementById('action').value='update'">Save changes</button>
-                        </div>
-                        <div class="control">
-                            <button type="submit" class="button is-danger" onclick="document.getElementById('action').value='delete'">Delete selected</button>
-                        </div>
+                    <div class="admin-user-grid">
+                        @for (var i = 0; i < Model.Users.Count; i++)
+                        {
+                            var u = Model.Users[i];
+
+                            <article class="admin-user-card">
+                                <div class="admin-user-card-top">
+                                    <label class="admin-checkbox-label" for="rowCheck_@u.Id">
+                                        <input type="checkbox" id="rowCheck_@u.Id" name="id" value="@u.Id" class="rowCheck" />
+                                        <span>Select user</span>
+                                    </label>
+
+                                    <span class="admin-user-role-badge @(u.Role == "admin" ? "is-admin" : "is-user")">
+                                        @u.Role
+                                    </span>
+                                </div>
+
+                                <input type="hidden" name="users[@i].Id" value="@u.Id" />
+
+                                <div class="admin-field">
+                                    <label class="admin-label" for="users_@(i)__Username">Username</label>
+                                    <input id="users_@(i)__Username"
+                                           class="admin-input"
+                                           type="text"
+                                           name="users[@i].Username"
+                                           value="@u.Username" />
+                                </div>
+
+                                <div class="admin-field">
+                                    <label class="admin-label" for="users_@(i)__FullName">Full Name</label>
+                                    <input id="users_@(i)__FullName"
+                                           class="admin-input"
+                                           type="text"
+                                           name="users[@i].FullName"
+                                           value="@u.FullName" />
+                                </div>
+
+                                <div class="admin-field">
+                                    <label class="admin-label" for="users_@(i)__Email">Email</label>
+                                    <input id="users_@(i)__Email"
+                                           class="admin-input"
+                                           type="email"
+                                           name="users[@i].Email"
+                                           value="@u.Email" />
+                                </div>
+
+                                <div class="admin-field">
+                                    <label class="admin-label" for="users_@(i)__Role">Role</label>
+                                    <select id="users_@(i)__Role" class="admin-select" name="users[@i].Role">
+                                        <option value="user" selected="@(u.Role == "user")">user</option>
+                                        <option value="admin" selected="@(u.Role == "admin")">admin</option>
+                                    </select>
+                                </div>
+                            </article>
+                        }
+                    </div>
+
+                    <div class="admin-actions">
+                        <button type="submit"
+                                class="admin-btn admin-btn-primary"
+                                onclick="document.getElementById('action').value='update'">
+                            Save Changes
+                        </button>
+
+                        <button type="submit"
+                                class="admin-btn admin-btn-danger"
+                                onclick="document.getElementById('action').value='delete'">
+                            Delete Selected
+                        </button>
                     </div>
                 </form>
             }
@@ -155,10 +200,11 @@
 
 @section Scripts {
     <script>
-        // select/deselect all checkboxes
-        document.getElementById('selectAll')?.addEventListener('change', function (e) {
-            var checked = e.target.checked;
-            document.querySelectorAll('.rowCheck').forEach(function (cb) { cb.checked = checked; });
+        document.getElementById("selectAll")?.addEventListener("change", function (e) {
+            const checked = e.target.checked;
+            document.querySelectorAll(".rowCheck").forEach(function (cb) {
+                cb.checked = checked;
+            });
         });
     </script>
 }
