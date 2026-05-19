@@ -5,12 +5,21 @@
     Layout = "_Layout";
 }
 
-<div class="container">
-    <h1 class="title has-text-centered">Feedback (Admin)</h1>
+@section Styles {
+    <link rel="stylesheet" href="~/css/admin-feedback.css" asp-append-version="true" />
+}
+
+<div class="admin-feedback-page">
+    <div class="admin-feedback-header">
+        <h1 class="admin-feedback-title">Manage Feedback</h1>
+        <p class="admin-feedback-subtitle">
+            Review feedback submissions, update entries, or remove them when needed.
+        </p>
+    </div>
 
     @if (!Model.IsAdmin)
     {
-        <div class="notification is-danger">
+        <div class="admin-message admin-message-error">
             You do not have permission to view this page.
         </div>
     }
@@ -18,179 +27,183 @@
     {
         @if (!string.IsNullOrEmpty(Model.Error))
         {
-            <div class="notification is-danger">@Model.Error</div>
-        }
-        @if (!string.IsNullOrEmpty(Model.Success))
-        {
-            <div class="notification is-success">@Model.Success</div>
+            <div class="admin-message admin-message-error">@Model.Error</div>
         }
 
-        <section class="box">
-            <h2 class="subtitle">Create New Feedback</h2>
-            <form method="post" action="/Admin/FeedBack">
+        @if (!string.IsNullOrEmpty(Model.Success))
+        {
+            <div class="admin-message admin-message-success">@Model.Success</div>
+        }
+
+        <section class="admin-panel">
+            <h2 class="admin-panel-title">Create Feedback</h2>
+
+            <form method="post" action="/Admin/FeedBack" class="admin-form">
                 @Html.AntiForgeryToken()
                 <input type="hidden" name="action" value="create" />
 
-                <div class="field">
-                    <label class="label">Heading</label>
-                    <div class="control">
-                        <input class="input" type="text" name="feedback.Heading" placeholder="Short heading" maxlength="200" required />
+                <div class="admin-field-grid">
+                    <div class="admin-field">
+                        <label class="admin-label" for="feedback_Heading">Heading</label>
+                        <input id="feedback_Heading"
+                               class="admin-input"
+                               type="text"
+                               name="feedback.Heading"
+                               placeholder="Short heading"
+                               maxlength="200"
+                               required />
+                    </div>
+
+                    <div class="admin-field">
+                        <label class="admin-label" for="feedback_Type">Feedback Type</label>
+                        <select id="feedback_Type" class="admin-select" name="feedback.Type" required>
+                            <option value="">Select type</option>
+                            <option>General</option>
+                            <option>Bug</option>
+                            <option>Feature Request</option>
+                            <option>Praise</option>
+                        </select>
                     </div>
                 </div>
 
-                <div class="field">
-                    <label class="label">Full name</label>
-                    <div class="control">
-                        <input class="input" type="text" name="feedback.FullName" placeholder="Your full name" maxlength="100" required />
+                <div class="admin-field-grid">
+                    <div class="admin-field">
+                        <label class="admin-label" for="feedback_FullName">Full Name</label>
+                        <input id="feedback_FullName"
+                               class="admin-input"
+                               type="text"
+                               name="feedback.FullName"
+                               placeholder="Your full name"
+                               maxlength="100"
+                               required />
+                    </div>
+
+                    <div class="admin-field">
+                        <label class="admin-label" for="feedback_Email">Email</label>
+                        <input id="feedback_Email"
+                               class="admin-input"
+                               type="email"
+                               name="feedback.Email"
+                               placeholder="you@example.com"
+                               required />
                     </div>
                 </div>
 
-                <div class="field">
-                    <label class="label">Email</label>
-                    <div class="control">
-                        <input class="input" type="email" name="feedback.Email" placeholder="you@example.com" required />
-                    </div>
+                <div class="admin-field">
+                    <label class="admin-label" for="feedback_Message">Message</label>
+                    <textarea id="feedback_Message"
+                              class="admin-textarea"
+                              name="feedback.Message"
+                              placeholder="Tell us what's on your mind"
+                              minlength="10"
+                              maxlength="1000"
+                              required></textarea>
                 </div>
 
-                <div class="field">
-                    <label class="label">Feedback type</label>
-                    <div class="control">
-                        <div class="select">
-                            <select name="feedback.Type" required>
-                                <option value="">Select type</option>
-                                <option>General</option>
-                                <option>Bug</option>
-                                <option>Feature Request</option>
-                                <option>Praise</option>
-                            </select>
-                        </div>
+                <div class="admin-field-grid">
+                    <div class="admin-field">
+                        <label class="admin-label" for="feedback_SubmittedDate">Date</label>
+                        <input id="feedback_SubmittedDate"
+                               class="admin-input"
+                               type="datetime-local"
+                               name="feedback.SubmittedDate" />
                     </div>
-                </div>
 
-                <div class="field">
-                    <label class="label">Message</label>
-                    <div class="control">
-                        <textarea class="textarea" name="feedback.Message" placeholder="Tell us what's on your mind" minlength="10" maxlength="1000" required></textarea>
-                    </div>
-                </div>
-
-                <div class="field">
-                    <label class="label">Date</label>
-                    <div class="control">
-                        <input class="input" type="datetime-local" name="feedback.SubmittedDate" />
-                    </div>
-                </div>
-
-                <div class="field">
-                    <div class="control">
-                        <label class="checkbox">
+                    <div class="admin-field admin-field-checkbox">
+                        <label class="admin-checkbox-label" for="feedback_WantsContact">
                             <input type="hidden" name="feedback.WantsContact" value="false" />
-                            <input type="checkbox" name="feedback.WantsContact" value="true" />
-                            Would you like us to contact you?
+                            <input id="feedback_WantsContact"
+                                   type="checkbox"
+                                   name="feedback.WantsContact"
+                                   value="true" />
+                            <span>Would you like us to contact you?</span>
                         </label>
                     </div>
                 </div>
 
-                <div class="field is-grouped">
-                    <div class="control">
-                        <button type="submit" class="button is-primary">Create Feedback</button>
-                    </div>
-                    <div class="control">
-                        <button type="reset" class="button is-light">Reset</button>
-                    </div>
+                <div class="admin-actions">
+                    <button type="submit" class="admin-btn admin-btn-primary">Create Feedback</button>
+                    <button type="reset" class="admin-btn admin-btn-secondary">Reset</button>
                 </div>
             </form>
         </section>
 
-        <section class="box">
-            <h2 class="subtitle">Manage Feedback</h2>
+        <section class="admin-panel">
+            <div class="admin-panel-heading">
+                <h2 class="admin-panel-title">Existing Feedback</h2>
+                <p class="admin-panel-help">Delete submissions in bulk or edit them below.</p>
+            </div>
 
             @if (Model.Feedbacks is null || !Model.Feedbacks.Any())
             {
-                <div class="notification is-warning">No feedback entries available.</div>
+                <div class="admin-empty-state">
+                    No feedback entries available.
+                </div>
             }
             else
             {
-                <form method="post" action="/Admin/FeedBack">
+                <form method="post" action="/Admin/FeedBack" class="admin-delete-form">
                     @Html.AntiForgeryToken()
                     <input type="hidden" name="action" value="delete" />
 
-                    <table class="table is-fullwidth is-striped">
-                        <thead>
-                            <tr>
-                                <th></th>
-                                <th>Heading</th>
-                                <th>Full name</th>
-                                <th>Email</th>
-                                <th>Type</th>
-                                <th>Date</th>
-                                <th>Contact?</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @for (var i = 0; i < Model.Feedbacks.Count; i++)
-                            {
-                                var fb = Model.Feedbacks[i];
-                                <tr>
-                                    <td>
-                                        <input type="checkbox" name="id" value="@fb.Id" />
-                                    </td>
-                                    <td>@fb.Heading</td>
-                                    <td>@fb.FullName</td>
-                                    <td>@fb.Email</td>
-                                    <td>@fb.Type</td>
-                                    <td>@fb.SubmittedDate.ToString("yyyy-MM-dd HH:mm")</td>
-                                    <td>@(fb.WantsContact ? "Yes" : "No")</td>
-                                </tr>
-                            }
-                        </tbody>
-                    </table>
+                    <div class="admin-feedback-list">
+                        @for (var i = 0; i < Model.Feedbacks.Count; i++)
+                        {
+                            var fb = Model.Feedbacks[i];
 
-                    <div class="field is-grouped">
-                        <div class="control">
-                            <button type="submit" class="button is-danger">Delete selected</button>
-                        </div>
+                            <label class="admin-delete-card">
+                                <input type="checkbox" name="id" value="@fb.Id" />
+                                <span class="admin-delete-content">
+                                    <strong>@fb.Heading</strong>
+                                    <small>@fb.FullName · @fb.Email</small>
+                                    <em>@fb.Type · @fb.SubmittedDate.ToString("MMM dd, yyyy h:mm tt")</em>
+                                </span>
+                            </label>
+                        }
+                    </div>
+
+                    <div class="admin-actions">
+                        <button type="submit" class="admin-btn admin-btn-danger">Delete Selected</button>
                     </div>
                 </form>
 
-                <hr />
+                <hr class="admin-divider" />
 
-                <form method="post" action="/Admin/FeedBack">
+                <form method="post" action="/Admin/FeedBack" class="admin-update-form">
                     @Html.AntiForgeryToken()
                     <input type="hidden" name="action" value="update" />
 
-                    @for (var i = 0; i < Model.Feedbacks.Count; i++)
-                    {
-                        var fb = Model.Feedbacks[i];
-                        <div class="box">
-                            <input type="hidden" name="feedbacks[@i].Id" value="@fb.Id" />
+                    <div class="admin-edit-grid">
+                        @for (var i = 0; i < Model.Feedbacks.Count; i++)
+                        {
+                            var fb = Model.Feedbacks[i];
 
-                            <div class="field">
-                                <label class="label">Heading</label>
-                                <div class="control">
-                                    <input class="input" type="text" name="feedbacks[@i].Heading" value="@fb.Heading" maxlength="200" required />
+                            <article class="admin-edit-card">
+                                <input type="hidden" name="feedbacks[@i].Id" value="@fb.Id" />
+
+                                <div class="admin-card-meta">
+                                    <span class="admin-badge">Feedback</span>
+                                    <span class="admin-date">@fb.SubmittedDate.ToString("MMMM dd, yyyy")</span>
                                 </div>
-                            </div>
 
-                            <div class="field">
-                                <label class="label">Full name</label>
-                                <div class="control">
-                                    <input class="input" type="text" name="feedbacks[@i].FullName" value="@fb.FullName" maxlength="100" required />
-                                </div>
-                            </div>
+                                <div class="admin-field-grid">
+                                    <div class="admin-field">
+                                        <label class="admin-label" for="feedbacks_@(i)__Heading">Heading</label>
+                                        <input id="feedbacks_@(i)__Heading"
+                                               class="admin-input"
+                                               type="text"
+                                               name="feedbacks[@i].Heading"
+                                               value="@fb.Heading"
+                                               maxlength="200"
+                                               required />
+                                    </div>
 
-                            <div class="field">
-                                <label class="label">Email</label>
-                                <div class="control">
-                                    <input class="input" type="email" name="feedbacks[@i].Email" value="@fb.Email" required />
-                                </div>
-                            </div>
-
-                            <div class="field">
-                                <label class="label">Feedback type</label>
-                                <div class="control">
-                                    <div class="select">
-                                        <select name="feedbacks[@i].Type" required>
+                                    <div class="admin-field">
+                                        <label class="admin-label" for="feedbacks_@(i)__Type">Feedback Type</label>
+                                        <select id="feedbacks_@(i)__Type"
+                                                class="admin-select"
+                                                name="feedbacks[@i].Type"
+                                                required>
                                             <option value="">Select type</option>
                                             <option selected="@(fb.Type == "General")">General</option>
                                             <option selected="@(fb.Type == "Bug")">Bug</option>
@@ -199,42 +212,71 @@
                                         </select>
                                     </div>
                                 </div>
-                            </div>
 
-                            <div class="field">
-                                <label class="label">Message</label>
-                                <div class="control">
-                                    <textarea class="textarea" name="feedbacks[@i].Message" minlength="10" maxlength="1000" required>@fb.Message</textarea>
+                                <div class="admin-field-grid">
+                                    <div class="admin-field">
+                                        <label class="admin-label" for="feedbacks_@(i)__FullName">Full Name</label>
+                                        <input id="feedbacks_@(i)__FullName"
+                                               class="admin-input"
+                                               type="text"
+                                               name="feedbacks[@i].FullName"
+                                               value="@fb.FullName"
+                                               maxlength="100"
+                                               required />
+                                    </div>
+
+                                    <div class="admin-field">
+                                        <label class="admin-label" for="feedbacks_@(i)__Email">Email</label>
+                                        <input id="feedbacks_@(i)__Email"
+                                               class="admin-input"
+                                               type="email"
+                                               name="feedbacks[@i].Email"
+                                               value="@fb.Email"
+                                               required />
+                                    </div>
                                 </div>
-                            </div>
 
-                            <div class="field">
-                                <label class="label">Date</label>
-                                <div class="control">
-                                    <input class="input" type="datetime-local" name="feedbacks[@i].SubmittedDate" value="@(fb.SubmittedDate.ToString("yyyy-MM-ddTHH:mm"))" />
+                                <div class="admin-field">
+                                    <label class="admin-label" for="feedbacks_@(i)__Message">Message</label>
+                                    <textarea id="feedbacks_@(i)__Message"
+                                              class="admin-textarea"
+                                              name="feedbacks[@i].Message"
+                                              minlength="10"
+                                              maxlength="1000"
+                                              required>@fb.Message</textarea>
                                 </div>
-                            </div>
 
-                            <div class="field">
-                                <div class="control">
-                                    <label class="checkbox">
-                                        <input type="hidden" name="feedbacks[@i].WantsContact" value="false" />
-                                        <input type="checkbox" name="feedbacks[@i].WantsContact" value="true" @(fb.WantsContact ? "checked" : "") />
-                                        Would like contact
-                                    </label>
+                                <div class="admin-field-grid">
+                                    <div class="admin-field">
+                                        <label class="admin-label" for="feedbacks_@(i)__SubmittedDate">Date</label>
+                                        <input id="feedbacks_@(i)__SubmittedDate"
+                                               class="admin-input"
+                                               type="datetime-local"
+                                               name="feedbacks[@i].SubmittedDate"
+                                               value="@(fb.SubmittedDate.ToString("yyyy-MM-ddTHH:mm"))" />
+                                    </div>
+
+                                    <div class="admin-field admin-field-checkbox">
+                                        <label class="admin-checkbox-label" for="feedbacks_@(i)__WantsContact">
+                                            <input type="hidden" name="feedbacks[@i].WantsContact" value="false" />
+                                            <input id="feedbacks_@(i)__WantsContact"
+                                                   type="checkbox"
+                                                   name="feedbacks[@i].WantsContact"
+                                                   value="true"
+                                                   @(fb.WantsContact ? "checked" : "") />
+                                            <span>Would like contact</span>
+                                        </label>
+                                    </div>
                                 </div>
-                            </div>
-                        </div>
-                    }
+                            </article>
+                        }
+                    </div>
 
-                    <div class="field is-grouped">
-                        <div class="control">
-                            <button type="submit" class="button is-primary">Save updates</button>
-                        </div>
+                    <div class="admin-actions">
+                        <button type="submit" class="admin-btn admin-btn-primary">Save Updates</button>
                     </div>
                 </form>
             }
-            <p class="help">Next: ensure feedback storage and CRUD methods exist in <code>AppDb</code> and that the AdminController POST/GET handlers persist and load feedback entries.</p>
         </section>
     }
 </div>

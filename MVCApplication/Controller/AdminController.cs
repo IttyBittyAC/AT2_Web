@@ -25,7 +25,50 @@ namespace MVCApplication.Controllers
         /// </summary>
         /// <returns>Admin dashboard view</returns>
         [HttpGet("/Admin")]
-        public Task<IActionResult> Index() => GraveMind(Admin.Index, MethodCode.AdminIndex, admin: true);
+        public Task<IActionResult> Index() => GraveMind(
+            Admin.Index,
+            MethodCode.AdminIndex,
+            admin: true,
+            populate: async m =>
+            {
+                var announcements = await _db.GetAnnouncements() ?? [];
+                var (events, _) = await _db.GetEvent(null);
+                var (users, _) = await _db.GetUser(null);
+                var (feedbacks, _) = await _db.GetFeedback(null);
+
+                m.Announcements = announcements;
+                m.Events = events ?? [];
+                m.Users = users ?? [];
+                m.Feedbacks = feedbacks ?? [];
+
+                ViewBag.AnnouncementsCount = m.Announcements.Count;
+                ViewBag.EventsCount = m.Events.Count;
+                ViewBag.UsersCount = m.Users.Count;
+                ViewBag.FeedbackCount = m.Feedbacks.Count;
+
+                ViewBag.RecentAnnouncements = m.Announcements
+                    .OrderByDescending(a => a.PostedDate)
+                    .Take(5)
+                    .Select(a => new
+                    {
+                        a.Title,
+                        Summary = a.Message.Length > 80 ? a.Message.Substring(0, 80) + "..." : a.Message,
+                        PublishedAt = a.PostedDate
+                    })
+                    .ToList();
+
+                ViewBag.RecentEvents = m.Events
+                    .OrderByDescending(e => e.EventDate)
+                    .Take(5)
+                    .Select(e => new
+                    {
+                        e.Id,
+                        e.Title,
+                        e.Location,
+                        Start = e.EventDate
+                    })
+                    .ToList();
+            });
 
         /// <summary>
         /// Displays all announcements for admin management. Requires admin access.
