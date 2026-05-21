@@ -82,6 +82,11 @@ namespace MVCApplication.Controllers
             Events.Details,
             MethodCode.EventsRegister,
             auth: true,
+            populate: async m =>
+            {
+                var (_, eventItem) = await _db.GetEvent(id);
+                m.Event = eventItem;
+            },
             save: async () =>
             {
                 string? email = HttpContext.Session.GetString(SessionKeys.Type);
@@ -93,7 +98,24 @@ namespace MVCApplication.Controllers
 
                 return await _db.SaveEventBooking(id, email);
             },
-            redirect: () => RedirectToAction("Details", new {id }));
+            redirect: () => RedirectToAction("RegisterConfirmation", new { id }));
+
+        /// <summary>
+        /// Displays confirmation after registering for an event.
+        /// </summary>
+        /// <param name="id">Event ID</param>
+        /// <returns>Registration confirmation view</returns>
+        [HttpGet("/Events/Register/Confirmation/{id}")]
+        public Task<IActionResult> RegisterConfirmation(int id) => GraveMind(
+            Events.RegisterConfirmation,
+            MethodCode.EventsDetails,
+            auth: true,
+            populate: async m =>
+            {
+                var (_, eventItem) = await _db.GetEvent(id);
+                m.Event = eventItem;
+            },
+            check: m => m.Event != null);
     }
 
 

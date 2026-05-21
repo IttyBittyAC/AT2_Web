@@ -192,8 +192,8 @@ namespace MVCApplication.Data
 
                 if (alreadyRegistered > 0)
                 {
-                    _logger.LogWarning("Attempt to save duplicate event booking for user {UserId} and event {EventId}", user.Id, eventId);
-                    return false;
+                    _logger.LogInformation("User {UserId} is already registered for event {EventId}", user.Id, eventId);
+                    return true;
                 }
 
                 return await con.ExecuteAsync(
@@ -222,14 +222,18 @@ namespace MVCApplication.Data
         //--------------------------------------------------------------------------------
         //THIS METHOD HAS NOT BEEN TESTED AND HAS BEEN IMPLEMENTED AS AN IDENTICAL STRUCTURE TO OTHER GET METHODS - To be tested and debugged by DB team when implementing announcements functionality
         //--------------------------------------------------------------------------------
+        /// <summary>
+        /// Gets all announcements from the database.
+        /// </summary>
+        /// <returns>A list of announcements, or null if there was a database error.</returns>
         public async Task<List<Announcement>?> GetAnnouncements()
         {
             try
             {
                 using SqliteConnection con = new SqliteConnection(_conn);
 
-                //Retrieve announcements from the database
-                return (await con.QueryAsync<Announcement>("SELECT * FROM announcements ORDER BY PostedDate DESC")).ToList();
+                return (await con.QueryAsync<Announcement>(
+                    "SELECT * FROM announcements ORDER BY PostedDate DESC")).ToList();
             }
             catch (SqliteException ex)
             {
@@ -242,24 +246,36 @@ namespace MVCApplication.Data
                 throw;
             }
         }
-        //--------------------------------------------------------------------------------
-        //THIS METHOD HAS NOT BEEN TESTED AND HAS BEEN IMPLEMENTED AS AN IDENTICAL STRUCTURE TO OTHER GET METHODS - To be tested and debugged by DB team when implementing announcements functionality
-        //--------------------------------------------------------------------------------
+
+        /// <summary>
+        /// Saves a new announcement to the database.
+        /// </summary>
+        /// <param name="announcement">The announcement being saved.</param>
+        /// <returns>True if the announcement was saved successfully, otherwise false.</returns>
         public async Task<bool> SaveAnnouncement(Announcement announcement)
         {
-            /*
-             * TODO: Implement method to take from form and save an announcement to table in the database
-             * Should use email from session to find current user and get their UserID, check the event exists, check they are not already registered,
-             * then save the booking to the database with UserID, EventID, FullName, Email, and BookingDate
-             */
             try
             {
                 using SqliteConnection con = new SqliteConnection(_conn);
 
-                // Return true if at least one row was affected (i.e., user was inserted)
+                if (announcement.PostedDate == DateTime.MinValue)
+                {
+                    announcement.PostedDate = DateTime.UtcNow;
+                }
+
                 return await con.ExecuteAsync(@"
-                    INSERT INTO announcements(Id, Title, Message, PostedDate) 
-                    VALUES (@Id, @Title, @Message, @PostedDate)", announcement) > 0;
+            INSERT INTO announcements
+            (
+                Title,
+                Message,
+                PostedDate
+            )
+            VALUES
+            (
+                @Title,
+                @Message,
+                @PostedDate
+            )", announcement) > 0;
             }
             catch (SqliteException ex)
             {
@@ -269,6 +285,81 @@ namespace MVCApplication.Data
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Unexpected error during SaveAnnouncement for title {Title}", announcement.Title);
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// Updates existing announcements in the database.
+        /// </summary>
+        /// <param name="announcements">The announcements being updated.</param>
+        /// <returns>The number of rows affected.</returns>
+        public async Task<int> UpdateAnnouncements(List<Announcement> announcements)
+        {
+            if (announcements == null || announcements.Count == 0)
+            {
+                return 0;
+            }
+
+            try
+            {
+                using SqliteConnection con = new SqliteConnection(_conn);
+
+                int affected = 0;
+
+                foreach (Announcement announcement in announcements)
+                {
+                    affected += await con.ExecuteAsync(@"
+                UPDATE announcements
+                SET
+                    Title = @Title,
+                    Message = @Message,
+                    PostedDate = @PostedDate
+                WHERE Id = @Id", announcement);
+                }
+
+                return affected;
+            }
+            catch (SqliteException ex)
+            {
+                _logger.LogError(ex, "Database error during UpdateAnnouncements");
+                return 0;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Unexpected error during UpdateAnnouncements");
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// Deletes selected announcements from the database.
+        /// </summary>
+        /// <param name="id">The announcement IDs being deleted.</param>
+        /// <returns>True if at least one announcement was deleted, otherwise false.</returns>
+        public async Task<bool> DeleteAnnouncements(List<int> id)
+        {
+            if (id == null || id.Count == 0)
+            {
+                return false;
+            }
+
+            try
+            {
+                using SqliteConnection con = new SqliteConnection(_conn);
+
+                return await con.ExecuteAsync(
+                    "DELETE FROM announcements WHERE Id IN @Ids",
+                    new { Ids = id }) > 0;
+            }
+            catch (SqliteException ex)
+            {
+                _logger.LogError(ex, "Database error during DeleteAnnouncements for ids {Ids}", string.Join(", ", id));
+                return false;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Unexpected error during DeleteAnnouncements for ids {Ids}", string.Join(", ", id));
                 throw;
             }
         }

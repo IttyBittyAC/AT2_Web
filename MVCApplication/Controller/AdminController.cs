@@ -83,33 +83,52 @@ namespace MVCApplication.Controllers
             {
                 m.Announcements = await _db.GetAnnouncements() ?? [];
             });
+
         /// <summary>
-        /// Handles announcement creation from the admin panel.
+        /// Handles announcement management actions such as create, update, and delete.
         /// </summary>
-        /// <param name="announcement">Announcement object containing admin input data</param>
-        /// <returns>Redirects back to admin announcements on success</returns>
+        /// <param name="id">List of announcement IDs for delete operations</param>
+        /// <param name="announcements">List of announcements for update operations</param>
+        /// <param name="announcement">Single announcement for create operations</param>
+        /// <param name="action">Action to perform: create, update, or delete</param>
+        /// <returns>Redirects on success or returns the view with errors</returns>
         [HttpPost("/Admin/Announcements")]
-        public Task<IActionResult> Announcements(Announcement announcement) => !ModelState.IsValid
-            ? GraveMind(
-                Admin.Announcements,
-                MethodCode.AdminAnnouncementsInvalid,
+        public Task<IActionResult> Announcements(
+            List<int>? id,
+            List<Announcement>? announcements,
+            Announcement? announcement,
+            AdminUserAction? action) => action == null
+            ? GraveMind(Admin.Announcements, MethodCode.AdminAnnouncementsInvalid,
                 admin: true,
                 populate: async m =>
                 {
                     m.Error = Store[MethodCode.AdminAnnouncementsInvalid].ErrorMsg;
-                    m.Announcement = announcement;
                     m.Announcements = await _db.GetAnnouncements() ?? [];
                 })
-            : GraveMind(
-                Admin.Announcements,
-                MethodCode.AdminAnnouncementsCreate,
-                admin: true,
-                save: async () =>
-                {
-                    announcement.PostedDate = DateTime.UtcNow;
-                    return await _db.SaveAnnouncement(announcement);
-                },
-                redirect: () => RedirectToAction("Announcements"));
+
+            : action == AdminUserAction.Delete && id != null
+                ? GraveMind(Admin.Announcements, MethodCode.AdminAnnouncementsDelete,
+                    admin: true,
+                    save: () => _db.DeleteAnnouncements(id),
+                    redirect: () => RedirectToAction("Announcements"))
+
+            : action == AdminUserAction.Update && announcements != null
+                ? GraveMind(Admin.Announcements, MethodCode.AdminAnnouncementsUpdate,
+                    admin: true,
+                    save: async () => await _db.UpdateAnnouncements(announcements) > 0,
+                    redirect: () => RedirectToAction("Announcements"))
+
+            : action == AdminUserAction.Create && announcement != null
+                ? GraveMind(Admin.Announcements, MethodCode.AdminAnnouncementsCreate,
+                    admin: true,
+                    save: async () =>
+                    {
+                        announcement.PostedDate = DateTime.UtcNow;
+                        return await _db.SaveAnnouncement(announcement);
+                    },
+                    redirect: () => RedirectToAction("Announcements"))
+
+            : Task.FromResult(NotFound() as IActionResult);
 
         /// <summary>
         /// Displays all users and populates the model with user data from the database. Requires admin access.

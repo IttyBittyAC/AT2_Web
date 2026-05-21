@@ -44,8 +44,10 @@ namespace MVCApplication.Helpers
             AdminBookingsUpdate,
             AdminBookingsCreate,
             AdminLogs,
-            AdminAnnouncementsCreate,
             AdminAnnouncementsInvalid,
+            AdminAnnouncementsCreate,
+            AdminAnnouncementsUpdate,
+            AdminAnnouncementsDelete,
 
             // Services
             ServiceIndex,
@@ -92,8 +94,10 @@ namespace MVCApplication.Helpers
             // Admin Controller
             [MethodCode.AdminIndex] = new("admin", "Admin", null, null),
             [MethodCode.AdminAnnouncements] = new("announcements", "Manage Announcements", "Could not load announcements", "Loaded announcements"),
+            [MethodCode.AdminAnnouncementsInvalid] = new("announcements", "Manage Announcements", "No action specified", null),
             [MethodCode.AdminAnnouncementsCreate] = new("announcements", "Create Announcement", "Could not create announcement", "Successfully created announcement"),
-            [MethodCode.AdminAnnouncementsInvalid] = new("announcements", "Create Announcement", "Please fill in all fields", null),
+            [MethodCode.AdminAnnouncementsUpdate] = new("announcements", "Update Announcement", "Could not update announcement", "Successfully updated announcement"),
+            [MethodCode.AdminAnnouncementsDelete] = new("announcements", "Delete Announcement", "Could not delete announcement", "Successfully deleted announcement"),
             [MethodCode.AdminUsers] = new("users", "View all users", "No users Found", "Displayed Users"),
             [MethodCode.AdminUsersInvalid] = new("users", "View All Users", "No action specified", null),
             [MethodCode.AdminUsersDelete] = new("users", "Delete a User","Could not delete", "Successfully deleted user"),

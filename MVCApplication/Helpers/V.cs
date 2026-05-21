@@ -37,6 +37,7 @@
             public const string Index = "~/Views/Events/Index.cshtml";
             public const string Details = "~/Views/Events/EventDetails.cshtml";
             public const string Create = "~/Views/Events/Create.cshtml";
+            public const string RegisterConfirmation = "~/Views/Events/RegisterConfirmation.cshtml";
         }
         public static class Services
         {
