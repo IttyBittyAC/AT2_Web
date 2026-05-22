@@ -169,5 +169,108 @@ const ValidationHelpers = {
     }
 };
 
+// LockoutManager: simple client-side attempt tracker using localStorage
+// IMPORTANT: Client-side only — enforce lockout on server for real security.
+ValidationHelpers.LockoutManager = (function() {
+    const STORAGE_PREFIX = 'app_lockout';
+    const defaults = {
+        maxAttempts: 5,
+        lockoutDurationMs: 15 * 60 * 1000 // 15 minutes
+    };
+
+    function storageKey(scope, identifier) {
+        const id = identifier ? identifier.toString().toLowerCase() : 'global';
+        return `${STORAGE_PREFIX}:${scope}:${id}`;
+    }
+
+    function now() {
+        return Date.now();
+    }
+
+    function readState(scope, identifier) {
+        try {
+            const raw = localStorage.getItem(storageKey(scope, identifier));
+            if (!raw) return { attempts: 0, lockedUntil: 0 };
+            const parsed = JSON.parse(raw);
+            return {
+                attempts: parsed.attempts || 0,
+                lockedUntil: parsed.lockedUntil || 0
+            };
+        } catch {
+            return { attempts: 0, lockedUntil: 0 };
+        }
+    }
+
+    function writeState(scope, identifier, state) {
+        try {
+            localStorage.setItem(storageKey(scope, identifier), JSON.stringify(state));
+        } catch {
+            // ignore storage errors
+        }
+    }
+
+    function clearState(scope, identifier) {
+        try {
+            localStorage.removeItem(storageKey(scope, identifier));
+        } catch {
+            // ignore
+        }
+    }
+
+    function isLocked(scope, identifier) {
+        const s = readState(scope, identifier);
+        return s.lockedUntil && s.lockedUntil > now();
+    }
+
+    function remainingMs(scope, identifier) {
+        const s = readState(scope, identifier);
+        return Math.max(0, (s.lockedUntil || 0) - now());
+    }
+
+    function recordFailure(scope, identifier, options = {}) {
+        const cfg = { ...defaults, ...(options || {}) };
+        const s = readState(scope, identifier);
+        s.attempts = (s.attempts || 0) + 1;
+        if (s.attempts >= cfg.maxAttempts) {
+            s.lockedUntil = now() + cfg.lockoutDurationMs;
+            s.attempts = 0; // reset attempts after locking
+        }
+        writeState(scope, identifier, s);
+        return { locked: !!s.lockedUntil && s.lockedUntil > now(), attempts: s.attempts, lockedUntil: s.lockedUntil || 0 };
+    }
+
+    function resetAttempts(scope, identifier) {
+        clearState(scope, identifier);
+    }
+
+    function getState(scope, identifier) {
+        const s = readState(scope, identifier);
+        return {
+            attempts: s.attempts || 0,
+            lockedUntil: s.lockedUntil || 0,
+            locked: s.lockedUntil && s.lockedUntil > now(),
+            remainingMs: Math.max(0, (s.lockedUntil || 0) - now())
+        };
+    }
+
+    function formatMs(ms) {
+        const total = Math.max(0, Math.floor(ms / 1000));
+        const minutes = Math.floor(total / 60);
+        const seconds = total % 60;
+        return `${minutes}:${seconds.toString().padStart(2, '0')}`;
+    }
+
+    return {
+        defaults: { ...defaults },
+        isLocked: isLocked,
+        remainingMs: remainingMs,
+        recordFailure: recordFailure,
+        resetAttempts: resetAttempts,
+        getState: getState,
+        storageKey: storageKey,
+        formatMs: formatMs
+    };
+})();
+
 // Make it available globally
 window.ValidationHelpers = ValidationHelpers;
