@@ -14,10 +14,7 @@
 	> https://github.com/IttyBittyAC/AT2_Web.git
 ---  
 # User Guide
-## Seed Database
 
- Inside Seeding.cs     
-- TODO
 ## Admin Login Credentials 
  Email: **admin@email.com**  
  Password: **admin123**  
@@ -48,6 +45,10 @@
 	>admin123
 - Click Login
 - Click Admin at top in the HomePage
-
+## Seed Database   
+  - Login as Admin Account   
+  - Click Admin on the top of HomePage   
+  - Click Type of table you want to seed (Users/Events/Feedback/Bookings)   
+  - Enter in new Data based upon input field specifications
 
 
