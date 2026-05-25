@@ -1,0 +1,94 @@
+﻿@model MVCApplication.Models.AndInTheDarknessBindThem
+@{
+    ViewData["Title"] = "Registration Confirmed";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/event-details.css" asp-append-version="true" />
+}
+
+<div class="event-details-container">
+    <a href="/Events" class="back-button">
+        ← Back to All Events
+    </a>
+
+    @if (Model.Event != null)
+    {
+        <div class="event-detail-header">
+            <h1 class="event-detail-title">✅ Registration Confirmed</h1>
+            <p class="event-detail-subtitle">You have successfully registered for this event.</p>
+        </div>
+
+        <div class="event-detail-content">
+            <div class="event-detail-section">
+                <h2 class="section-title">
+                    <span class="section-icon">🎉</span>
+                    You're All Set
+                </h2>
+
+                <div class="section-content">
+                    Your registration for <strong>@Model.Event.Title</strong> has been saved.
+                </div>
+            </div>
+
+            <div class="event-info-grid">
+                <div class="info-box">
+                    <div class="info-box-label">📅 Date & Time</div>
+                    <div class="info-box-value">
+                        @Model.Event.EventDate.ToString("MMMM dd, yyyy")
+                    </div>
+                    <div style="color: #7f8c8d; margin-top: 5px;">
+                        @Model.Event.EventDate.ToString("h:mm tt")
+                    </div>
+                </div>
+
+                <div class="info-box">
+                    <div class="info-box-label">📍 Location</div>
+                    <div class="info-box-value">@Model.Event.Location</div>
+                </div>
+            </div>
+
+            <div class="event-detail-section">
+                <h2 class="section-title">
+                    <span class="section-icon">📝</span>
+                    Event Details
+                </h2>
+
+                <div class="section-content">
+                    @Model.Event.Description
+                </div>
+            </div>
+
+            <div class="event-actions">
+                <a href="/Dashboard/MyBookings" class="btn-action btn-primary">
+                    📋 View My Bookings
+                </a>
+
+                <a href="/Events/Details/@Model.Event.Id" class="btn-action btn-secondary">
+                    ← Back to Event
+                </a>
+
+                <a href="/Events" class="btn-action btn-secondary">
+                    📅 View All Events
+                </a>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="error-state">
+            <div class="error-state-icon">❌</div>
+            <h2>Event Not Found</h2>
+            <p>Sorry, we couldn't find the event registration details.</p>
+
+            @if (!string.IsNullOrEmpty(Model.Error))
+            {
+                <p style="color: #c62828;">@Model.Error</p>
+            }
+
+            <a href="/Events" class="btn-action btn-primary">
+                ← Return to Events List
+            </a>
+        </div>
+    }
+</div>
