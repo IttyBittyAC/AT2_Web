@@ -7,36 +7,50 @@
     <link rel="stylesheet" href="~/css/login-register.css" asp-append-version="true" />
 }
 
-<div>
-    <h2 class="loginHeading">Login</h2>
+<div class="auth-page">
+    <div class="auth-hero">
+        <h1 class="auth-title">Welcome Back</h1>
+        <p class="auth-subtitle">Sign in to access your bookings, events, and community services.</p>
+    </div>
 
-    @if (!string.IsNullOrEmpty(Model.Error))
-    {
-        <div class="alert alert-danger" id="serverError">@Model.Error</div>
-    }
+    <div class="auth-card">
+        <h2 class="auth-card-title">Login</h2>
 
-    <div class="alert alert-danger" id="validationErrors" style="display: none;"></div>
-
-    <form method="post" action="/Account/Login" id="loginForm">
-        @Html.AntiForgeryToken()
-        
-        <div class="input-wrapper">
-            <input type="email" id="email" name="email" placeholder="Email" />
-            <span class="error-message" id="emailError"></span>
-        </div>
-
-        <div class="input-wrapper">
-            <input type="password" id="password" name="password" placeholder="Password" />
-            <span class="error-message" id="passwordError"></span>
-        </div>
-
-        @if (!string.IsNullOrEmpty(Model.ReturnUrl))
+        @if (!string.IsNullOrEmpty(Model.Error))
         {
-            <input type="hidden" name="returnurl" value="@Model.ReturnUrl" />
+            <div class="alert alert-danger" id="serverError">@Model.Error</div>
         }
 
-        <button type="submit">Login</button>
-    </form>
+        <div class="alert alert-danger validation-summary" id="validationErrors"></div>
+
+        <form method="post" action="/Account/Login" id="loginForm" class="auth-form">
+            @Html.AntiForgeryToken()
+
+            <div class="input-wrapper">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" placeholder="Enter your email" />
+                <span class="error-message" id="emailError"></span>
+            </div>
+
+            <div class="input-wrapper">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" placeholder="Enter your password" />
+                <span class="error-message" id="passwordError"></span>
+            </div>
+
+            @if (!string.IsNullOrEmpty(Model.ReturnUrl))
+            {
+                <input type="hidden" name="returnurl" value="@Model.ReturnUrl" />
+            }
+
+            <button type="submit" class="btn btn-primary auth-submit">Login</button>
+        </form>
+
+        <p class="auth-footer">
+            Don’t have an account?
+            <a href="/Account/Register">Register here</a>
+        </p>
+    </div>
 </div>
 
 @section Scripts {
