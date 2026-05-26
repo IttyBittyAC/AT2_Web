@@ -172,29 +172,24 @@ document.addEventListener('DOMContentLoaded', function() {
         const action = form.action || window.location.href;
         const formData = new FormData(form);
 
+        // NOTE: allow same-origin credentials and follow redirects so cookies and redirect info behave like a normal navigation.
         fetch(action, {
             method: 'POST',
             body: formData,
-            redirect: 'manual'
+            credentials: 'same-origin',
+            redirect: 'follow'
         }).then(async response => {
-            // Treat redirects (3xx) as success (typical server behavior after successful login)
-            if (response.status >= 300 && response.status < 400) {
-                // If server sent a Location header, navigate there; fall back to reload.
-                const location = response.headers.get('Location');
-                if (location) {
-                    window.location.href = location;
-                } else {
-                    window.location.reload();
-                }
+            // If the fetch followed a redirect, response.redirected will be true and response.url is final location.
+            if (response.redirected) {
+                // navigate the top-level window to the final URL
+                window.location.href = response.url;
                 return;
             }
 
-            // If fetch indicates ok and not a redirect, treat as failure for login flow
-            // Try to extract a server-provided error message from returned HTML
+            // If no redirect occurred, treat as failed login (server returned login page or 200 with errors)
             let message = 'Login failed. Please check your credentials.';
             try {
                 const text = await response.text();
-                // Try to parse a #validationErrors text from returned HTML
                 const parser = new DOMParser();
                 const doc = parser.parseFromString(text, 'text/html');
                 const serverErr = doc.getElementById('validationErrors') || doc.querySelector('.validation-summary-errors');
