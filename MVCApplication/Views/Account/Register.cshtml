@@ -56,11 +56,6 @@
                 <span class="error-message" id="confirmPasswordError"></span>
             </div>
 
-            <div class="input-wrapper">
-                <label for="adminPassword">Admin Password</label>
-                <input type="password" id="adminPassword" name="adminPassword" placeholder="Optional admin password" />
-            </div>
-
             @if (!string.IsNullOrEmpty(Model.ReturnUrl))
             {
                 <input type="hidden" name="returnUrl" value="@Model.ReturnUrl" />
