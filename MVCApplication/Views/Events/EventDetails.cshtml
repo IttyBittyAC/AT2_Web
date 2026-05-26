@@ -69,6 +69,7 @@
                           asp-action="Register"
                           asp-route-id="@Model.Event.Id"
                           style="display:inline;">
+                        @Html.AntiForgeryToken()
                         <button type="submit" class="btn-action btn-primary">
                             ✓ Register for This Event
                         </button>
