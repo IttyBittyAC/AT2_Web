@@ -815,11 +815,18 @@ namespace MVCApplication.Data
             if (id == null || id.Count == 0) return false;
 
             try
-            { 
+            {
                 using SqliteConnection con = new SqliteConnection(_conn);
 
-                // Return true if at least one row was affected (i.e., event(s) were deleted)
-                return (await con.ExecuteAsync("DELETE FROM events WHERE Id IN @Ids", new { Ids = id }) > 0);
+                // Delete bookings linked to these events first, otherwise the foreign key blocks event deletion.
+                await con.ExecuteAsync(
+                    "DELETE FROM bookings WHERE EventId IN @Ids",
+                    new { Ids = id });
+
+                // Then delete the events.
+                return await con.ExecuteAsync(
+                    "DELETE FROM events WHERE Id IN @Ids",
+                    new { Ids = id }) > 0;
             }
             catch (SqliteException ex)
             {
