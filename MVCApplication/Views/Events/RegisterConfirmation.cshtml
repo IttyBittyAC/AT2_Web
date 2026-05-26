@@ -1,0 +1,66 @@
+﻿@model MVCApplication.Models.AndInTheDarknessBindThem
+@{
+    ViewData["Title"] = "Registration Confirmed";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/event-details.css" asp-append-version="true" />
+}
+
+<div class="event-details-container">
+    <a href="/Events/Details/@Model.Event?.Id" class="back-button">← Back to Event Details</a>
+
+    <div class="event-detail-header">
+        <h1 class="event-detail-title">✅ Registration Confirmed</h1>
+        <p class="event-detail-subtitle">
+            You have successfully registered for this event.
+        </p>
+    </div>
+
+    @if (Model.Event != null)
+    {
+        <div class="event-detail-content">
+            <div class="detail-section">
+                <h2 class="section-title">Event Summary</h2>
+                <div class="section-content">
+                    <p><strong>Title:</strong> @Model.Event.Title</p>
+                    <p><strong>Date:</strong> @Model.Event.EventDate.ToString("dddd, dd MMMM yyyy")</p>
+                    <p><strong>Time:</strong> @Model.Event.EventDate.ToString("h:mm tt")</p>
+                    <p><strong>Location:</strong> @Model.Event.Location</p>
+                </div>
+            </div>
+
+            <div class="detail-section">
+                <h2 class="section-title">What Happens Next?</h2>
+                <div class="section-content">
+                    <ul>
+                        <li>Your registration has been recorded</li>
+                        <li>Please arrive 15 minutes before the event starts</li>
+                        <li>You can review your bookings from your dashboard</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="event-actions">
+                <a href="/Dashboard/MyBookings" class="btn-action btn-primary">
+                    🎫 View My Bookings
+                </a>
+
+                <a href="/Events" class="btn-action btn-secondary">
+                    📅 Browse More Events
+                </a>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="error-state">
+            <div class="error-state-icon">❌</div>
+            <h2>Registration Complete</h2>
+            <p>Your registration was submitted, but the event details could not be loaded.</p>
+            <a href="/Events" class="btn-action btn-primary">
+                ← Return to Events List
+            </a>
+        </div>
+    }
+</div>
