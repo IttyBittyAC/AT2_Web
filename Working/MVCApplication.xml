@@ -1,0 +1,618 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<doc>
+  <assembly>
+    <name>MVCApplication</name>
+  </assembly>
+  <members>
+    <member name="T:MVCApplication.Controllers.AccountController">
+      <summary>
+            Controller responsible for handling user account-related actions such as registration, login, and logout.
+            </summary>
+    </member>
+    <member name="M:MVCApplication.Controllers.AccountController.#ctor(MVCApplication.Data.AppDb,Microsoft.Extensions.Logging.ILogger{MVCApplication.Controllers.AccountController},Microsoft.Extensions.Options.IOptions{MVCApplication.Models.Seeding.AdminSettings})">
+      <summary>
+            Initializes a new instance of the AccountController class with the provided database context,
+            </summary>
+      <param name="db">Application database context</param>
+      <param name="adminSettings">Admin Password string</param>
+      <param name="logger">Logging Context for Controller Logger</param>
+    </member>
+    <member name="M:MVCApplication.Controllers.AccountController.Register(System.String)">
+      <summary>
+            Handles user registration by displaying the registration form. 
+            If the user is already authenticated, they are redirected to the home page.
+            </summary>
+      <param name="returnUrl">Optional return URL after successful registration</param>
+    </member>
+    <member name="M:MVCApplication.Controllers.AccountController.Register(System.String,System.String,System.String,System.String,System.String,System.String)">
+      <summary>
+            Handles user by validating input and saving the new user to the database. 
+            If any required fields are missing, an error message is displayed.
+            </summary>
+      <param name="password">User password</param>
+      <param name="email">User email address</param>
+      <param name="username">Username for the account</param>
+      <param name="fullname">Full name of the user</param>
+      <param name="returnUrl">Optional return URL after registration</param>
+      <param name="adminPassword">Optional admin password to assign admin role</param>
+      <returns>Redirects on success or returns the view with errors</returns>
+    </member>
+    <member name="M:MVCApplication.Controllers.AccountController.Login(System.String)">
+      <summary>
+            Displays the login page or redirects if the user is already authenticated.
+            </summary>
+      <param name="returnUrl">Optional return URL after login</param>
+    </member>
+    <member name="M:MVCApplication.Controllers.AccountController.Login(System.String,System.String,System.String)">
+      <summary>
+            Handles user login by validating credentials and setting session data.
+            </summary>
+      <param name="password">User password</param>
+      <param name="email">User email address</param>
+      <param name="returnurl">Optional return URL after login</param>
+      <returns>Redirects on success or returns the view with errors</returns>
+    </member>
+    <member name="M:MVCApplication.Controllers.AccountController.Logout">
+      <summary>
+            Logs the user out by clearing the session and redirects to the login page.
+            </summary>
+    </member>
+    <member name="T:MVCApplication.Controllers.AdminController">
+      <summary>
+            Controller responsible for handling administrative actions such as managing users, events, and feedback.
+            </summary>
+    </member>
+    <member name="M:MVCApplication.Controllers.AdminController.#ctor(MVCApplication.Data.AppDb,Microsoft.Extensions.Logging.ILogger{MVCApplication.Controllers.AdminController})">
+      <summary>
+            Initializes a new instance of the AdminController class with the provided database context.
+            </summary>
+      <param name="db">Application database context</param>
+      <param name="logger">Logging Context for Controller Logger</param>
+    </member>
+    <member name="M:MVCApplication.Controllers.AdminController.Index">
+      <summary>
+            Displays the main admin dashboard. Requires admin access.
+            </summary>
+      <returns>Admin dashboard view</returns>
+    </member>
+    <member name="M:MVCApplication.Controllers.AdminController.Announcements">
+      <summary>
+            Displays all announcements for admin management. Requires admin access.
+            </summary>
+      <returns>Announcements view with data</returns>
+    </member>
+    <member name="M:MVCApplication.Controllers.AdminController.Announcements(System.Collections.Generic.List{System.Int32},System.Collections.Generic.List{MVCApplication.Models.Announcement},MVCApplication.Models.Announcement,System.Nullable{MVCApplication.Helpers.ActionEnums.AdminUserAction})">
+      <summary>
+            Handles announcement management actions such as create, update, and delete.
+            </summary>
+      <param name="id">List of announcement IDs for delete operations</param>
+      <param name="announcements">List of announcements for update operations</param>
+      <param name="announcement">Single announcement for create operations</param>
+      <param name="action">Action to perform: create, update, or delete</param>
+      <returns>Redirects on success or returns the view with errors</returns>
+    </member>
+    <member name="M:MVCApplication.Controllers.AdminController.Users">
+      <summary>
+            Displays all users and populates the model with user data from the database. Requires admin access.
+            </summary>
+      <returns>Users view with data</returns>
+    </member>
+    <member name="M:MVCApplication.Controllers.AdminController.Users(System.Collections.Generic.List{System.Int32},System.Collections.Generic.List{MVCApplication.Models.User},MVCApplication.Models.User,System.Nullable{MVCApplication.Helpers.ActionEnums.AdminUserAction})">
+      <summary>
+            Handles user management actions such as create, update, and delete.
+            </summary>
+      <param name="id">List of user IDs for delete operations</param>
+      <param name="users">List of users for update operations</param>
+      <param name="user">Single user for create operations</param>
+      <param name="action">Action to perform (create, update, delete)</param>
+      <returns>Redirects on success or returns the view with errors</returns>
+    </member>
+    <member name="M:MVCApplication.Controllers.AdminController.Events">
+      <summary>
+            Displays all events and populates the model with event data from the database. Requires admin access.
+            </summary>
+      <returns>Events view with data</returns>
+    </member>
+    <member name="M:MVCApplication.Controllers.AdminController.Events(System.Collections.Generic.List{System.Int32},System.Collections.Generic.List{MVCApplication.Models.Event},MVCApplication.Models.Event,System.Nullable{MVCApplication.Helpers.ActionEnums.AdminUserAction})">
+      <summary>
+            Handles event management actions such as create, update, and delete.
+            </summary>
+      <param name="id">List of event IDs for delete operations</param>
+      <param name="events">List of events for update operations</param>
+      <param name="singleEvent">Single event for create operations</param>
+      <param name="action">Action to perform (create, update, delete)</param>
+      <returns>Redirects on success or returns the view with errors</returns>
+    </member>
+    <member name="M:MVCApplication.Controllers.AdminController.Feedback">
+      <summary>
+            Displays all feedback entries and populates the model with feedback data from the database. Requires admin access.
+            </summary>
+      <returns>Feedback view with data</returns>
+    </member>
+    <member name="M:MVCApplication.Controllers.AdminController.Feedback(System.Collections.Generic.List{System.Int32},System.Collections.Generic.List{MVCApplication.Models.Feedback},MVCApplication.Models.Feedback,System.Nullable{MVCApplication.Helpers.ActionEnums.AdminUserAction})">
+      <summary>
+            Handles feedback management actions such as create, update, and delete.
+            </summary>
+      <param name="id">List of feedback IDs for delete operations</param>
+      <param name="feedbacks">List of feedback entries for update operations</param>
+      <param name="feedback">Single feedback entry for create operations</param>
+      <param name="action">Action to perform (create, update, delete)</param>
+      <returns>Redirects on success or returns the view with errors</returns>
+    </member>
+    <member name="M:MVCApplication.Controllers.AdminController.Bookings">
+      <summary>
+            Displays all booking entries and populates the model with booking data from the database. Requires admin access.
+            </summary>
+      <returns>Booking view with data</returns>
+    </member>
+    <member name="M:MVCApplication.Controllers.AdminController.Bookings(System.Collections.Generic.List{System.Int32},System.Collections.Generic.List{MVCApplication.Models.Booking},MVCApplication.Models.Booking,System.Nullable{MVCApplication.Helpers.ActionEnums.AdminUserAction})">
+      <summary>
+            Handles booking management actions such as create, update, and delete.
+            </summary>
+      <param name="id">List of booking IDs for delete operations</param>
+      <param name="bookings">List of booking entries for update operations</param>
+      <param name="booking">Single booking entry for create operations</param>
+      <param name="action">Action to perform (create, update, delete)</param>
+      <returns>Redirects on success or returns the view with errors</returns>
+    </member>
+    <member name="M:MVCApplication.Controllers.AdminController.Logs">
+      <summary>
+            Displays the application logs for administrators.
+            </summary>
+      <returns>Application logs view</returns>
+    </member>
+    <member name="T:MVCApplication.Controllers.BaseAppController`1">
+      <summary>
+            Base controller that provides shared database access and common functionality for all other controllers in the application.
+            </summary>
+    </member>
+    <member name="F:MVCApplication.Controllers.BaseAppController`1._db">
+      <summary>
+            Database context for accessing application data, shared across all controllers that inherit from BaseAppController.
+            </summary>
+    </member>
+    <member name="M:MVCApplication.Controllers.BaseAppController`1.#ctor(MVCApplication.Data.AppDb,Microsoft.Extensions.Logging.ILogger{`0})">
+      <summary>
+            Initializes a new instance of the BaseAppController class with the provided database context, 
+            allowing derived controllers to access the database through the _db field.
+            </summary>
+      <param name="db">
+      </param>
+      <param name="logger">
+      </param>
+    </member>
+    <member name="P:MVCApplication.Controllers.BaseAppController`1.IsAuth">
+      <summary>
+            Gets authentication status of session and sets true if not null
+            </summary>
+    </member>
+    <member name="P:MVCApplication.Controllers.BaseAppController`1.IsAdmin">
+      <summary>
+            Gets role of session and sets true if admin
+            </summary>
+    </member>
+    <member name="M:MVCApplication.Controllers.BaseAppController`1.Build(System.String,System.String,System.String)">
+      <summary>
+            Method to make instance of model and set essential data to properties
+            </summary>
+      <param name="table"> Table that is related to operations </param>
+      <param name="title"> Title for View </param>
+      <param name="returnUrl"> Previous url </param>
+      <returns> AndInTheDarknessBindThem initialised model with data in params </returns>
+    </member>
+    <member name="M:MVCApplication.Controllers.BaseAppController`1.logWrapper(System.String,System.String,System.String,System.Func{System.Threading.Tasks.Task{Microsoft.AspNetCore.Mvc.IActionResult}})">
+      <summary>
+      </summary>
+      <param name="path">
+      </param>
+      <param name="operation">
+      </param>
+      <param name="e">
+      </param>
+      <param name="s">
+      </param>
+      <returns>
+      </returns>
+    </member>
+    <member name="M:MVCApplication.Controllers.BaseAppController`1.GraveMind(System.String,MVCApplication.Helpers.MessageDictionary.MethodCode,System.Boolean,System.Boolean,System.Func{MVCApplication.Models.AndInTheDarknessBindThem,System.Threading.Tasks.Task},System.Func{MVCApplication.Models.AndInTheDarknessBindThem,System.Boolean},System.Func{System.Threading.Tasks.Task{System.Boolean}},System.Func{Microsoft.AspNetCore.Mvc.IActionResult})">
+      <summary>
+            Method that handles
+                Authorisation (auth/admin)
+                GET model pop and validation
+                POST save and redirection
+                
+            We Trade One Villain for Another 
+            </summary>
+      <param name="view"> Page to be displayed (Required) </param>
+      <param name="controllerOp">Key of Dict containing value pair of UX parameters</param>
+      <param name="auth"> If True, required authenticated user </param>
+      <param name="admin"> If True, required authenticated admin </param>
+      <param name="populate"> Optional delegate that populates the view model with data from db before rendering the view </param>
+      <param name="check"> Optional delegate that validates model and returns false to trigger 404 </param>
+      <param name="save"> Optional delegate that does POST operations </param>
+      <param name="redirect"> Optional delegate that stores where to be redirected to after a POST </param>
+      <returns> An IActionResult representing either a view, redirect, or error response </returns>
+    </member>
+    <member name="M:MVCApplication.Controllers.BaseAppController`1.Guard(System.Boolean,System.Boolean)">
+      <summary>
+            Method to authorise if session data matches set requirements for user
+            </summary>
+      <param name="requireAdmin"> IfTrue Checks session for authenticated admin </param>
+      <param name="requireAuth"> IfTrue Checks session for authenticated user </param>
+      <returns> IActionResult redirect to login if session data doesnt match required params set, otherwise null </returns>
+    </member>
+    <member name="T:MVCApplication.Controllers.DashboardController">
+      <summary>
+            This controller is responsible for handling user dashboard-related actions, 
+            such as displaying the main dashboard, user bookings, and profile information.
+            </summary>
+    </member>
+    <member name="M:MVCApplication.Controllers.DashboardController.#ctor(MVCApplication.Data.AppDb,Microsoft.Extensions.Logging.ILogger{MVCApplication.Controllers.DashboardController})">
+      <summary>
+            Initializes a new instance of the DashboardController class with the provided database context.
+            </summary>
+      <param name="db">Application database context</param>
+      <param name="logger">Logging Context for Controller Logger</param>
+    </member>
+    <member name="M:MVCApplication.Controllers.DashboardController.Index">
+      <summary>
+            Displays the main dashboard view for authenticated users.
+            </summary>
+      <returns>Dashboard view</returns>
+    </member>
+    <member name="M:MVCApplication.Controllers.DashboardController.MyBookings">
+      <summary>
+            Handles HTTP GET requests for the My Bookings dashboard view, retrieving and displaying bookings associated
+            with the currently authenticated user.
+            </summary>
+      <remarks>This action requires the user to be authenticated. If the user is not authenticated
+            or has no associated bookings, the view will display an empty bookings list.</remarks>
+      <returns>A task that represents the asynchronous operation. The task result contains an <see cref="T:Microsoft.AspNetCore.Mvc.IActionResult" />
+            that renders the My Bookings view with the user's bookings.</returns>
+    </member>
+    <member name="M:MVCApplication.Controllers.DashboardController.Profile">
+      <summary>
+            Displays the current logged-in user's profile information.
+            </summary>
+      <returns>Profile view with current user data</returns>
+    </member>
+    <member name="M:MVCApplication.Controllers.DashboardController.Profile(MVCApplication.Models.User)">
+      <summary>
+            Updates the current logged-in user's profile information.
+            </summary>
+      <param name="updatedUser">Updated user details from the profile form</param>
+      <returns>Redirects back to the profile page</returns>
+    </member>
+    <member name="T:MVCApplication.Controllers.EventsController">
+      <summary>
+            Controller responsible for handling event-related actions such as viewing, creating, and displaying event details.
+            </summary>
+    </member>
+    <member name="M:MVCApplication.Controllers.EventsController.#ctor(MVCApplication.Data.AppDb,Microsoft.Extensions.Logging.ILogger{MVCApplication.Controllers.EventsController})">
+      <summary>
+            Initializes a new instance of the EventsController class with the provided database context.
+            </summary>
+      <param name="logger">Logging Context for Controller Logger</param>
+      <param name="db">Application database context</param>
+    </member>
+    <member name="M:MVCApplication.Controllers.EventsController.Index">
+      <summary>
+            Displays all events and populates the model with event data from the database.
+            </summary>
+      <returns>Events view with data</returns>
+    </member>
+    <member name="M:MVCApplication.Controllers.EventsController.Create">
+      <summary>
+            Displays the event creation page for authenticated users.
+            </summary>
+      <returns>Create event view</returns>
+    </member>
+    <member name="M:MVCApplication.Controllers.EventsController.Create(MVCApplication.Models.Event,System.Nullable{System.Int32})">
+      <summary>
+            Handles event creation by validating input and saving the new event to the database.
+            </summary>
+      <param name="singleEvent">Event object containing user input data</param>
+      <param name="id">Id to be redirected to</param>
+      <returns>Redirects on success or returns the view with errors</returns>
+    </member>
+    <member name="M:MVCApplication.Controllers.EventsController.Details">
+      <summary>
+            Displays the event details page.
+            </summary>
+      <returns>Event details view</returns>
+    </member>
+    <member name="M:MVCApplication.Controllers.EventsController.Details(System.Int32)">
+      <summary>
+            Retrieves and displays specific event details based on the provided ID.
+            </summary>
+      <param name="id">Event ID</param>
+      <returns>Event details view with data or error if not found</returns>
+    </member>
+    <member name="M:MVCApplication.Controllers.EventsController.Register(System.Int32)">
+      <summary>
+            Registers the current logged-in user for an event.
+            </summary>
+      <param name="id">Event ID</param>
+      <returns>Redirects back to the event details page</returns>
+    </member>
+    <member name="M:MVCApplication.Controllers.EventsController.RegisterConfirmation(System.Int32)">
+      <summary>
+            Displays confirmation after registering for an event.
+            </summary>
+      <param name="id">Event ID</param>
+      <returns>Registration confirmation view</returns>
+    </member>
+    <member name="T:MVCApplication.Controllers.HomeController">
+      <summary>
+            Controller responsible for handling general site pages such as the home page, announcements, feedback, FAQ, and error pages.
+            </summary>
+    </member>
+    <member name="M:MVCApplication.Controllers.HomeController.#ctor(MVCApplication.Data.AppDb,Microsoft.Extensions.Logging.ILogger{MVCApplication.Controllers.HomeController})">
+      <summary>
+            Initializes a new instance of the HomeController class with the provided database context.
+            </summary>
+      <param name="db">Application database context</param>
+      <param name="logger">Logging Context for Controller Logger</param>
+    </member>
+    <member name="M:MVCApplication.Controllers.HomeController.Error">
+      <summary>
+            Displays the error page with the current request identifier.
+            </summary>
+      <returns>Error view with request details</returns>
+    </member>
+    <member name="M:MVCApplication.Controllers.HomeController.Index">
+      <summary>
+            Displays the home page.
+            Populates announcements and events so they render on the index view.
+            </summary>
+      <returns>Home view</returns>
+    </member>
+    <member name="M:MVCApplication.Controllers.HomeController.Announcements">
+      <summary>
+            Displays the announcements page with announcement data from the database.
+            </summary>
+      <returns>Announcements view with data</returns>
+    </member>
+    <member name="M:MVCApplication.Controllers.HomeController.Feedback">
+      <summary>
+            Displays the feedback form page.
+            </summary>
+      <returns>Feedback form view</returns>
+    </member>
+    <member name="M:MVCApplication.Controllers.HomeController.Feedback(MVCApplication.Models.Feedback)">
+      <summary>
+            Handles feedback form submission by validating input and saving the feedback to the database.
+            </summary>
+      <param name="feedback">Feedback object containing user input data</param>
+      <returns>Redirects on success or returns the view with errors</returns>
+    </member>
+    <member name="M:MVCApplication.Controllers.HomeController.FAQ">
+      <summary>
+            Displays the FAQ page.
+            </summary>
+      <returns>FAQ view</returns>
+    </member>
+    <member name="M:MVCApplication.Controllers.HomeController.Confirmation">
+      <summary>
+            Displays the confirmation page.
+            </summary>
+      <returns>Confirmation view</returns>
+    </member>
+    <member name="T:MVCApplication.Controllers.ServicesController">
+      <summary>
+            Controller responsible for handling service booking actions such as viewing bookings, booking services, and viewing booking details.
+            </summary>
+    </member>
+    <member name="M:MVCApplication.Controllers.ServicesController.#ctor(MVCApplication.Data.AppDb,Microsoft.Extensions.Logging.ILogger{MVCApplication.Controllers.ServicesController})">
+      <summary>
+            Initializes a new instance of the ServicesController class with the provided database context.
+            </summary>
+      <param name="db">Application database context</param>
+      <param name="logger">Logging Context for Controller Logger</param>
+    </member>
+    <member name="M:MVCApplication.Controllers.ServicesController.Index(System.Nullable{System.Int32})">
+      <summary>
+            Displays all bookings or a specific booking if an ID is provided.
+            </summary>
+      <param name="id">Optional booking ID</param>
+      <returns>Services view with booking data</returns>
+    </member>
+    <member name="M:MVCApplication.Controllers.ServicesController.Index(System.Int32,System.Nullable{MVCApplication.Helpers.ActionEnums.ServiceAction})">
+      <summary>
+            Handles user actions from the services page such as navigating to details or booking pages.
+            </summary>
+      <param name="id">Booking ID</param>
+      <param name="action">Action to perform (Details or Book)</param>
+      <returns>Redirects based on action or returns the view</returns>
+    </member>
+    <member name="M:MVCApplication.Controllers.ServicesController.Details(System.Int32)">
+      <summary>
+            Displays details for a specific booking.
+            </summary>
+      <param name="id">Booking ID</param>
+      <returns>Booking details view or error if not found</returns>
+    </member>
+    <member name="M:MVCApplication.Controllers.ServicesController.Book">
+      <summary>
+            Displays the booking page for authenticated users.
+            </summary>
+      <returns>Booking form view</returns>
+    </member>
+    <member name="M:MVCApplication.Controllers.ServicesController.Book(MVCApplication.Models.Booking)">
+      <summary>
+            Handles booking submission by validating input and saving the booking to the database.
+            </summary>
+      <param name="booking">Booking object containing user input data</param>
+      <returns>Redirects on success or returns the view with errors</returns>
+    </member>
+    <member name="M:MVCApplication.Controllers.ServicesController.RatesEnquiries">
+      <summary>
+            Displays the rates enquiries page with pricing information for services.
+            </summary>
+      <returns>Rates enquiries view</returns>
+    </member>
+    <member name="M:MVCApplication.Data.AppDb.SaveEventBooking(System.Int32,System.String)">
+      <summary>
+            Saves an event registration as a booking for the current user.
+            </summary>
+      <param name="eventId">Selected event ID.</param>
+      <param name="email">Current logged-in user's email.</param>
+      <returns>True if saved successfully, otherwise false.</returns>
+    </member>
+    <member name="M:MVCApplication.Data.AppDb.GetAnnouncements">
+      <summary>
+            Gets all announcements from the database.
+            </summary>
+      <returns>A list of announcements, or null if there was a database error.</returns>
+    </member>
+    <member name="M:MVCApplication.Data.AppDb.SaveAnnouncement(MVCApplication.Models.Announcement)">
+      <summary>
+            Saves a new announcement to the database.
+            </summary>
+      <param name="announcement">The announcement being saved.</param>
+      <returns>True if the announcement was saved successfully, otherwise false.</returns>
+    </member>
+    <member name="M:MVCApplication.Data.AppDb.UpdateAnnouncements(System.Collections.Generic.List{MVCApplication.Models.Announcement})">
+      <summary>
+            Updates existing announcements in the database.
+            </summary>
+      <param name="announcements">The announcements being updated.</param>
+      <returns>The number of rows affected.</returns>
+    </member>
+    <member name="M:MVCApplication.Data.AppDb.DeleteAnnouncements(System.Collections.Generic.List{System.Int32})">
+      <summary>
+            Deletes selected announcements from the database.
+            </summary>
+      <param name="id">The announcement IDs being deleted.</param>
+      <returns>True if at least one announcement was deleted, otherwise false.</returns>
+    </member>
+    <member name="M:MVCApplication.Data.AppDb.SaveLog(MVCApplication.Models.Log)">
+      <summary>
+            Saves a log entry to the database.
+            </summary>
+      <param name="log">The log entry being saved.</param>
+      <returns>True if the log was saved successfully, otherwise false.</returns>
+    </member>
+    <member name="M:MVCApplication.Data.AppDb.GetLogs">
+      <summary>
+            Gets all application logs from the database.
+            </summary>
+      <returns>A list of logs, or null if there was a database error.</returns>
+    </member>
+    <member name="T:MVCApplication.Models.Config.Footer">
+            Singleton class to represent footer configuration loaded from XML configuration
+        </member>
+    <member name="T:MVCApplication.Models.Config.MenuItem">
+            Class to represent a menu item, which contains display text, a URL, and an order for sorting
+        </member>
+    <member name="T:MVCApplication.XMLServices.IXMLConfigService">
+      <summary>
+            Interface for XML configuration service that provides methods to retrieve features and menus from XML configuration files.
+            </summary>
+    </member>
+    <member name="M:MVCApplication.XMLServices.XMLConfigService.#ctor(Microsoft.Extensions.Hosting.IHostEnvironment)">
+      <summary>
+            Construct the service and load all XML configuration from the Config folder.
+            The IHostEnvironment is used to resolve the application's ContentRootPath so files
+            are read from the deployed content root (e.g., MVCApplication/Config).
+            </summary>
+    </member>
+    <member name="M:MVCApplication.XMLServices.XMLConfigService.SafeSettings">
+      <summary>
+            Create secure XmlReaderSettings to avoid XML External Entity (XXE) attacks.
+            We prohibit DTD processing and disable XmlResolver so external resources cannot be resolved.
+            </summary>
+    </member>
+    <member name="M:MVCApplication.XMLServices.XMLConfigService.LoadAll">
+      <summary>
+            Load all configuration files into memory. Each loader returns a list of POCOs which
+            are cached on the service instance. This method is safe to call on startup or when
+            you implement a reload/watch mechanism.
+            </summary>
+    </member>
+    <member name="M:MVCApplication.XMLServices.XMLConfigService.LoadFeatures">
+      <summary>
+            Load features from features.xml. The parser is case-insensitive to element
+            and attribute names to accommodate lowercase XML. Uses XmlReader with SafeSettings
+            for secure parsing. On parse errors, the method returns the previous cached value
+            to avoid replacing a working configuration with an empty list.
+            </summary>
+    </member>
+    <!-- Badly formed XML comment ignored for member "M:MVCApplication.XMLServices.XMLConfigService.LoadMenus" -->
+    <member name="M:MVCApplication.XMLServices.XMLConfigService.LoadFooters">
+      <summary>
+            Load footer layout from footer.xml. The expected structure is:
+            <Footer><Columns><Column title="..."><Link text="..." url="..." /></Column></Columns></Footer>
+            The method returns a list to support multiple footer sets in the future, but
+            the current XML typically contains a single footer section.
+            </summary>
+    </member>
+    <!-- Badly formed XML comment ignored for member "M:MVCApplication.XMLServices.XMLConfigService.LoadFaqs" -->
+    <member name="M:MVCApplication.XMLServices.XMLConfigService.GetFeatures">
+      <summary>
+            Return the cached list of features. Caller should treat the returned list as readonly.
+            </summary>
+    </member>
+    <member name="M:MVCApplication.XMLServices.XMLConfigService.GetFeature(System.String)">
+      <summary>
+            Find a feature by id (case-insensitive). Returns null if not found.
+            </summary>
+    </member>
+    <member name="M:MVCApplication.XMLServices.XMLConfigService.GetMenus">
+      <summary>
+            Return all parsed menus.
+            </summary>
+    </member>
+    <member name="M:MVCApplication.XMLServices.XMLConfigService.GetMenu(System.String)">
+      <summary>
+            Find a menu by id (case-insensitive). Returns null if not found.
+            </summary>
+    </member>
+    <member name="M:MVCApplication.XMLServices.XMLConfigService.GetFooters">
+      <summary>
+            Return the parsed footer sections. Currently this typically contains a single Footer.
+            </summary>
+    </member>
+    <member name="M:MVCApplication.XMLServices.XMLConfigService.GetFooter(System.String)">
+      <summary>
+            Return a footer by id. The current lookup attempts to match the provided id to the
+            first column title (case-insensitive). If no match is found the first footer is returned.
+            Adjust lookup logic if you prefer an explicit footer id attribute.
+            </summary>
+    </member>
+    <member name="M:MVCApplication.XMLServices.XMLConfigService.GetFaqs">
+      <summary>
+            Return all parsed FAQs.
+            </summary>
+    </member>
+    <member name="M:MVCApplication.XMLServices.XMLConfigService.GetFaq(System.String)">
+      <summary>
+            Find a faq by id (case-insensitive). Returns null if not found.
+            </summary>
+    </member>
+    <member name="N:MVCApplication">
+      <summary />
+    </member>
+    <member name="N:MVCApplication.Controllers">
+      <summary />
+    </member>
+    <member name="N:MVCApplication.Data">
+      <summary />
+    </member>
+    <member name="N:MVCApplication.Helpers">
+      <summary />
+    </member>
+    <member name="N:MVCApplication.Models">
+      <summary />
+    </member>
+    <member name="N:MVCApplication.Models.Config">
+      <summary />
+    </member>
+    <member name="N:MVCApplication.Models.Seeding">
+      <summary />
+    </member>
+    <member name="N:MVCApplication.XMLServices">
+      <summary />
+    </member>
+  </members>
+</doc>

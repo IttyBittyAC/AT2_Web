@@ -16,18 +16,19 @@
     <AssemblyName>Documentation</AssemblyName>
     <RootNamespace>Documentation</RootNamespace>
     <Name>Documentation</Name>
+
     <!-- SHFB properties -->
-    <FrameworkVersion>.NET Framework 4.7.2</FrameworkVersion>
+    <FrameworkVersion>.NET Core/.NET Standard/.NET 5.0+</FrameworkVersion>
     <OutputPath>Help\</OutputPath>
     <HtmlHelpName>Documentation</HtmlHelpName>
     <Language>en-US</Language>
     <DocumentationSources>
-      <DocumentationSource sourceFile="MVCApplication\bin\Release\net8.0\MVCApplication.dll" />
-<DocumentationSource sourceFile="MVCApplication\bin\Release\net8.0\MVCApplication.xml" /></DocumentationSources>
+      <DocumentationSource sourceFile="MVCApplication\bin\Release\net8.0\MVCApplication.dll" subFolders="True" />
+<DocumentationSource sourceFile="MVCApplication\bin\Release\net8.0\MVCApplication.xml" subFolders="True" /></DocumentationSources>
     <HelpFileFormat>Website</HelpFileFormat>
     <SyntaxFilters>C#, JavaScript, XAML Usage, ASP.NET</SyntaxFilters>
     <PresentationStyle>Default2022</PresentationStyle>
-    <CleanIntermediates>True</CleanIntermediates>
+    <CleanIntermediates>False</CleanIntermediates>
     <KeepLogFile>True</KeepLogFile>
     <DisableCodeBlockComponent>False</DisableCodeBlockComponent>
     <IndentHtml>False</IndentHtml>
@@ -35,6 +36,13 @@
     <SaveComponentCacheCapacity>100</SaveComponentCacheCapacity>
     <WarnOnMissingSourceContext>False</WarnOnMissingSourceContext>
     <WorkingPath>Working\</WorkingPath>
+    <VisibleItems>InheritedMembers, Protected, SealedProtected, NoPIATypes, PublicCompilerGenerated, EditorBrowsableNever, NonBrowsable</VisibleItems>
+    <MissingTags>Summary, Parameter, Returns, Value, AutoDocumentCtors, Namespace, TypeParameter, IncludeTargets, AutoDocumentDispose</MissingTags>
+    <ApiFilter>
+		<Filter entryType="Namespace" fullName="" isExposed="False" />
+		<Filter entryType="Namespace" fullName="AspNetCoreGeneratedDocument" isExposed="False" />
+		<Filter entryType="Namespace" fullName="MVCApplication.Controllers" isExposed="True" />
+	</ApiFilter>
   </PropertyGroup>
   <!-- There are no properties for these groups.  AnyCPU needs to appear in order for Visual Studio to perform
 			 the build.  The others are optional common platform types that may appear. -->
@@ -67,4 +75,22 @@
     </PostBuildEvent>
     <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
   </PropertyGroup>
+	<ItemGroup>
+		<Dependencies Include="C:\Program Files\dotnet\packs\Microsoft.AspNetCore.App.Ref\8.0.20\ref\net8.0\Microsoft.AspNetCore.Mvc.Core.dll" />
+		<Dependencies Include="C:\Program Files\dotnet\packs\Microsoft.AspNetCore.App.Ref\8.0.20\ref\net8.0\Microsoft.AspNetCore.Mvc.ViewFeatures.dll" />
+		<Dependencies Include="C:\Program Files\dotnet\packs\Microsoft.AspNetCore.App.Ref\8.0.20\ref\net8.0\Microsoft.AspNetCore.Mvc.Abstractions.dll" />
+		<Dependencies Include="C:\Program Files\dotnet\packs\Microsoft.AspNetCore.App.Ref\8.0.20\ref\net8.0\Microsoft.AspNetCore.Mvc.Razor.dll" />
+		<Dependencies Include="C:\Program Files\dotnet\packs\Microsoft.AspNetCore.App.Ref\8.0.20\ref\net8.0\Microsoft.AspNetCore.Mvc.TagHelpers.dll" />
+		<Dependencies Include="C:\Program Files\dotnet\packs\Microsoft.AspNetCore.App.Ref\8.0.20\ref\net8.0\Microsoft.AspNetCore.Razor.dll" />
+		<Dependencies Include="C:\Program Files\dotnet\packs\Microsoft.AspNetCore.App.Ref\8.0.20\ref\net8.0\Microsoft.AspNetCore.Razor.Runtime.dll" />
+		<Dependencies Include="C:\Program Files\dotnet\packs\Microsoft.AspNetCore.App.Ref\8.0.20\ref\net8.0\Microsoft.AspNetCore.Html.Abstractions.dll" />
+		<Dependencies Include="C:\Program Files\dotnet\packs\Microsoft.AspNetCore.App.Ref\8.0.20\ref\net8.0\Microsoft.AspNetCore.Http.Abstractions.dll" />
+		<Dependencies Include="C:\Program Files\dotnet\packs\Microsoft.AspNetCore.App.Ref\8.0.20\ref\net8.0\Microsoft.AspNetCore.Session.dll" />
+		<Dependencies Include="C:\Program Files\dotnet\packs\Microsoft.AspNetCore.App.Ref\8.0.20\ref\net8.0\Microsoft.AspNetCore.dll" />
+		<Dependencies Include="C:\Program Files\dotnet\packs\Microsoft.AspNetCore.App.Ref\8.0.20\ref\net8.0\Microsoft.Extensions.DependencyInjection.Abstractions.dll" />
+		<Dependencies Include="C:\Program Files\dotnet\packs\Microsoft.AspNetCore.App.Ref\8.0.20\ref\net8.0\Microsoft.Extensions.Hosting.Abstractions.dll" />
+		<Dependencies Include="C:\Program Files\dotnet\packs\Microsoft.AspNetCore.App.Ref\8.0.20\ref\net8.0\Microsoft.Extensions.Logging.Abstractions.dll" />
+		<Dependencies Include="C:\Program Files\dotnet\packs\Microsoft.AspNetCore.App.Ref\8.0.20\ref\net8.0\Microsoft.Extensions.Configuration.Abstractions.dll" />
+		<Dependencies Include="C:\Program Files\dotnet\packs\Microsoft.AspNetCore.App.Ref\8.0.20\ref\net8.0\Microsoft.Extensions.Options.dll" />
+	</ItemGroup>
 </Project>

@@ -1,0 +1,468 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<topics>
+  <topic id="N:MVCApplication" file="02930cce-2e52-bc74-d73c-9ee3c23a4208">
+    <topic id="T:MVCApplication.Program" file="22f464c5-d2e0-ab9a-6c5c-7f928f210721">
+      <topic id="M:MVCApplication.Program.#ctor" file="af202ee7-15fa-aa31-fdeb-2e7f0b527cc1" />
+      <topic id="Methods.T:MVCApplication.Program" file="278a92e4-e06e-fed3-08a6-e3fd687810a9">
+        <topic id="M:MVCApplication.Program.Main(System.String[])" file="c7399651-c0d1-7e18-7ff7-2f63c98ee4bd" />
+      </topic>
+    </topic>
+  </topic>
+  <topic id="N:MVCApplication.Controllers" file="a76cd486-8672-07a5-4560-5a31590f3863">
+    <topic id="T:MVCApplication.Controllers.AccountController" file="352b7551-6470-8f35-7a7d-9a2ec359bf22">
+      <topic id="M:MVCApplication.Controllers.AccountController.#ctor(MVCApplication.Data.AppDb,Microsoft.Extensions.Logging.ILogger{MVCApplication.Controllers.AccountController},Microsoft.Extensions.Options.IOptions{MVCApplication.Models.Seeding.AdminSettings})" file="e2dfc899-62c2-96ab-1cf1-50453420ba4e" />
+      <topic id="Properties.T:MVCApplication.Controllers.AccountController" file="d6c67a2f-9ea1-6d99-6968-cd41dd95fb43" />
+      <topic id="Methods.T:MVCApplication.Controllers.AccountController" file="f9579ed2-4907-2845-00e4-8e33ef208679">
+        <topic id="Overload:MVCApplication.Controllers.AccountController.Login" file="1735b369-759f-f33e-a562-238abe2025bc">
+          <topic id="M:MVCApplication.Controllers.AccountController.Login(System.String)" file="3784c5a6-aa17-952a-87ce-145c61b98035" />
+          <topic id="M:MVCApplication.Controllers.AccountController.Login(System.String,System.String,System.String)" file="5e11e6f3-2a7b-6fd8-6dde-82160b3db9aa" />
+        </topic>
+        <topic id="M:MVCApplication.Controllers.AccountController.Logout" file="3761a8cc-2726-1952-a073-944c4cbefee1" />
+        <topic id="Overload:MVCApplication.Controllers.AccountController.Register" file="45ad41c0-1c51-5895-f2a8-84d5e09a39ba">
+          <topic id="M:MVCApplication.Controllers.AccountController.Register(System.String)" file="70daa92c-9100-c947-cd79-7ee774321d80" />
+          <topic id="M:MVCApplication.Controllers.AccountController.Register(System.String,System.String,System.String,System.String,System.String,System.String)" file="0a4b328f-bb7a-2ee4-de3f-16015281581d" />
+        </topic>
+      </topic>
+      <topic id="Fields.T:MVCApplication.Controllers.AccountController" file="1a306b49-96b2-74fa-9902-8615ff38b4b7" />
+    </topic>
+    <topic id="T:MVCApplication.Controllers.AdminController" file="246fdaa6-0ea6-fba0-4f4d-cfaa1a5e20be">
+      <topic id="M:MVCApplication.Controllers.AdminController.#ctor(MVCApplication.Data.AppDb,Microsoft.Extensions.Logging.ILogger{MVCApplication.Controllers.AdminController})" file="3b3eaab5-6e19-4d37-d079-a61b0e564534" />
+      <topic id="Properties.T:MVCApplication.Controllers.AdminController" file="8c3fc796-ff75-6587-682d-78c9ce1ca6aa" />
+      <topic id="Methods.T:MVCApplication.Controllers.AdminController" file="cc7c7689-d803-ac5f-685c-5ede8e666136">
+        <topic id="Overload:MVCApplication.Controllers.AdminController.Announcements" file="0ed00b47-c1b3-8f46-fc89-200291ebf05a">
+          <topic id="M:MVCApplication.Controllers.AdminController.Announcements" file="3776e7dd-5f9a-6656-4790-4888d9e9b7d7" />
+          <topic id="M:MVCApplication.Controllers.AdminController.Announcements(System.Collections.Generic.List{System.Int32},System.Collections.Generic.List{MVCApplication.Models.Announcement},MVCApplication.Models.Announcement,System.Nullable{MVCApplication.Helpers.ActionEnums.AdminUserAction})" file="b6a09947-89bb-2e69-a27b-66d8f8e0bace" />
+        </topic>
+        <topic id="Overload:MVCApplication.Controllers.AdminController.Bookings" file="58967f84-b9f2-c2ea-510d-0db62780a462">
+          <topic id="M:MVCApplication.Controllers.AdminController.Bookings" file="15680175-8ffa-7866-2b3c-e66c06071284" />
+          <topic id="M:MVCApplication.Controllers.AdminController.Bookings(System.Collections.Generic.List{System.Int32},System.Collections.Generic.List{MVCApplication.Models.Booking},MVCApplication.Models.Booking,System.Nullable{MVCApplication.Helpers.ActionEnums.AdminUserAction})" file="fc768273-8f8d-bdcf-e099-3d82a19a40df" />
+        </topic>
+        <topic id="Overload:MVCApplication.Controllers.AdminController.Events" file="cc7c24a4-46eb-183e-e5b7-ec3ecb218a47">
+          <topic id="M:MVCApplication.Controllers.AdminController.Events" file="1ca75308-0b81-c5fc-4991-7bafb9d4462f" />
+          <topic id="M:MVCApplication.Controllers.AdminController.Events(System.Collections.Generic.List{System.Int32},System.Collections.Generic.List{MVCApplication.Models.Event},MVCApplication.Models.Event,System.Nullable{MVCApplication.Helpers.ActionEnums.AdminUserAction})" file="515fe752-8357-f0ea-5077-95ae93db0b0c" />
+        </topic>
+        <topic id="Overload:MVCApplication.Controllers.AdminController.Feedback" file="82a0002a-3c3a-e0bb-39f8-0fbca56ea183">
+          <topic id="M:MVCApplication.Controllers.AdminController.Feedback" file="ac0e993b-813e-6611-8196-11166cafc135" />
+          <topic id="M:MVCApplication.Controllers.AdminController.Feedback(System.Collections.Generic.List{System.Int32},System.Collections.Generic.List{MVCApplication.Models.Feedback},MVCApplication.Models.Feedback,System.Nullable{MVCApplication.Helpers.ActionEnums.AdminUserAction})" file="f427e1e7-bc3f-549a-117c-45dc267fab22" />
+        </topic>
+        <topic id="M:MVCApplication.Controllers.AdminController.Index" file="fe2d65b4-00a5-e33c-552b-7f76ec2a6f07" />
+        <topic id="M:MVCApplication.Controllers.AdminController.Logs" file="864fc0c7-986e-3c3a-6a78-59150e54c406" />
+        <topic id="Overload:MVCApplication.Controllers.AdminController.Users" file="830822a5-39e1-df85-b967-7004b393d10f">
+          <topic id="M:MVCApplication.Controllers.AdminController.Users" file="43cdd6c1-4526-5eb6-7051-f7252af64842" />
+          <topic id="M:MVCApplication.Controllers.AdminController.Users(System.Collections.Generic.List{System.Int32},System.Collections.Generic.List{MVCApplication.Models.User},MVCApplication.Models.User,System.Nullable{MVCApplication.Helpers.ActionEnums.AdminUserAction})" file="a35a0099-2ac4-1b5b-2288-119f718d28b0" />
+        </topic>
+      </topic>
+      <topic id="Fields.T:MVCApplication.Controllers.AdminController" file="62ae5f12-9a38-697c-d86f-c9a9e3cd84df" />
+    </topic>
+    <topic id="T:MVCApplication.Controllers.BaseAppController`1" file="328937e4-87f1-eedb-49a8-d90e80c40e9e">
+      <topic id="M:MVCApplication.Controllers.BaseAppController`1.#ctor(MVCApplication.Data.AppDb,Microsoft.Extensions.Logging.ILogger{`0})" file="49d3a63c-d61d-90c7-4300-9cc8c6fb6066" />
+      <topic id="Properties.T:MVCApplication.Controllers.BaseAppController`1" file="5508dc53-e603-4c77-c878-c4979391bb37">
+        <topic id="P:MVCApplication.Controllers.BaseAppController`1.IsAdmin" file="3fca4b71-e230-bb2e-fca5-260ca54699b8" />
+        <topic id="P:MVCApplication.Controllers.BaseAppController`1.IsAuth" file="932e5a92-93e2-1583-cb2a-3e8539629aba" />
+      </topic>
+      <topic id="Methods.T:MVCApplication.Controllers.BaseAppController`1" file="efec5315-60e1-bb72-ff97-d691ced17da4">
+        <topic id="M:MVCApplication.Controllers.BaseAppController`1.Build(System.String,System.String,System.String)" file="b5f446ae-fcb5-00e8-b04e-beea72acf40e" />
+        <topic id="M:MVCApplication.Controllers.BaseAppController`1.GraveMind(System.String,MVCApplication.Helpers.MessageDictionary.MethodCode,System.Boolean,System.Boolean,System.Func{MVCApplication.Models.AndInTheDarknessBindThem,System.Threading.Tasks.Task},System.Func{MVCApplication.Models.AndInTheDarknessBindThem,System.Boolean},System.Func{System.Threading.Tasks.Task{System.Boolean}},System.Func{Microsoft.AspNetCore.Mvc.IActionResult})" file="a2420461-4e84-c27b-8948-3e3cf0ae8ec3" />
+        <topic id="M:MVCApplication.Controllers.BaseAppController`1.Guard(System.Boolean,System.Boolean)" file="33002634-379b-ff6b-c37b-caca53bdd5e0" />
+      </topic>
+      <topic id="Fields.T:MVCApplication.Controllers.BaseAppController`1" file="97ad1761-bc1e-b8c9-2d35-3f27f2a99a83">
+        <topic id="F:MVCApplication.Controllers.BaseAppController`1._db" file="7c720251-33fd-7de2-0b32-4e5d23ecfdeb" />
+      </topic>
+    </topic>
+    <topic id="T:MVCApplication.Controllers.DashboardController" file="891024ff-d8b9-7dc4-fd09-c22ec334fb48">
+      <topic id="M:MVCApplication.Controllers.DashboardController.#ctor(MVCApplication.Data.AppDb,Microsoft.Extensions.Logging.ILogger{MVCApplication.Controllers.DashboardController})" file="4b25badb-f0dd-d9a0-b18e-aacf37eaaebe" />
+      <topic id="Properties.T:MVCApplication.Controllers.DashboardController" file="fbb8f02d-e0e7-7d81-894b-9f27427ee140" />
+      <topic id="Methods.T:MVCApplication.Controllers.DashboardController" file="edac7915-4554-00bd-27da-b217296901c6">
+        <topic id="M:MVCApplication.Controllers.DashboardController.Index" file="467acd9b-8ca9-0c80-163a-024ccfc4d113" />
+        <topic id="M:MVCApplication.Controllers.DashboardController.MyBookings" file="623f546b-da30-a543-c924-b4267bf76dfb" />
+        <topic id="Overload:MVCApplication.Controllers.DashboardController.Profile" file="a944e7c0-ae56-94a6-e67e-6e607514ef45">
+          <topic id="M:MVCApplication.Controllers.DashboardController.Profile" file="0147153f-ab6e-e42c-cae8-6f6b6e987d52" />
+          <topic id="M:MVCApplication.Controllers.DashboardController.Profile(MVCApplication.Models.User)" file="c717117f-5e99-c259-cdb8-1e7199c23a1f" />
+        </topic>
+      </topic>
+      <topic id="Fields.T:MVCApplication.Controllers.DashboardController" file="8f4f199d-003b-42d3-b480-9310c6e53fd0" />
+    </topic>
+    <topic id="T:MVCApplication.Controllers.EventsController" file="d6aad5f1-4f14-bbf5-ceef-ccd54cbf2d3a">
+      <topic id="M:MVCApplication.Controllers.EventsController.#ctor(MVCApplication.Data.AppDb,Microsoft.Extensions.Logging.ILogger{MVCApplication.Controllers.EventsController})" file="4ba81559-0250-e3c1-48b9-28054798f143" />
+      <topic id="Properties.T:MVCApplication.Controllers.EventsController" file="9468cef0-ed40-5dae-e13e-43d4792a4a7a" />
+      <topic id="Methods.T:MVCApplication.Controllers.EventsController" file="3102bc68-f7e1-1444-71e1-e1dc31ae15e5">
+        <topic id="Overload:MVCApplication.Controllers.EventsController.Create" file="0fcf0f84-5f2f-8394-fbf6-f2eb7a147721">
+          <topic id="M:MVCApplication.Controllers.EventsController.Create" file="4662edd3-3c25-a782-b10e-4d76b50c7d79" />
+          <topic id="M:MVCApplication.Controllers.EventsController.Create(MVCApplication.Models.Event,System.Nullable{System.Int32})" file="0e3f0a5b-978d-bbe3-9c60-577d2b441b92" />
+        </topic>
+        <topic id="Overload:MVCApplication.Controllers.EventsController.Details" file="96662cb6-20ec-7440-b08f-e46a74d0eca8">
+          <topic id="M:MVCApplication.Controllers.EventsController.Details" file="e02cbb99-a0b6-ddf4-9d06-ad57bbeb10d5" />
+          <topic id="M:MVCApplication.Controllers.EventsController.Details(System.Int32)" file="f12dd03e-1f04-8cae-049c-4b2c42a6d070" />
+        </topic>
+        <topic id="M:MVCApplication.Controllers.EventsController.Index" file="c7ef36e8-bf6e-b669-6a47-c3bebe462130" />
+        <topic id="M:MVCApplication.Controllers.EventsController.Register(System.Int32)" file="2198b258-7909-f923-e3c9-1aea8ab4d957" />
+        <topic id="M:MVCApplication.Controllers.EventsController.RegisterConfirmation(System.Int32)" file="6409aefa-a7a1-dab2-60c5-799e74f22410" />
+      </topic>
+      <topic id="Fields.T:MVCApplication.Controllers.EventsController" file="f46c413e-32f6-ac4a-9bba-c791d9d95fdb" />
+    </topic>
+    <topic id="T:MVCApplication.Controllers.HomeController" file="906f6298-fbab-3eb1-67f6-edac25a8d37f">
+      <topic id="M:MVCApplication.Controllers.HomeController.#ctor(MVCApplication.Data.AppDb,Microsoft.Extensions.Logging.ILogger{MVCApplication.Controllers.HomeController})" file="1497be7e-8e80-3643-2826-7e8d6a809ebc" />
+      <topic id="Properties.T:MVCApplication.Controllers.HomeController" file="6264e8c0-0fb6-4f78-29cc-782afbda40f6" />
+      <topic id="Methods.T:MVCApplication.Controllers.HomeController" file="aea89304-620e-3ebe-2482-5c5265cd7163">
+        <topic id="M:MVCApplication.Controllers.HomeController.Announcements" file="3e04f786-19a8-3ad5-b5ba-1fa99622da85" />
+        <topic id="M:MVCApplication.Controllers.HomeController.Confirmation" file="49a91aa0-023a-e75a-df04-c9f03d9eebb5" />
+        <topic id="M:MVCApplication.Controllers.HomeController.Error" file="c34c68f4-1c9a-5e18-20d4-48a8b6eb8d62" />
+        <topic id="M:MVCApplication.Controllers.HomeController.FAQ" file="321fafbc-539e-e2b9-5922-eb714c32a57e" />
+        <topic id="Overload:MVCApplication.Controllers.HomeController.Feedback" file="794ace28-d565-e9e2-3b5a-6c1744afda2f">
+          <topic id="M:MVCApplication.Controllers.HomeController.Feedback" file="73c285a6-5aaa-93ec-9e5d-7a8b1409c273" />
+          <topic id="M:MVCApplication.Controllers.HomeController.Feedback(MVCApplication.Models.Feedback)" file="f590ffa4-678c-9855-ea85-7c4d6c94b747" />
+        </topic>
+        <topic id="M:MVCApplication.Controllers.HomeController.Index" file="9f7c02b4-8c09-ca2b-ec85-f86a3e6bccbc" />
+      </topic>
+      <topic id="Fields.T:MVCApplication.Controllers.HomeController" file="5a4a43a0-a3b8-7ecd-bcf4-cee806c3e518" />
+    </topic>
+    <topic id="T:MVCApplication.Controllers.ServicesController" file="98c0d415-41ea-c168-fa66-5dfb86d50301">
+      <topic id="M:MVCApplication.Controllers.ServicesController.#ctor(MVCApplication.Data.AppDb,Microsoft.Extensions.Logging.ILogger{MVCApplication.Controllers.ServicesController})" file="76d9b5e3-4d15-bb4f-9890-58a0aded65a6" />
+      <topic id="Properties.T:MVCApplication.Controllers.ServicesController" file="e9e0d02a-94fa-7d3a-b7e4-a7d848d1e263" />
+      <topic id="Methods.T:MVCApplication.Controllers.ServicesController" file="393313f7-104a-b3eb-6e87-ca6fcc6240b9">
+        <topic id="Overload:MVCApplication.Controllers.ServicesController.Book" file="cbf2c98f-d913-9a20-4ebd-755bbc91a589">
+          <topic id="M:MVCApplication.Controllers.ServicesController.Book" file="ba3e5c8b-3701-b7b5-5406-a8a94bf739d6" />
+          <topic id="M:MVCApplication.Controllers.ServicesController.Book(MVCApplication.Models.Booking)" file="ff243442-0a68-d403-55e3-60e678fe7bdf" />
+        </topic>
+        <topic id="M:MVCApplication.Controllers.ServicesController.Details(System.Int32)" file="bbc5ab13-7513-b87b-079a-84760b172e4e" />
+        <topic id="Overload:MVCApplication.Controllers.ServicesController.Index" file="55c6a3bc-e313-a411-8071-e7bbb27e6d4e">
+          <topic id="M:MVCApplication.Controllers.ServicesController.Index(System.Nullable{System.Int32})" file="d922ab9a-1cb0-9831-a54b-3634cf2b2bfb" />
+          <topic id="M:MVCApplication.Controllers.ServicesController.Index(System.Int32,System.Nullable{MVCApplication.Helpers.ActionEnums.ServiceAction})" file="15989d2c-18db-9b54-7e37-6583ebc47f65" />
+        </topic>
+        <topic id="M:MVCApplication.Controllers.ServicesController.RatesEnquiries" file="37b21334-1139-27c7-bde8-7e7f4d426682" />
+      </topic>
+      <topic id="Fields.T:MVCApplication.Controllers.ServicesController" file="f4ae5769-50e6-6c41-2871-4a131837ebd8" />
+    </topic>
+  </topic>
+  <topic id="N:MVCApplication.Data" file="a3464dc0-9d75-0cc2-63f4-0b2b27b9efb5">
+    <topic id="T:MVCApplication.Data.AppDb" file="ae1184e4-a209-654d-2788-55f3627aa107">
+      <topic id="M:MVCApplication.Data.AppDb.#ctor(Microsoft.Extensions.Configuration.IConfiguration,Microsoft.Extensions.Logging.ILogger{MVCApplication.Data.AppDb})" file="886a57f8-5815-011b-057c-8b4a60e1b4a6" />
+      <topic id="Methods.T:MVCApplication.Data.AppDb" file="c92dc047-1815-4bec-e908-771d48d8024b">
+        <topic id="M:MVCApplication.Data.AppDb.DeleteAnnouncements(System.Collections.Generic.List{System.Int32})" file="a03ade99-6998-907f-aa9f-be38e6bd39de" />
+        <topic id="M:MVCApplication.Data.AppDb.DeleteBookings(System.Collections.Generic.List{System.Int32})" file="9d92e825-da0a-da71-1191-fc692fb4615d" />
+        <topic id="M:MVCApplication.Data.AppDb.DeleteEvents(System.Collections.Generic.List{System.Int32})" file="78bef31c-3949-e964-c68a-bb691c787f39" />
+        <topic id="M:MVCApplication.Data.AppDb.DeleteFeedbacks(System.Collections.Generic.List{System.Int32})" file="9f06cc2e-0740-8cff-dacb-885ecbb57776" />
+        <topic id="M:MVCApplication.Data.AppDb.DeleteUsers(System.Collections.Generic.List{System.Int32})" file="495589cd-adec-de76-d7b2-34a1a4e2db21" />
+        <topic id="M:MVCApplication.Data.AppDb.EnsureCreated" file="53c1ebb1-0b38-1d87-25e3-1cb572c87007" />
+        <topic id="M:MVCApplication.Data.AppDb.GetAnnouncements" file="5d122fcf-6659-2639-79e3-3c79a7ef13ee" />
+        <topic id="M:MVCApplication.Data.AppDb.GetBooking(System.Nullable{System.Int32})" file="51739bcd-a8b6-22d5-9bdc-19b2c134f381" />
+        <topic id="M:MVCApplication.Data.AppDb.GetBookingByEmail(System.String)" file="c903bbab-e7f6-1716-c41a-d8c1a6c08ba6" />
+        <topic id="M:MVCApplication.Data.AppDb.GetEvent(System.Nullable{System.Int32})" file="51dec4d2-d97e-be68-90db-00cd577afe6c" />
+        <topic id="M:MVCApplication.Data.AppDb.GetFeedback(System.Nullable{System.Int32})" file="952f9b03-0dcf-9f44-1760-162a48fe09e9" />
+        <topic id="M:MVCApplication.Data.AppDb.GetLogs" file="58d9b202-d01e-dff2-611e-4d23aadf8351" />
+        <topic id="M:MVCApplication.Data.AppDb.GetUser(System.Nullable{System.Int32})" file="5b7655e5-125b-f7e3-e08b-34897321199e" />
+        <topic id="M:MVCApplication.Data.AppDb.GetUserByEmail(System.String)" file="3f3f312e-a18e-75fe-2c0d-0e76d5d7ba95" />
+        <topic id="M:MVCApplication.Data.AppDb.Login(System.String,System.String)" file="2418c4df-81d5-585c-b424-383eb6b83ca9" />
+        <topic id="M:MVCApplication.Data.AppDb.Register(System.String,System.String,System.String,System.String,System.String)" file="d3562fd8-14f4-441e-2c5b-ac492bab26a4" />
+        <topic id="M:MVCApplication.Data.AppDb.SaveAnnouncement(MVCApplication.Models.Announcement)" file="452645f8-b675-e99d-56c8-744b3aa70197" />
+        <topic id="M:MVCApplication.Data.AppDb.SaveBooking(MVCApplication.Models.Booking)" file="23565560-b9c0-df38-06ed-5c744c4c2ba0" />
+        <topic id="M:MVCApplication.Data.AppDb.SaveEvent(MVCApplication.Models.Event)" file="346825ff-5076-a187-24e8-8c869d661361" />
+        <topic id="M:MVCApplication.Data.AppDb.SaveEventBooking(System.Int32,System.String)" file="e9ea9a2a-68ae-1a87-cb62-1d6614cf4932" />
+        <topic id="M:MVCApplication.Data.AppDb.SaveFeedback(MVCApplication.Models.Feedback)" file="e27287d2-d3f9-01c4-18a0-b1a1c19eb4c9" />
+        <topic id="M:MVCApplication.Data.AppDb.SaveLog(MVCApplication.Models.Log)" file="dbc424b1-933b-8d75-a2d4-dac6e5369f89" />
+        <topic id="M:MVCApplication.Data.AppDb.SaveUser(MVCApplication.Models.User)" file="cf2b3717-f719-cc69-4307-53febcb3e886" />
+        <topic id="M:MVCApplication.Data.AppDb.UpdateAnnouncements(System.Collections.Generic.List{MVCApplication.Models.Announcement})" file="383d2543-78f3-fae2-51f8-a9415e2b5370" />
+        <topic id="M:MVCApplication.Data.AppDb.UpdateBooking(System.Collections.Generic.List{MVCApplication.Models.Booking})" file="a62b8ecd-e350-6c6b-ec83-ba4a6a596849" />
+        <topic id="M:MVCApplication.Data.AppDb.UpdateEvent(System.Collections.Generic.List{MVCApplication.Models.Event})" file="da25a827-cc38-b24e-f67e-9dc77918da9a" />
+        <topic id="M:MVCApplication.Data.AppDb.UpdateFeedback(System.Collections.Generic.List{MVCApplication.Models.Feedback})" file="d1ecb5a8-2901-6e2b-1c12-ab0bb6123a16" />
+        <topic id="M:MVCApplication.Data.AppDb.UpdateUser(System.Collections.Generic.List{MVCApplication.Models.User})" file="aa9ea9f9-defa-b7b4-1442-237ced52e454" />
+      </topic>
+    </topic>
+    <topic id="T:MVCApplication.Data.Seeding" file="5d6437ed-6a03-d399-fbf5-6e73d325fda1">
+      <topic id="M:MVCApplication.Data.Seeding.#ctor(Microsoft.Extensions.Configuration.IConfiguration,Microsoft.Extensions.Options.IOptions{MVCApplication.Models.Seeding.AdminSettings})" file="9fd59a6b-8b7c-e6e2-dfdd-6cdbf7c4efeb" />
+      <topic id="Methods.T:MVCApplication.Data.Seeding" file="71f8c1e0-02b3-d065-1004-5075fe372310">
+        <topic id="M:MVCApplication.Data.Seeding.SeedAdminUser" file="8a3de33c-fd91-342b-c5ce-ab9b93295d97" />
+        <topic id="M:MVCApplication.Data.Seeding.SeedAnnouncements" file="f6874844-5378-f8c6-f16e-3e7f7c00d59b" />
+        <topic id="M:MVCApplication.Data.Seeding.SeedBooking" file="2bc39f34-3938-ff26-c7a2-11fcde792b04" />
+        <topic id="M:MVCApplication.Data.Seeding.SeedEvent" file="2a5e3253-0195-3eb7-519b-4e4ed9c29bc9" />
+        <topic id="M:MVCApplication.Data.Seeding.SeedFeedback" file="75af794f-2d5f-aacd-bdfe-59ee9a4cd831" />
+        <topic id="M:MVCApplication.Data.Seeding.SeedUser" file="f583ee4c-1039-dbe3-d029-b6bbc03aa37e" />
+      </topic>
+    </topic>
+  </topic>
+  <topic id="N:MVCApplication.Helpers" file="dc1404eb-a593-5b83-8958-f5d535ecd18a">
+    <topic id="T:MVCApplication.Helpers.ActionEnums" file="681b0f56-d420-cab5-51f1-1df7fb5b0aaf" />
+    <topic id="T:MVCApplication.Helpers.ActionEnums.AdminUserAction" file="0a67426f-800f-48af-f259-31a02d226d40" />
+    <topic id="T:MVCApplication.Helpers.ActionEnums.ServiceAction" file="b82dac81-4ac1-00ee-cfc6-a445c7b43e52" />
+    <topic id="T:MVCApplication.Helpers.MessageDictionary" file="025bbb32-a462-3517-3346-1040450835a2">
+      <topic id="Fields.T:MVCApplication.Helpers.MessageDictionary" file="06941cc9-c56c-4335-a8eb-b66802926641">
+        <topic id="F:MVCApplication.Helpers.MessageDictionary.Store" file="cd9d3a1f-f20d-bfba-f822-644e96e8bc7f" />
+      </topic>
+    </topic>
+    <topic id="T:MVCApplication.Helpers.MessageDictionary.Info" file="faab725a-93d2-a78b-6d7e-e55534681ba3">
+      <topic id="M:MVCApplication.Helpers.MessageDictionary.Info.#ctor(System.String,System.String,System.String,System.String)" file="cc98b3f7-906e-3cd2-1d63-8966d4557b24" />
+      <topic id="Properties.T:MVCApplication.Helpers.MessageDictionary.Info" file="ebdfe9fa-c35b-800d-5a9a-8f3ccf5097e6">
+        <topic id="P:MVCApplication.Helpers.MessageDictionary.Info.ErrorMsg" file="0c7a22eb-ec0c-8918-4295-b81ff35a3a56" />
+        <topic id="P:MVCApplication.Helpers.MessageDictionary.Info.SuccessMsg" file="2956309e-590d-1971-41b2-8df5979b3e27" />
+        <topic id="P:MVCApplication.Helpers.MessageDictionary.Info.Table" file="8ea0dd4f-f54f-78b8-2420-a6d706089b1d" />
+        <topic id="P:MVCApplication.Helpers.MessageDictionary.Info.Title" file="9d1d20e2-f5d4-22d8-56c7-4c6e5120f201" />
+      </topic>
+      <topic id="Methods.T:MVCApplication.Helpers.MessageDictionary.Info" file="8a1074ed-97f4-6bb8-fae9-3ea2c3d61d2f">
+        <topic id="M:MVCApplication.Helpers.MessageDictionary.Info.&lt;Clone&gt;$" file="de02da1f-08d9-8f07-a2d9-ab46f909425a" />
+        <topic id="M:MVCApplication.Helpers.MessageDictionary.Info.Deconstruct(System.String@,System.String@,System.String@,System.String@)" file="628f5bcc-22c0-1b6d-48dc-a112a42d89b1" />
+        <topic id="Overload:MVCApplication.Helpers.MessageDictionary.Info.Equals" file="267deb6f-a1a2-89c0-cd25-0f07dafea0c0">
+          <topic id="M:MVCApplication.Helpers.MessageDictionary.Info.Equals(MVCApplication.Helpers.MessageDictionary.Info)" file="2098fc00-54db-2456-9f88-e038023015f6" />
+          <topic id="M:MVCApplication.Helpers.MessageDictionary.Info.Equals(System.Object)" file="ee19ac49-a117-6e7d-00bd-880bf407b4f4" />
+        </topic>
+        <topic id="M:MVCApplication.Helpers.MessageDictionary.Info.GetHashCode" file="6c581d8f-c478-98b0-0574-1a8f9e1dfc83" />
+        <topic id="M:MVCApplication.Helpers.MessageDictionary.Info.ToString" file="cd2231da-46c0-455c-c238-c2814c601de2" />
+      </topic>
+      <topic id="Operators.T:MVCApplication.Helpers.MessageDictionary.Info" file="ec9d2ead-51f4-e755-c337-da9c7f471b02">
+        <topic id="M:MVCApplication.Helpers.MessageDictionary.Info.op_Equality(MVCApplication.Helpers.MessageDictionary.Info,MVCApplication.Helpers.MessageDictionary.Info)" file="6d97738d-d2eb-0b95-0c8f-e107a64f8580" />
+        <topic id="M:MVCApplication.Helpers.MessageDictionary.Info.op_Inequality(MVCApplication.Helpers.MessageDictionary.Info,MVCApplication.Helpers.MessageDictionary.Info)" file="836e4267-b63f-864e-997c-dec550b34446" />
+      </topic>
+    </topic>
+    <topic id="T:MVCApplication.Helpers.MessageDictionary.MethodCode" file="e5ed2039-da37-ba3f-6cda-5fab995f47fa" />
+    <topic id="T:MVCApplication.Helpers.SessionKeys" file="89a28f0f-9da2-92d9-390b-ce715341309b">
+      <topic id="Fields.T:MVCApplication.Helpers.SessionKeys" file="2857ada6-e938-5375-3d9f-a5f16252f756">
+        <topic id="F:MVCApplication.Helpers.SessionKeys.Role" file="5d327682-8078-cfc9-406a-2d08276eb7b1" />
+        <topic id="F:MVCApplication.Helpers.SessionKeys.Type" file="0a8cc5c1-3ea7-6a56-13ad-1182fc53ebef" />
+      </topic>
+    </topic>
+    <topic id="T:MVCApplication.Helpers.UserRole" file="cf6e64df-0728-3915-c2e0-07b98aca61cb" />
+    <topic id="T:MVCApplication.Helpers.V" file="9d01b7b2-21aa-364d-694f-cf9e1ee5542e" />
+    <topic id="T:MVCApplication.Helpers.V.Account" file="2bf2fd2e-8813-7195-63ba-cd20cddb48ce">
+      <topic id="Fields.T:MVCApplication.Helpers.V.Account" file="6c4cbf02-d50d-ee46-b364-c67b3dbd8f83">
+        <topic id="F:MVCApplication.Helpers.V.Account.AccessDenied" file="f9519896-c4de-fd91-1a0f-919ec5a9ae94" />
+        <topic id="F:MVCApplication.Helpers.V.Account.Login" file="ef261215-5af5-70a7-4fe1-6bcd27292e9d" />
+        <topic id="F:MVCApplication.Helpers.V.Account.Register" file="594b08a0-5e8c-8203-a59e-fd6bbf825d03" />
+      </topic>
+    </topic>
+    <topic id="T:MVCApplication.Helpers.V.Admin" file="036ca9c0-c561-568d-f9af-fa98da678951">
+      <topic id="Fields.T:MVCApplication.Helpers.V.Admin" file="4e538162-c91c-79a9-a59d-beff2c6768e2">
+        <topic id="F:MVCApplication.Helpers.V.Admin.Announcements" file="d0736902-8143-a97a-4f74-3ec67d48d7dd" />
+        <topic id="F:MVCApplication.Helpers.V.Admin.Bookings" file="4f9fc5c2-8f6e-656c-735a-7165b45b71be" />
+        <topic id="F:MVCApplication.Helpers.V.Admin.Events" file="02939a4a-99ce-1b50-1c8d-c286f2dd6192" />
+        <topic id="F:MVCApplication.Helpers.V.Admin.Feedback" file="84cd892b-7bdc-cea5-07c9-6cbec19939b7" />
+        <topic id="F:MVCApplication.Helpers.V.Admin.Index" file="c697da15-e93c-250a-351f-24aef9342d52" />
+        <topic id="F:MVCApplication.Helpers.V.Admin.Logs" file="4e2924ad-2e4b-e487-59e3-784ebc5a6b7c" />
+        <topic id="F:MVCApplication.Helpers.V.Admin.Users" file="c7f7cb24-482d-c193-061d-634601c93e47" />
+      </topic>
+    </topic>
+    <topic id="T:MVCApplication.Helpers.V.Dashboard" file="4d443d6b-400d-b7ef-008a-0ff39d0f6fa6">
+      <topic id="Fields.T:MVCApplication.Helpers.V.Dashboard" file="ec95f98d-1bd5-d416-ec54-a30ad18156b7">
+        <topic id="F:MVCApplication.Helpers.V.Dashboard.Index" file="c816ee34-619a-4fca-1735-81002a638afa" />
+        <topic id="F:MVCApplication.Helpers.V.Dashboard.MyBookings" file="043b735b-24c0-0d00-84dc-fa559b6e7d73" />
+        <topic id="F:MVCApplication.Helpers.V.Dashboard.Profile" file="7b6a0757-be64-552b-fe36-9764a8286344" />
+      </topic>
+    </topic>
+    <topic id="T:MVCApplication.Helpers.V.Events" file="ca93c039-36d2-bf02-3729-be0339df7ae5">
+      <topic id="Fields.T:MVCApplication.Helpers.V.Events" file="d202a254-f814-823c-052d-b445784300d8">
+        <topic id="F:MVCApplication.Helpers.V.Events.Create" file="2987af16-2cb1-2a8d-da4e-2f0f49eaac30" />
+        <topic id="F:MVCApplication.Helpers.V.Events.Details" file="d8a2177d-17a1-1589-0852-1e3d7dc171d8" />
+        <topic id="F:MVCApplication.Helpers.V.Events.Index" file="bb0e0046-404c-9857-c884-bea7ab44c289" />
+        <topic id="F:MVCApplication.Helpers.V.Events.RegisterConfirmation" file="9d46ebd7-b9e0-aaad-4b19-0975d8d3b591" />
+      </topic>
+    </topic>
+    <topic id="T:MVCApplication.Helpers.V.Home" file="111ec4c0-9380-449b-217e-4471054c1889">
+      <topic id="Fields.T:MVCApplication.Helpers.V.Home" file="85087223-81f2-ee08-e932-fff7785e0937">
+        <topic id="F:MVCApplication.Helpers.V.Home.Announcements" file="76e56734-e342-5ec4-0ccf-4131aea7f453" />
+        <topic id="F:MVCApplication.Helpers.V.Home.FAQ" file="62ff70fd-1fdd-c9c4-470b-2c719ec03a86" />
+        <topic id="F:MVCApplication.Helpers.V.Home.Feedback" file="db9bb1ea-6fe5-4bf7-d347-54b651b089b6" />
+        <topic id="F:MVCApplication.Helpers.V.Home.Index" file="819ce08d-810e-8f85-2de6-73296e9a1239" />
+        <topic id="F:MVCApplication.Helpers.V.Home.WasteManagement" file="029bd4f6-44a1-baf8-4844-6f9675bb2576" />
+      </topic>
+    </topic>
+    <topic id="T:MVCApplication.Helpers.V.Services" file="83edcbf0-3326-de73-24f4-ae13871e3ad1">
+      <topic id="Fields.T:MVCApplication.Helpers.V.Services" file="00456f91-e753-0509-7ec7-5681dabc23be">
+        <topic id="F:MVCApplication.Helpers.V.Services.Book" file="c123dbe0-58d4-80a4-b8a8-c5179e4ef615" />
+        <topic id="F:MVCApplication.Helpers.V.Services.Details" file="707e0dcc-1355-9319-ddae-e2da8a9ffbb8" />
+        <topic id="F:MVCApplication.Helpers.V.Services.Index" file="d1fbb3d2-8553-56d9-a267-bf29c94df790" />
+        <topic id="F:MVCApplication.Helpers.V.Services.RatesEnquiries" file="3591df67-b75b-14b2-c356-837260c0eaba" />
+      </topic>
+    </topic>
+  </topic>
+  <topic id="N:MVCApplication.Models" file="d022f074-5c40-6f7b-f049-5813e60df1a0">
+    <topic id="T:MVCApplication.Models.AndInTheDarknessBindThem" file="24318a2a-256e-d7b6-6502-db83238cce34">
+      <topic id="M:MVCApplication.Models.AndInTheDarknessBindThem.#ctor" file="a3a1ba42-3cb1-e70b-0cb1-ebaa5743adb3" />
+      <topic id="Properties.T:MVCApplication.Models.AndInTheDarknessBindThem" file="efd3a088-a0b8-5535-79ab-46ee35285b03">
+        <topic id="P:MVCApplication.Models.AndInTheDarknessBindThem.Announcement" file="df673a03-f8b2-65c0-63f5-4186ad35b4d3" />
+        <topic id="P:MVCApplication.Models.AndInTheDarknessBindThem.Announcements" file="b29bda96-1d8a-a115-18a8-24c721b30061" />
+        <topic id="P:MVCApplication.Models.AndInTheDarknessBindThem.Booking" file="b5585e37-a2ee-5d78-4c00-f9f2d71497f0" />
+        <topic id="P:MVCApplication.Models.AndInTheDarknessBindThem.Bookings" file="2e8322ea-0f8c-61e5-c842-3cc746a2552f" />
+        <topic id="P:MVCApplication.Models.AndInTheDarknessBindThem.CurrentRole" file="5eb2eff6-3a79-a214-73fe-a8bdb3a4b595" />
+        <topic id="P:MVCApplication.Models.AndInTheDarknessBindThem.CurrentUser" file="900b3937-7abf-4d5e-252a-4b9d6e7519d7" />
+        <topic id="P:MVCApplication.Models.AndInTheDarknessBindThem.Error" file="db037aeb-8674-bc9b-cb71-3e4a81e611f0" />
+        <topic id="P:MVCApplication.Models.AndInTheDarknessBindThem.Event" file="cac607b7-526a-dfe9-ca5b-e344510e8ada" />
+        <topic id="P:MVCApplication.Models.AndInTheDarknessBindThem.Events" file="e30f1d42-5d8b-f7d4-e4aa-a0d80f0bb945" />
+        <topic id="P:MVCApplication.Models.AndInTheDarknessBindThem.Feedback" file="3003ec9b-3a84-34ba-dfd1-a6729631991f" />
+        <topic id="P:MVCApplication.Models.AndInTheDarknessBindThem.Feedbacks" file="08705b08-9b7c-4a67-820d-862afbdba27d" />
+        <topic id="P:MVCApplication.Models.AndInTheDarknessBindThem.IsAdmin" file="c54a13a9-7892-cf2c-32d7-39b4e46cd334" />
+        <topic id="P:MVCApplication.Models.AndInTheDarknessBindThem.IsAuth" file="5b5b6a41-7289-b743-c376-5145ade12ec6" />
+        <topic id="P:MVCApplication.Models.AndInTheDarknessBindThem.Log" file="e73df863-772a-d637-1200-be5b4459620e" />
+        <topic id="P:MVCApplication.Models.AndInTheDarknessBindThem.Logs" file="94bdf4d5-d571-b025-3226-83ef1e8f6500" />
+        <topic id="P:MVCApplication.Models.AndInTheDarknessBindThem.ReturnUrl" file="7f77b6bf-740d-7dbf-d211-3c96c7b62f1d" />
+        <topic id="P:MVCApplication.Models.AndInTheDarknessBindThem.Success" file="66cafefc-bd78-1422-9eb9-b0e6356be22c" />
+        <topic id="P:MVCApplication.Models.AndInTheDarknessBindThem.Table" file="ad5c1c6b-58c9-a9b5-0d54-b84984a53b3f" />
+        <topic id="P:MVCApplication.Models.AndInTheDarknessBindThem.Title" file="a600cff5-3826-ca4b-209c-0074bb0e50b7" />
+        <topic id="P:MVCApplication.Models.AndInTheDarknessBindThem.User" file="d0665c13-8a3e-77c4-3e35-65a7f4c37c08" />
+        <topic id="P:MVCApplication.Models.AndInTheDarknessBindThem.Users" file="8d6526f1-7910-46bf-94d6-66d770ed595f" />
+      </topic>
+      <topic id="Methods.T:MVCApplication.Models.AndInTheDarknessBindThem" file="1e9b23de-19ac-ea7e-41dd-4fe95bc7f120">
+        <topic id="M:MVCApplication.Models.AndInTheDarknessBindThem.Build(System.String,System.String,System.String,System.String,System.String)" file="69d2c3c7-e520-ef24-4b4a-81f9d17f06d3" />
+      </topic>
+    </topic>
+    <topic id="T:MVCApplication.Models.Announcement" file="9d653cb8-44b7-47fa-e37e-54190f822522">
+      <topic id="M:MVCApplication.Models.Announcement.#ctor" file="d019d1a4-24b1-2b20-0497-78bc2e2fca0d" />
+      <topic id="Properties.T:MVCApplication.Models.Announcement" file="ed0229e2-8036-7a04-ed55-ec11dcd45165">
+        <topic id="P:MVCApplication.Models.Announcement.Id" file="598bf553-0999-508c-670d-559c7b24ca90" />
+        <topic id="P:MVCApplication.Models.Announcement.Message" file="50b8f89c-0504-c72e-e206-471d13cfada6" />
+        <topic id="P:MVCApplication.Models.Announcement.PostedDate" file="657899b9-a028-fb79-a9f7-67154527b939" />
+        <topic id="P:MVCApplication.Models.Announcement.Title" file="d590d36a-bcc2-353d-4c9f-d6c8d470e9c1" />
+      </topic>
+    </topic>
+    <topic id="T:MVCApplication.Models.Booking" file="e382bc77-b387-23aa-ef87-f87c75807e64">
+      <topic id="M:MVCApplication.Models.Booking.#ctor" file="cc01cc7d-65a8-449e-145a-8e2a17f2ef08" />
+      <topic id="Properties.T:MVCApplication.Models.Booking" file="01040807-bece-48f8-ddfc-ee0ea5347f90">
+        <topic id="P:MVCApplication.Models.Booking.BookingDate" file="741267bf-9d31-9db4-bade-58dca5de9e0a" />
+        <topic id="P:MVCApplication.Models.Booking.Email" file="678b3096-dbd1-3e8d-5374-6c13d182cc44" />
+        <topic id="P:MVCApplication.Models.Booking.EventId" file="a988bca4-3d30-1dc5-0fc4-c5de942bbb75" />
+        <topic id="P:MVCApplication.Models.Booking.FullName" file="234b48aa-0fbc-34b1-6b11-90e050f9b346" />
+        <topic id="P:MVCApplication.Models.Booking.Id" file="de8336b2-0eec-3c00-cad7-3786237f6727" />
+        <topic id="P:MVCApplication.Models.Booking.UserId" file="93164fa9-2d04-8105-6e2c-d3698d437f9a" />
+      </topic>
+    </topic>
+    <topic id="T:MVCApplication.Models.ErrorViewModel" file="7d80b787-dcbe-1b2c-2d5a-a1c5cf0cdf5e">
+      <topic id="M:MVCApplication.Models.ErrorViewModel.#ctor" file="98efa309-37ec-d59d-deea-d9e761093bbc" />
+      <topic id="Properties.T:MVCApplication.Models.ErrorViewModel" file="2bfc7401-bbef-64e7-3963-2a7b35ac889a">
+        <topic id="P:MVCApplication.Models.ErrorViewModel.RequestId" file="45986e83-e01f-03b5-deb5-22c40b0075d9" />
+        <topic id="P:MVCApplication.Models.ErrorViewModel.ShowRequestId" file="55ce3eba-f009-1dd8-b0f7-0ec50501c670" />
+      </topic>
+    </topic>
+    <topic id="T:MVCApplication.Models.Event" file="3e32da47-0dc0-b6b6-9370-ea11b91d6588">
+      <topic id="M:MVCApplication.Models.Event.#ctor" file="6d74a978-7307-ec8c-6a51-75e74c1b08c1" />
+      <topic id="Properties.T:MVCApplication.Models.Event" file="c879a535-6c10-012f-1ea2-e9d8950e8457">
+        <topic id="P:MVCApplication.Models.Event.Description" file="0c9919af-8aa5-97c8-a4c3-ec2d0ccef793" />
+        <topic id="P:MVCApplication.Models.Event.EventDate" file="a9bfea30-9529-032d-5c34-55acf723af71" />
+        <topic id="P:MVCApplication.Models.Event.Id" file="eea85432-de95-0226-ee1b-bd532d943ce7" />
+        <topic id="P:MVCApplication.Models.Event.Location" file="dfe55a42-35cf-b2fe-3abc-0d463bd0279b" />
+        <topic id="P:MVCApplication.Models.Event.Title" file="f5998cbc-7fe8-5ab6-0c04-dfa514c71c90" />
+      </topic>
+    </topic>
+    <topic id="T:MVCApplication.Models.Feedback" file="e63cbbf8-e6c7-233e-b6b0-089b1d76ca58">
+      <topic id="M:MVCApplication.Models.Feedback.#ctor" file="da40e91c-6edf-788f-b8f7-f95690fe4df3" />
+      <topic id="Properties.T:MVCApplication.Models.Feedback" file="40187d3f-e8f5-8e23-c881-07a858575385">
+        <topic id="P:MVCApplication.Models.Feedback.Email" file="2deff924-f3e3-57fd-2cb3-cdaa67ce4266" />
+        <topic id="P:MVCApplication.Models.Feedback.FullName" file="6ba59d66-3ed7-35ff-bf89-e432db81e90b" />
+        <topic id="P:MVCApplication.Models.Feedback.Heading" file="792213e9-f354-104b-ca95-968f8c580fe7" />
+        <topic id="P:MVCApplication.Models.Feedback.Id" file="6beb2691-73dc-ab5a-1559-c77cae36a990" />
+        <topic id="P:MVCApplication.Models.Feedback.Message" file="6343ead4-0926-9805-b3e2-53dc216152c2" />
+        <topic id="P:MVCApplication.Models.Feedback.SubmittedDate" file="19598b0d-774f-40b1-f833-f2889eb326eb" />
+        <topic id="P:MVCApplication.Models.Feedback.Type" file="e1ee94f8-7fc4-3fc6-f99c-c748fadd14a1" />
+        <topic id="P:MVCApplication.Models.Feedback.WantsContact" file="df07dad4-8729-472c-b2bc-2e435b85b408" />
+      </topic>
+    </topic>
+    <topic id="T:MVCApplication.Models.Log" file="cd60b016-02bf-0188-d970-fdb4eea94360">
+      <topic id="M:MVCApplication.Models.Log.#ctor" file="7abb1685-cb1f-327b-16f4-f55d9a005c25" />
+      <topic id="Properties.T:MVCApplication.Models.Log" file="feeebbf7-e63f-b2ee-2065-e0223636bdfd">
+        <topic id="P:MVCApplication.Models.Log.DateTime" file="47bba514-ef79-3767-0729-2177c9596aa3" />
+        <topic id="P:MVCApplication.Models.Log.Id" file="561edd1c-19a2-c8ee-aed2-88765269bb30" />
+        <topic id="P:MVCApplication.Models.Log.IsError" file="dbc8e4ef-15a8-452b-d851-1dee3a72b030" />
+        <topic id="P:MVCApplication.Models.Log.Message" file="9f626054-9381-eab6-e3fb-de0154b4c1f7" />
+        <topic id="P:MVCApplication.Models.Log.Role" file="38938cac-feea-761c-4c46-fd360fb90fef" />
+        <topic id="P:MVCApplication.Models.Log.UserName" file="d055e4a9-23d0-fc15-90ba-9652e71a783a" />
+        <topic id="P:MVCApplication.Models.Log.View" file="f07737e0-2b6b-4fdd-4ab5-fd7c10dccb5d" />
+      </topic>
+    </topic>
+    <topic id="T:MVCApplication.Models.User" file="08c590e3-8ad0-0f40-f39f-cd1834ca4c50">
+      <topic id="M:MVCApplication.Models.User.#ctor" file="9597e48c-febd-6599-5153-ee8874738abe" />
+      <topic id="Properties.T:MVCApplication.Models.User" file="659c2270-4b98-ecf1-a87d-06dcf0188794">
+        <topic id="P:MVCApplication.Models.User.Email" file="834fee1b-cff5-1794-850d-8f278b5e5db7" />
+        <topic id="P:MVCApplication.Models.User.FullName" file="773efc00-a8ce-b98e-d9bd-ca607c869ad1" />
+        <topic id="P:MVCApplication.Models.User.Id" file="06232353-2eab-f604-8c37-f0bebab09056" />
+        <topic id="P:MVCApplication.Models.User.PasswordHash" file="dabd685f-286c-5768-095a-0af43dd50cd0" />
+        <topic id="P:MVCApplication.Models.User.Role" file="d8ba93c1-b40a-531f-e8b8-49814133ddf3" />
+        <topic id="P:MVCApplication.Models.User.Username" file="d36dbdec-e70d-b2b9-ff19-3fce714ac3fc" />
+      </topic>
+    </topic>
+  </topic>
+  <topic id="N:MVCApplication.Models.Config" file="b235d4c0-4bfb-cb15-7010-71325b734546">
+    <topic id="T:MVCApplication.Models.Config.Column" file="27491ea6-1fba-8be9-493d-65bbb8a3d704">
+      <topic id="M:MVCApplication.Models.Config.Column.#ctor" file="d36be5ff-6345-d987-54c4-e508a8433812" />
+      <topic id="Properties.T:MVCApplication.Models.Config.Column" file="fea0f742-f2d2-1055-ff68-8888f74a953f">
+        <topic id="P:MVCApplication.Models.Config.Column.Links" file="1e47466d-a92f-425c-ac32-cd21bf0330c3" />
+        <topic id="P:MVCApplication.Models.Config.Column.Title" file="c03f2468-9e26-db51-9910-ce9ff29ca539" />
+      </topic>
+    </topic>
+    <topic id="T:MVCApplication.Models.Config.Faq" file="1e6cd5bc-0319-ed52-73f1-157a44f29aec">
+      <topic id="M:MVCApplication.Models.Config.Faq.#ctor" file="682f7f94-adad-984a-c218-3f54f65fc856" />
+      <topic id="Properties.T:MVCApplication.Models.Config.Faq" file="12f33b70-1adf-b85f-4f71-beb9c8f03ef7">
+        <topic id="P:MVCApplication.Models.Config.Faq.Answer" file="128b25f7-d01b-2f4a-c4c1-8e5c36e53da6" />
+        <topic id="P:MVCApplication.Models.Config.Faq.Id" file="3743c9e7-43b6-c1d0-98b3-cb7e4aef0b7d" />
+        <topic id="P:MVCApplication.Models.Config.Faq.Order" file="18ef1a37-8d13-614f-d285-a71027ccea55" />
+        <topic id="P:MVCApplication.Models.Config.Faq.Question" file="48f9cda9-bca0-452f-5b4b-eb621eb3eae2" />
+      </topic>
+    </topic>
+    <topic id="T:MVCApplication.Models.Config.Feature" file="0e41d4a3-12e7-789d-f3a1-dc5859140a9f">
+      <topic id="M:MVCApplication.Models.Config.Feature.#ctor" file="fea21a61-255d-af43-e21a-aa40dba430a4" />
+      <topic id="Properties.T:MVCApplication.Models.Config.Feature" file="2d2d8f0e-6c1b-a4e7-aa5c-0a0427291674">
+        <topic id="P:MVCApplication.Models.Config.Feature.Enabled" file="ce7efa67-2d48-5b2c-5fb8-5d600a7140c5" />
+        <topic id="P:MVCApplication.Models.Config.Feature.Id" file="7e32c082-d6ed-c0c2-61f3-56e7e5a4f191" />
+      </topic>
+    </topic>
+    <topic id="T:MVCApplication.Models.Config.Footer" file="81020b15-77e0-d297-2acc-93cecf2c0124">
+      <topic id="M:MVCApplication.Models.Config.Footer.#ctor" file="9608bc1a-d240-8f13-fe66-e45ab7040e6c" />
+      <topic id="Properties.T:MVCApplication.Models.Config.Footer" file="c59ee50b-8f91-d0ca-46e5-c742d40639b7">
+        <topic id="P:MVCApplication.Models.Config.Footer.Columns" file="56f36a87-5b75-6ec7-232f-588ef7e94a3d" />
+      </topic>
+    </topic>
+    <topic id="T:MVCApplication.Models.Config.Link" file="aac9d1ba-cd90-1a05-6072-92f9a27be0cd">
+      <topic id="M:MVCApplication.Models.Config.Link.#ctor" file="24c4eda1-66e3-b951-100e-1cc2803ff7f9" />
+      <topic id="Properties.T:MVCApplication.Models.Config.Link" file="81775feb-f429-cdcb-2bd9-0c5b4b53b885">
+        <topic id="P:MVCApplication.Models.Config.Link.Text" file="962b338e-16ef-8bd5-8b8b-9ddb114b1571" />
+        <topic id="P:MVCApplication.Models.Config.Link.Url" file="6a0b721f-3df2-f9cb-f7a7-2811382044d8" />
+      </topic>
+    </topic>
+    <topic id="T:MVCApplication.Models.Config.Menu" file="e5c845fb-5a25-e2d0-9296-6789099ad28e">
+      <topic id="M:MVCApplication.Models.Config.Menu.#ctor" file="d77b0df3-5f33-de38-32e7-5f3206581aa6" />
+      <topic id="Properties.T:MVCApplication.Models.Config.Menu" file="4f5b7fe7-a22e-1902-9c66-c188b0b2404c">
+        <topic id="P:MVCApplication.Models.Config.Menu.Id" file="57da86fb-1ba1-7d5b-fcff-3e21677f1630" />
+        <topic id="P:MVCApplication.Models.Config.Menu.Items" file="3b81e966-de8c-d4af-9e9a-209f343ac057" />
+      </topic>
+    </topic>
+    <topic id="T:MVCApplication.Models.Config.MenuItem" file="e3277ea5-3641-bc7a-924d-50b23de0c6e3">
+      <topic id="M:MVCApplication.Models.Config.MenuItem.#ctor" file="4bdab09a-f669-3929-bb7e-03901bd49097" />
+      <topic id="Properties.T:MVCApplication.Models.Config.MenuItem" file="32ded5c2-3e07-9171-ece8-b3b066311c99">
+        <topic id="P:MVCApplication.Models.Config.MenuItem.Order" file="4b2c7ad3-7d7c-3620-b15a-16b44a156e36" />
+        <topic id="P:MVCApplication.Models.Config.MenuItem.Text" file="287b7e0e-df7e-123d-aae6-e393e0d928c5" />
+        <topic id="P:MVCApplication.Models.Config.MenuItem.Url" file="93d6032b-1510-77b3-4812-99aa4fb0907a" />
+      </topic>
+    </topic>
+  </topic>
+  <topic id="N:MVCApplication.Models.Seeding" file="4b541ae3-4d12-094d-576b-5174baf5397d">
+    <topic id="T:MVCApplication.Models.Seeding.AdminSettings" file="4a5835a0-72b2-26cb-4a76-5abbb769c8b9">
+      <topic id="M:MVCApplication.Models.Seeding.AdminSettings.#ctor" file="a18ed291-e5a9-a0ef-37e3-04322a1b6f0b" />
+      <topic id="Properties.T:MVCApplication.Models.Seeding.AdminSettings" file="7cde5421-f240-cbc4-fb07-41b4b531ea0a">
+        <topic id="P:MVCApplication.Models.Seeding.AdminSettings.SeedEmail" file="cd168c48-4416-fbbb-47cd-064f94382388" />
+        <topic id="P:MVCApplication.Models.Seeding.AdminSettings.SeedPassword" file="53e6b139-f6cb-c0c5-ffaa-6bf278f939b0" />
+      </topic>
+    </topic>
+  </topic>
+  <topic id="N:MVCApplication.XMLServices" file="b500ddbe-6158-bcec-1322-7cd624fa1091">
+    <topic id="T:MVCApplication.XMLServices.IXMLConfigService" file="4f9e0c4b-a2e6-58ae-cb04-acafc277127c">
+      <topic id="Methods.T:MVCApplication.XMLServices.IXMLConfigService" file="21e111bf-3209-7492-461e-da36187c2249">
+        <topic id="M:MVCApplication.XMLServices.IXMLConfigService.GetFaq(System.String)" file="c5d91f6b-01bb-b276-859b-4cb93d6260bd" />
+        <topic id="M:MVCApplication.XMLServices.IXMLConfigService.GetFaqs" file="646d8c02-fd62-b44f-0ee5-e0f383dbc95c" />
+        <topic id="M:MVCApplication.XMLServices.IXMLConfigService.GetFeature(System.String)" file="6ee1e0a8-aae4-8008-1457-245693d2c72f" />
+        <topic id="M:MVCApplication.XMLServices.IXMLConfigService.GetFeatures" file="d1c4c303-97ca-825a-f32f-7cad3d02ca71" />
+        <topic id="M:MVCApplication.XMLServices.IXMLConfigService.GetFooter(System.String)" file="6948aec5-795b-0cb8-21ee-1d660535511b" />
+        <topic id="M:MVCApplication.XMLServices.IXMLConfigService.GetFooters" file="d2293993-d98d-3973-4f81-c1b2ac3a51d3" />
+        <topic id="M:MVCApplication.XMLServices.IXMLConfigService.GetMenu(System.String)" file="3c1bc456-40ed-3f0b-68ce-c048c7ad3ee6" />
+        <topic id="M:MVCApplication.XMLServices.IXMLConfigService.GetMenus" file="59c022bc-0786-a7bb-dcae-9040e3cabdd4" />
+      </topic>
+    </topic>
+    <topic id="T:MVCApplication.XMLServices.XMLConfigService" file="f2022f3b-b328-f263-7d31-8a53cbed25e4">
+      <topic id="M:MVCApplication.XMLServices.XMLConfigService.#ctor(Microsoft.Extensions.Hosting.IHostEnvironment)" file="af8492df-49a5-bb00-90af-b3351d84c6ae" />
+      <topic id="Methods.T:MVCApplication.XMLServices.XMLConfigService" file="2c945fbf-2372-09e7-0a9c-d2732d216ca1">
+        <topic id="M:MVCApplication.XMLServices.XMLConfigService.GetFaq(System.String)" file="93dbf2f8-822a-9624-16d9-5ffac5844984" />
+        <topic id="M:MVCApplication.XMLServices.XMLConfigService.GetFaqs" file="760e04c0-573c-1826-d860-d88f1932d12f" />
+        <topic id="M:MVCApplication.XMLServices.XMLConfigService.GetFeature(System.String)" file="c9abb8f6-9fac-a421-bd40-7b1b761fc745" />
+        <topic id="M:MVCApplication.XMLServices.XMLConfigService.GetFeatures" file="9c7ee730-bc3b-e413-95ff-c2474bbb3fb2" />
+        <topic id="M:MVCApplication.XMLServices.XMLConfigService.GetFooter(System.String)" file="0b64b32c-b00c-2891-1194-cac02c2998c5" />
+        <topic id="M:MVCApplication.XMLServices.XMLConfigService.GetFooters" file="6ea8b8d8-5c03-26b8-2bc5-ebe0b3a9103b" />
+        <topic id="M:MVCApplication.XMLServices.XMLConfigService.GetMenu(System.String)" file="2f04448e-fc1a-1c60-a443-9499ec168862" />
+        <topic id="M:MVCApplication.XMLServices.XMLConfigService.GetMenus" file="d56a4e15-60df-aac9-b804-1cc697d3f206" />
+      </topic>
+    </topic>
+  </topic>
+</topics>
